@@ -1,7 +1,7 @@
 import Foundation
 import ArgumentParser
 import SVG
-import Templates
+import Translation
 
 extension Document.Template: ExpressibleByArgument { }
 

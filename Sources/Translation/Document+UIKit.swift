@@ -1,5 +1,5 @@
+import Foundation
 import SVG
-import Graphics
 
 #if canImport(UIKit)
 import UIKit

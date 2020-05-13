@@ -20,12 +20,8 @@ let package = Package(
             targets: ["SVG"]
         ),
         .library(
-            name: "Graphics",
-            targets: ["Graphics"]
-        ),
-        .library(
-            name: "Templates",
-            targets: ["Templates"]
+            name: "Translation",
+            targets: ["Translation"]
         ),
     ],
     dependencies: [
@@ -37,31 +33,23 @@ let package = Package(
             url: "https://github.com/MaxDesiatov/XMLCoder.git",
             from: "0.11.1"
         ),
-        .package(
-            url: "https://github.com/richardpiazza/GraphPoint.git",
-            .upToNextMinor(from: "3.4.0")
-        ),
     ],
     targets: [
         .target(
             name: "VectorPlus",
-            dependencies: ["SVG", "Templates", .product(name: "ArgumentParser", package: "swift-argument-parser")]
+            dependencies: ["SVG", "Translation", .product(name: "ArgumentParser", package: "swift-argument-parser")]
         ),
         .target(
             name: "SVG",
             dependencies: ["XMLCoder"]
         ),
         .target(
-            name: "Graphics",
-            dependencies: ["SVG", "GraphPoint"]
-        ),
-        .target(
-            name: "Templates",
-            dependencies: ["SVG", "Graphics"]
+            name: "Translation",
+            dependencies: ["SVG"]
         ),
         .testTarget(
             name: "VectorPlusTests",
-            dependencies: ["VectorPlus", "SVG"]
+            dependencies: ["VectorPlus", "SVG", "Translation"]
         ),
     ]
 )

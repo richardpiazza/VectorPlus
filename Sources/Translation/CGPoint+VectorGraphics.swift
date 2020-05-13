@@ -1,7 +1,8 @@
 import Foundation
-import CoreGraphics
-import GraphPoint
 import SVG
+
+#if canImport(CoreGraphics)
+import CoreGraphics
 
 extension CGPoint {
     init(x: Float, y: Float) {
@@ -35,3 +36,30 @@ extension CGPoint {
         return VectorPoint(x: x, y: y)
     }
 }
+
+private extension CGRect {
+    /// Translates a `CGPoint` to a cartesian-based `CGPoint`.
+    ///
+    /// - parameter point: A point within the instance `CGRect`
+    /// - returns: Catesian coordinates for the supplied point.
+    func graphPoint(for point: CGPoint) -> CGPoint {
+        let graphOrigin = CGPoint(x: midX, y: midY)
+        var graphPoint = CGPoint.zero
+        
+        if point.x < graphOrigin.x {
+            graphPoint.x = -(graphOrigin.x - point.x)
+        } else if point.x > graphOrigin.x {
+            graphPoint.x = point.x - graphOrigin.x
+        }
+        
+        if point.y > graphOrigin.y {
+            graphPoint.y = -(point.y - graphOrigin.y)
+        } else if point.y < graphOrigin.y {
+            graphPoint.y = graphOrigin.y - point.y
+        }
+        
+        return graphPoint
+    }
+}
+
+#endif

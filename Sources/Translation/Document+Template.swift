@@ -1,6 +1,5 @@
 import Foundation
 import SVG
-import Graphics
 
 public extension Document {
     enum Template: String, Decodable, CaseIterable {

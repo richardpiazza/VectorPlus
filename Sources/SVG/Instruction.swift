@@ -203,6 +203,33 @@ public extension Instruction {
             return self
         }
     }
+}
+
+internal extension Instruction {
+    var isComplete: Bool {
+        switch self {
+        case .close:
+            return true
+        case .move(let x, let y), .line(let x, let y), .circle(let x, let y, _), .rectangle(let x, let y, _, _, _, _):
+            if x.isNaN || y.isNaN {
+                return false
+            }
+            
+            return true
+        case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
+            if x.isNaN || y.isNaN || cx1.isNaN || cy1.isNaN || cx2.isNaN || cy2.isNaN {
+                return false
+            }
+            
+            return true
+        case .quadraticCurve(let x, let y, let cx, let cy):
+            if x.isNaN || y.isNaN || cx.isNaN || cy.isNaN {
+                return false
+            }
+            
+            return true
+        }
+    }
     
     func adjusting(relativeValue: Float, at argumentPosition: Int) throws -> Instruction {
         switch self {
@@ -260,33 +287,6 @@ public extension Instruction {
             throw Error.invalidArgumentPosition
         case .close:
             throw Error.invalidArgumentPosition
-        }
-    }
-}
-
-internal extension Instruction {
-    var isComplete: Bool {
-        switch self {
-        case .close:
-            return true
-        case .move(let x, let y), .line(let x, let y), .circle(let x, let y, _), .rectangle(let x, let y, _, _, _, _):
-            if x.isNaN || y.isNaN {
-                return false
-            }
-            
-            return true
-        case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-            if x.isNaN || y.isNaN || cx1.isNaN || cy1.isNaN || cx2.isNaN || cy2.isNaN {
-                return false
-            }
-            
-            return true
-        case .quadraticCurve(let x, let y, let cx, let cy):
-            if x.isNaN || y.isNaN || cx.isNaN || cy.isNaN {
-                return false
-            }
-            
-            return true
         }
     }
 }

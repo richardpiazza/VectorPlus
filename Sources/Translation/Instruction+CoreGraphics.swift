@@ -1,13 +1,15 @@
 import Foundation
-import CoreGraphics
 import SVG
+
+#if canImport(CoreGraphics)
+import CoreGraphics
 
 public extension Instruction {
     /// The specific `CoreGraphics` command that is needed to execute the `Instruction`.
     ///
-    /// The `designSize` is specified to allow for translation from original image to 'any' size.
-    ///
     /// It is assumed that all required transformations has been applied (_squaring_) before calling this method.
+    ///
+    /// - parameter originalSize: Supplied to correctly determine how to proportionally scale the instruction.
     func coreGraphicsDescription(originalSize: CGSize) -> String {
         switch self {
         case .move(let x, let y):
@@ -54,3 +56,5 @@ public extension Instruction {
         }
     }
 }
+
+#endif

@@ -1,4 +1,6 @@
 import Foundation
+
+#if canImport(CoreGraphics)
 import CoreGraphics
 
 enum VectorSign: String {
@@ -38,3 +40,5 @@ extension VectorPoint {
         }
     }
 }
+
+#endif

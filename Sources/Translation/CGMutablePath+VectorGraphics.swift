@@ -1,5 +1,8 @@
-import CoreGraphics
+import Foundation
 import SVG
+
+#if canImport(CoreGraphics)
+import CoreGraphics
 
 public extension CGMutablePath {
     func addInstruction(_ instruction: Instruction, originalSize: CGSize, outputSize: CGSize) {
@@ -64,3 +67,5 @@ public extension CGMutablePath {
 fileprivate func radians(_ degree: Float) -> CGFloat {
     return CGFloat(degree) * (.pi / CGFloat(180))
 }
+
+#endif

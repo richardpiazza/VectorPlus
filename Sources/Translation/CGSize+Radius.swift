@@ -1,3 +1,4 @@
+#if canImport(CoreGraphics)
 import CoreGraphics
 
 public extension CGSize {
@@ -21,3 +22,5 @@ public extension CGSize {
         return CGPoint(x: xRadius, y: yRadius)
     }
 }
+
+#endif
