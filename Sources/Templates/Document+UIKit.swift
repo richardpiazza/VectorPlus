@@ -1,4 +1,3 @@
-import CoreGraphics
 import SVG
 import Graphics
 
@@ -6,33 +5,19 @@ import Graphics
 import UIKit
 
 public extension Document {
-    func path(sized size: CGSize, instructionSet: InstructionSet) -> CGPath {
+    func path(sized size: CGSize, subpaths: [[Instruction]]) -> CGPath {
         guard size.height > 0.0 && size.width > 0.0 else {
             return CGMutablePath()
         }
         
-        let includedPath = CGMutablePath()
-        for instruction in instructionSet.include {
-            includedPath.addInstruction(instruction, originalSize: originalSize, outputSize: size)
+        let mutablePath = CGMutablePath()
+        subpaths.forEach { (path) in
+            path.forEach { (instruction) in
+                mutablePath.addInstruction(instruction, originalSize: originalSize, outputSize: size)
+            }
         }
         
-        let excludedPath = CGMutablePath()
-        for instruction in instructionSet.exclude {
-            excludedPath.addInstruction(instruction, originalSize: originalSize, outputSize: size)
-        }
-        
-        let path: CGPath
-        if excludedPath.isEmpty {
-            path = includedPath
-        } else {
-            let bezierPath = UIBezierPath(cgPath: includedPath)
-            bezierPath.append(UIBezierPath(cgPath: excludedPath))
-            bezierPath.usesEvenOddFillRule = false
-            
-            path = bezierPath.cgPath
-        }
-        
-        return path
+        return mutablePath
     }
     
     func image(sized size: CGSize, fillColor: UIColor) -> UIImage? {
@@ -40,9 +25,9 @@ public extension Document {
             return nil
         }
         
-        let instructionSet: InstructionSet
+        let subpaths: [[Instruction]]
         do {
-            instructionSet = try asInstructionSet()
+            subpaths = try asSubpaths()
         } catch {
             return nil
         }
@@ -57,7 +42,7 @@ public extension Document {
             return nil
         }
         
-        context.addPath(path(sized: size, instructionSet: instructionSet))
+        context.addPath(path(sized: size, subpaths: subpaths))
         context.setFillColor(fillColor.cgColor)
         context.fillPath()
         

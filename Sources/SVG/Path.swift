@@ -34,105 +34,10 @@ public class Path: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
 }
 
 public extension Path {
-    /// A collection of instruction sets.
+    /// A collection of all the `Instruction`s represented by the 'data'
     ///
-    /// A 'set' of instructions is determined by spliting the `commands` whenever a 'move' instruction is encountered.
     ///
-    /// The second element is typically an 'exclusion' area from the first element.
-    func instructions(using transformations: [Transformation] = []) throws -> [[Instruction]] {
-        var output: [[Instruction]] = []
-        
-        let subpathInstructions = try self.subpathInstructions()
-        
-        for subpath in subpathInstructions {
-            output.append(subpath.map({ $0.applyingTransformations(transformations)} ))
-        }
-        
-        return output
-    }
-}
-
-private extension Path {
-    /// Deconstructs the `data` string into its component parts.
-    ///
-    func dataComponents() -> [String] {
-        var output: [String] = []
-        
-        var component: String = ""
-        
-        data.unicodeScalars.forEach { (character) in
-            // Account for exponential notation
-            if character == "e" {
-                component.append(String(character))
-                return
-            }
-            
-            if CharacterSet.letters.contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                output.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet.whitespaces.contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: ",").contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: "-").contains(character) {
-                // Account for exponential notation
-                if !component.isEmpty && component.last != "e" {
-                    output.append(component)
-                    component = ""
-                }
-                
-                component.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: ".").contains(character) {
-                component.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet.decimalDigits.contains(character) {
-                component.append(String(character))
-                
-                return
-            }
-            
-            print("UNHANDLED CHARACTER: \(character)")
-        }
-        
-        if !component.isEmpty {
-            output.append(component)
-            component = ""
-        }
-        
-        return output.filter({ !$0.isEmpty })
-    }
-    
-    /// A scanner implementation that understands multiple SVG path instruction formats.
-    func parsedInstructions() throws -> [Instruction] {
+    func asInstructions() throws -> [Instruction] {
         var output: [Instruction] = []
         var instruction: Instruction?
         
@@ -480,11 +385,13 @@ private extension Path {
         return output
     }
     
-    /// A collection of parsed subpaths.
-    func subpathInstructions() throws -> [[Instruction]] {
+    /// All instructions regrouped as individual subpaths ('close' terminated).
+    ///
+    /// A 'set' of instructions is determined by spliting the `commands` whenever a 'move' instruction is encountered.
+    func asSubpaths(applying transformations: [Transformation]? = nil) throws -> [[Instruction]] {
         var output: [[Instruction]] = []
         
-        let instructions: [Instruction] = try parsedInstructions()
+        let instructions = try self.asInstructions()
         
         guard instructions.count > 0 else {
             return output
@@ -509,53 +416,108 @@ private extension Path {
             }
         }
         
-        return output
+        guard let transforms = transformations else {
+            return output
+        }
+        
+        var transformedOutput: [[Instruction]] = []
+        
+        for subpath in output {
+            transformedOutput.append(subpath.map({ $0.applyingTransformations(transforms) }))
+        }
+        
+        return transformedOutput
+    }
+}
+
+private extension Path {
+    /// Deconstructs the `data` string into its component parts.
+    ///
+    func dataComponents() -> [String] {
+        var output: [String] = []
+        
+        var component: String = ""
+        
+        data.unicodeScalars.forEach { (character) in
+            // Account for exponential notation
+            if character == "e" {
+                component.append(String(character))
+                return
+            }
+            
+            if CharacterSet.letters.contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                output.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet.whitespaces.contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: ",").contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: "-").contains(character) {
+                // Account for exponential notation
+                if !component.isEmpty && component.last != "e" {
+                    output.append(component)
+                    component = ""
+                }
+                
+                component.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: ".").contains(character) {
+                component.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet.decimalDigits.contains(character) {
+                component.append(String(character))
+                
+                return
+            }
+            
+            print("UNHANDLED CHARACTER: \(character)")
+        }
+        
+        if !component.isEmpty {
+            output.append(component)
+            component = ""
+        }
+        
+        return output.filter({ !$0.isEmpty })
     }
 }
 
 extension Path: Equatable {
     public static func == (lhs: Path, rhs: Path) -> Bool {
         do {
-            let lhsInstructions = try lhs.instructions()
-            let rhsInstructions = try rhs.instructions()
+            let lhsInstructions = try lhs.asInstructions()
+            let rhsInstructions = try rhs.asInstructions()
             return lhsInstructions == rhsInstructions
         } catch {
             return false
         }
-    }
-}
-
-public extension Array where Element == Path {
-    func asInstructionSet(using transformations: [Transformation]) throws -> InstructionSet {
-        var include: [Instruction] = []
-        var exclude: [Instruction] = []
-        
-        try forEach {
-            let vectorInstructions = try $0.instructions(using: transformations)
-            
-            let includedInstructions: [Instruction]
-            let excludedInstructions: [Instruction]
-            
-            switch vectorInstructions.count {
-            case 2:
-                includedInstructions = vectorInstructions[0]
-                excludedInstructions = vectorInstructions[1]
-            default:
-                var i: [Instruction] = []
-                let e: [Instruction] = []
-                
-                vectorInstructions.forEach({ (instructions) in
-                    i.append(contentsOf: instructions)
-                })
-                
-                includedInstructions = i
-                excludedInstructions = e
-            }
-            
-            include.append(contentsOf: includedInstructions)
-            exclude.append(contentsOf: excludedInstructions)
-        }
-        
-        return (include, exclude)
     }
 }

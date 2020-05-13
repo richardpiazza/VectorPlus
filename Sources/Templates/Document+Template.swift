@@ -17,66 +17,60 @@ public extension Document {
         }
     }
     
-    func asInstructionSet() throws -> InstructionSet {
-        var instructionSet = InstructionSet([], [])
-        
-        let transformations: [Transformation] = []
+    func asSubpaths() throws -> [[Instruction]] {
+        var output: [[Instruction]] = []
         
         if let groups = self.groups {
-            for group in groups {
-                let set = try group.asInstructionSet(using: transformations)
-                instructionSet.include.append(contentsOf: set.include)
-                instructionSet.exclude.append(contentsOf: set.exclude)
+            try groups.forEach { (group) in
+                let subpaths = try group.asSubpaths()
+                output.append(contentsOf: subpaths)
             }
         }
         
         if let paths = self.paths {
-            let pathInstructionSets = try paths.asInstructionSet(using: transformations)
-            instructionSet.include.append(contentsOf: pathInstructionSets.include)
-            instructionSet.exclude.append(contentsOf: pathInstructionSets.exclude)
+            try paths.forEach({ (path) in
+                let subpaths = try path.asSubpaths()
+                output.append(contentsOf: subpaths)
+            })
         }
         
-        return instructionSet
+        return output
     }
 }
 
 private extension Document {
     func asFileTemplate() throws -> String {
-        let instructions = try asTemplateInstructions()
+        let instructions = try asCoreGraphicsDescription()
         
         return fileTemplate
             .replacingOccurrences(of: "{{name}}", with: name)
-            .replacingOccurrences(of: "{{instructions}}", with: instructions.included)
-            .replacingOccurrences(of: "{{exclusion_instructions}}", with: instructions.excluded)
+            .replacingOccurrences(of: "{{instructions}}", with: instructions)
     }
     
     func asImageViewSubclass() throws -> String {
-        let instructions = try asTemplateInstructions()
+        let instructions = try asCoreGraphicsDescription()
         
         return imageViewSubclassTemplate
             .replacingOccurrences(of: "{{name}}", with: name)
             .replacingOccurrences(of: "{{width}}", with: String(format: "%.1f", originalSize.width))
             .replacingOccurrences(of: "{{height}}", with: String(format: "%.1f", originalSize.height))
-            .replacingOccurrences(of: "{{instructions}}", with: instructions.included)
-            .replacingOccurrences(of: "{{exclusion_instructions}}", with: instructions.excluded)
+            .replacingOccurrences(of: "{{instructions}}", with: instructions)
     }
     
-    func asTemplateInstructions() throws -> (included: String, excluded: String) {
-        let instructionSet = try asInstructionSet()
+    ///
+    func asCoreGraphicsDescription(variableName: String = "path") throws -> String {
+        var outputs: [String] = []
         
-        let included = instructionSet.include.map { (vectorInstruction) -> String in
-            let cgMethod = vectorInstruction.coreGraphicsDescription(originalSize: originalSize)
-            return String(format: "includedPath%@", cgMethod)
+        let subpaths = try asSubpaths()
+        
+        subpaths.forEach { (path) in
+            path.forEach { (instruction) in
+                let method = instruction.coreGraphicsDescription(originalSize: originalSize)
+                let code = String(format: "%@%@", variableName, method)
+                outputs.append(code)
+            }
         }
         
-        let excluded = instructionSet.exclude.map { (vectorInstruction) -> String in
-            let cgMethod = vectorInstruction.coreGraphicsDescription(originalSize: originalSize)
-            return String(format: "excludedPath%@", cgMethod)
-        }
-        
-        let includedMerged = included.joined(separator: "\n        ")
-        let excludedMerged = excluded.joined(separator: "\n        ")
-        
-        return (includedMerged, excludedMerged)
+        return outputs.joined(separator: "\n        ")
     }
 }

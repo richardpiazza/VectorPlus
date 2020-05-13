@@ -126,23 +126,8 @@ public class {{name}}: UIImageView {
             let radius = max(size.width / 2.0, size.height / 2.0)
             let center = CGPoint(x: size.width / 2.0, y: size.height / 2.0)
             
-            let includedPath = CGMutablePath()
+            let path = CGMutablePath()
             {{instructions}}
-            
-            let excludedPath = CGMutablePath()
-            {{exclusion_instructions}}
-            
-            let path: CGPath
-            if excludedPath.isEmpty {
-                path = includedPath
-            } else {
-                let bezierPath = UIBezierPath(cgPath: includedPath)
-                bezierPath.append(UIBezierPath(cgPath: excludedPath))
-                bezierPath.usesEvenOddFillRule = false
-                
-                path = bezierPath.cgPath
-            }
-            
             return path
         }
         

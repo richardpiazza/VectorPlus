@@ -56,29 +56,26 @@ public extension Group {
         
         return Transformation(value)
     }
-}
-
-public extension Group {
-    func asInstructionSet(using transformations: [Transformation] = []) throws -> InstructionSet {
-        var include: [Instruction] = []
-        var exclude: [Instruction] = []
+    
+    func asSubpaths(applying transformations: [Transformation]? = nil) throws -> [[Instruction]] {
+        var output: [[Instruction]] = []
         
-        var transforms = transformations
+        var transforms = transformations ?? []
         if let transformation = self.transformation {
             transforms.append(transformation)
         }
         
         if let circles = self.circles {
             for circle in circles {
-                let instructions = circle.asInstructions(using: transformations)
-                include.append(contentsOf: instructions)
+                let instructions = circle.asInstructions(using: transforms)
+                output.append(instructions)
             }
         }
         
         if let rectangles = self.rectangles {
             for rectangle in rectangles {
-                let instructions = rectangle.asInstructions(using: transformations)
-                include.append(contentsOf: instructions)
+                let instructions = rectangle.asInstructions(using: transforms)
+                output.append(instructions)
             }
         }
         
@@ -89,19 +86,18 @@ public extension Group {
             allPaths.append(contentsOf: paths)
         }
         
-        let pathInstructionSets = try allPaths.asInstructionSet(using: transforms)
-        include.append(contentsOf: pathInstructionSets.include)
-        exclude.append(contentsOf: pathInstructionSets.exclude)
-        
-        if let groups = self.groups {
-            try groups.forEach({
-                let instructionSet = try $0.asInstructionSet(using: transforms)
-                
-                include.append(contentsOf: instructionSet.include)
-                exclude.append(contentsOf: instructionSet.exclude)
-            })
+        try allPaths.forEach { (path) in
+            let subpath = try path.asSubpaths(applying: transforms)
+            output.append(contentsOf: subpath)
         }
         
-        return (include, exclude)
+        if let groups = self.groups {
+            try groups.forEach { (group) in
+                let subpaths = try group.asSubpaths(applying: transforms)
+                output.append(contentsOf: subpaths)
+            }
+        }
+        
+        return output
     }
 }
