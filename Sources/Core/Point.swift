@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Point {
+public struct Point: Equatable {
     public var x: Float
     public var y: Float
     

@@ -137,52 +137,40 @@ public extension Instruction {
     }
     
     func applying(transformations: [Transformation]) -> Instruction {
-        var points: [(x: Float, y: Float)] = []
+        var instruction = self
         
-        switch self {
-        case .close:
-            return self
-        case .move(let x, let y), .line(let x, let y), .circle(let x, let y, _), .rectangle(let x, let y, _, _, _, _):
-            points.append((x, y))
-        case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-            points.append((x, y))
-            points.append((cx1, cy1))
-            points.append((cx2, cy2))
-        case .quadraticCurve(let x, let y, let cX, let cY):
-            points.append((x, y))
-            points.append((cX, cY))
+        transformations.forEach { (transformation) in
+            instruction = instruction.applying(transformation: transformation)
         }
         
-        for transform in transformations {
-            switch transform {
-            case .translate(let xOffset, let yOffset):
-                let thePoints = points
-                for i in 0..<thePoints.count {
-                    points[i].x += xOffset
-                    points[i].y += yOffset
-                }
-            }
-        }
-        
-        switch self {
-        case .move:
-            return .move(x: points[0].x, y: points[0].y)
-        case .line:
-            return .line(x: points[0].x, y: points[0].y)
-        case .bezierCurve:
-            return .bezierCurve(x: points[0].x, y: points[0].y, cx1: points[1].x, cy1: points[1].y, cx2: points[2].x, cy2: points[2].y)
-        case .quadraticCurve:
-            return .quadraticCurve(x: points[0].x, y: points[0].y, cx: points[1].x, cy: points[1].y)
-        case .circle(_, _, let r):
-            return .circle(x: points[0].x, y: points[0].y, r: r)
-        case .rectangle(_, _, let w, let h, let rx, let ry):
-            return .rectangle(x: points[0].x, y: points[0].y, w: w, h: h, rx: rx, ry: ry)
-        case .close:
-            return self
-        }
+        return instruction
     }
 }
 
+// MARK: - Transformable
+extension Instruction: Transformable {
+    public func applying(transformation: Transformation) -> Instruction {
+        switch transformation {
+        case .translate(let _x, let _y):
+            switch self {
+            case .move(let x, let y):
+                return .move(x: x + _x, y: y + _y)
+            case .line(let x, let y):
+                return .line(x: x + _x, y: y + _y)
+            case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
+                return .bezierCurve(x: x + _x, y: y + _y, cx1: cx1 + _x, cy1: cy1 + _y, cx2: cx2 + _x, cy2: cy2 + _y)
+            case .quadraticCurve(let x, let y, let cx, let cy):
+                return .quadraticCurve(x: x + _x, y: y + _y, cx: cx + _x, cy: cy + _y)
+            case .circle(let x, let y, let r):
+                return .circle(x: x + _x, y: y + _y, r: r)
+            case .rectangle(let x, let y, let w, let h, let rx, let ry):
+                return .rectangle(x: x + _x, y: y + _y, w: w, h: h, rx: rx, ry: ry)
+            case .close:
+                return .close
+            }
+        }
+    }
+}
 
 // MARK: - CustomStringConvertible
 extension Instruction: CustomStringConvertible {

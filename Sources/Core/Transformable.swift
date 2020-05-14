@@ -1,5 +1,5 @@
 import Foundation
 
 public protocol Transformable {
-    var transformations: [Transformation] { get }
+    func applying(transformation: Transformation) -> Self
 }

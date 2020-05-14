@@ -49,8 +49,8 @@ public struct Group: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     }
 }
 
-// MARK: - Transformable
-extension Group: Transformable {
+// MARK: - TransformationRepresentable
+extension Group: TransformationRepresentable {
     public var transformations: [Transformation] {
         guard let value = transform, !value.isEmpty else {
             return []

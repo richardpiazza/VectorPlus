@@ -110,4 +110,32 @@ internal extension Instruction {
             throw Error.invalidArgumentPosition
         }
     }
+    
+    var pathData: String? {
+        switch self {
+        case .move(let x, let y):
+            return String(format: "%@%.5f,%.5f", Prefix.move.stringValue, x, y)
+        case .line(let x, let y):
+            return String(format: "%@%.5f,%.5f", Prefix.line.stringValue, x, y)
+        case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
+            return String(format: "%@%.5f,%.5f %.5f,%.5f %.5f,%.5f", Prefix.bezierCurve.stringValue, cx1, cy1, cx2, cy2, x, y)
+        case .quadraticCurve(let x, let y, let cx, let cy):
+            return String(format: "%@%.5f,%.5f %.5f,%.5f", Prefix.quadraticCurve.stringValue, cx, cy, x, y)
+        case .close:
+            return Prefix.close.stringValue
+        default:
+            return nil
+        }
+    }
+    
+    var polygonPoints: String? {
+        switch self {
+        case .move(let x, let y):
+            return String(format: "%.5f,%.5f", x, y)
+        case .line(let x, let y):
+            return String(format: "%.5f,%.5f", x, y)
+        default:
+            return nil
+        }
+    }
 }

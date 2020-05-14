@@ -90,17 +90,3 @@ extension Polygon: InstructionRepresentable {
         return instructions
     }
 }
-
-// MARK: - Instruction (polygonPoints)
-private extension Instruction {
-    var polygonPoints: String? {
-        switch self {
-        case .move(let x, let y):
-            return String(format: "%.5f,%.5f", x, y)
-        case .line(let x, let y):
-            return String(format: "%.5f,%.5f", x, y)
-        default:
-            return nil
-        }
-    }
-}

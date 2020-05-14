@@ -39,7 +39,7 @@ public extension InstructionRepresentable {
             }
         }
         
-        guard let transformable = self as? Transformable else {
+        guard let transformable = self as? TransformationRepresentable else {
             return subpaths
         }
         
@@ -61,7 +61,7 @@ public extension InstructionRepresentable {
         var output: [[Instruction]] = []
         
         var transforms = transformations
-        if let transformable = self as? Transformable {
+        if let transformable = self as? TransformationRepresentable {
             transforms.append(contentsOf: transformable.transformations)
         }
         

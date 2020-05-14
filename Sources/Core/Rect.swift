@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Rect {
+public struct Rect: Equatable {
     public var origin: Point
     public var size: Size
     
