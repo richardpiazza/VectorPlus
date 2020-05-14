@@ -1,12 +1,14 @@
 import Foundation
 import XMLCoder
+import Core
 
-/// A container element for grouping together related graphics elements
+/// A container element for grouping ([g](https://www.w3.org/TR/SVG11/struct.html#Groups)).
 ///
-/// A group of elements, as well as individual objects, can be given a name using the ‘id’ attribute.
-///
-/// [https://www.w3.org/TR/SVG11/struct.html#Groups](https://www.w3.org/TR/SVG11/struct.html#Groups)
-public class Group: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
+/// Grouping constructs, when used in conjunction with the ‘desc’ and ‘title’ elements, provide information
+/// about document structure and semantics.
+public struct Group: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
+    
+    /// Name of the element
     public var id: String?
     public var transform: String?
     public var groups: [Group]?
@@ -44,57 +46,53 @@ public class Group: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     }
     
     public init() {
-        
     }
 }
 
-public extension Group {
-    var transformation: Transformation? {
+// MARK: - Transformable
+extension Group: Transformable {
+    public var transformations: [Transformation] {
         guard let value = transform, !value.isEmpty else {
-            return nil
+            return []
         }
         
-        return Transformation(value)
+        let transforms = value.components(separatedBy: " ")
+        return transforms.compactMap({ Transformation($0) })
     }
-    
-    func asSubpaths(applying transformations: [Transformation]? = nil) throws -> [[Instruction]] {
-        var output: [[Instruction]] = []
-        
-        var transforms = transformations ?? []
-        if let transformation = self.transformation {
-            transforms.append(transformation)
-        }
+}
+
+// MARK: - InstructionRepresentable
+extension Group: InstructionRepresentable {
+    public var instructions: [Instruction] {
+        var output: [Instruction] = []
         
         if let circles = self.circles {
-            for circle in circles {
-                let instructions = circle.asInstructions(using: transforms)
-                output.append(instructions)
+            circles.forEach { (circle) in
+                output.append(contentsOf: circle.instructions)
             }
         }
         
         if let rectangles = self.rectangles {
-            for rectangle in rectangles {
-                let instructions = rectangle.asInstructions(using: transforms)
-                output.append(instructions)
+            rectangles.forEach { (rectangle) in
+                output.append(contentsOf: rectangle.instructions)
             }
         }
         
-        var allPaths = paths ?? []
-        
         if let polygons = self.polygons {
-            let paths = polygons.map({ $0.asPath() })
-            allPaths.append(contentsOf: paths)
+            polygons.forEach { (polygon) in
+                output.append(contentsOf: polygon.instructions)
+            }
         }
         
-        try allPaths.forEach { (path) in
-            let subpath = try path.asSubpaths(applying: transforms)
-            output.append(contentsOf: subpath)
+        if let paths = self.paths {
+            paths.forEach { (path) in
+                output.append(contentsOf: path.instructions)
+            }
         }
         
         if let groups = self.groups {
-            try groups.forEach { (group) in
-                let subpaths = try group.asSubpaths(applying: transforms)
-                output.append(contentsOf: subpaths)
+            groups.forEach { (group) in
+                output.append(contentsOf: group.instructions)
             }
         }
         

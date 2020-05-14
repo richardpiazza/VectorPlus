@@ -15,26 +15,6 @@ public extension Document {
             return try asImageViewSubclass()
         }
     }
-    
-    func asSubpaths() throws -> [[Instruction]] {
-        var output: [[Instruction]] = []
-        
-        if let groups = self.groups {
-            try groups.forEach { (group) in
-                let subpaths = try group.asSubpaths()
-                output.append(contentsOf: subpaths)
-            }
-        }
-        
-        if let paths = self.paths {
-            try paths.forEach({ (path) in
-                let subpaths = try path.asSubpaths()
-                output.append(contentsOf: subpaths)
-            })
-        }
-        
-        return output
-    }
 }
 
 private extension Document {
@@ -60,7 +40,7 @@ private extension Document {
     func asCoreGraphicsDescription(variableName: String = "path") throws -> String {
         var outputs: [String] = []
         
-        let subpaths = try asSubpaths()
+        let subpaths = try self.subpaths()
         
         subpaths.forEach { (path) in
             path.forEach { (instruction) in

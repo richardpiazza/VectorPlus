@@ -1,6 +1,6 @@
 import Foundation
+import Core
 import SVG
-
 #if canImport(UIKit)
 import UIKit
 
@@ -13,7 +13,7 @@ public extension Document {
         let mutablePath = CGMutablePath()
         subpaths.forEach { (path) in
             path.forEach { (instruction) in
-                mutablePath.addInstruction(instruction, originalSize: originalSize, outputSize: size)
+                mutablePath.addInstruction(instruction, originalSize: originalSize, outputSize: size.size)
             }
         }
         
@@ -25,10 +25,7 @@ public extension Document {
             return nil
         }
         
-        let subpaths: [[Instruction]]
-        do {
-            subpaths = try asSubpaths()
-        } catch {
+        guard let subpaths = try? asSubpaths() else {
             return nil
         }
         

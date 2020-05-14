@@ -1,5 +1,6 @@
 import Foundation
 import ArgumentParser
+import Core
 import SVG
 import Translation
 

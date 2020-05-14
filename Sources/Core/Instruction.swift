@@ -132,33 +132,11 @@ public extension Instruction {
         }
     }
     
-    var point: (x: Float, y: Float) {
-        return (x: x, y: y)
+    var point: Point {
+        return Point(x: x, y: y)
     }
     
-    var lastControlPoint: (x: Float, y: Float)? {
-        switch self {
-        case .bezierCurve(_, _, _, _, let cx2, let cy2):
-            return (x: cx2, y: cy2)
-        case .quadraticCurve(_, _, let cx, let cy):
-            return (x: cx, y: cy)
-        default:
-            return nil
-        }
-    }
-    
-    /// A mirror representation of the last control point.
-    ///
-    /// Used when determining _smooth_ Cubic Bézier Curves.
-    var lastControlPointMirror: (x: Float, y: Float)? {
-        guard let lastControlPoint = self.lastControlPoint else {
-            return nil
-        }
-        
-        return mirror(controlPoint: lastControlPoint, endPoint: point)
-    }
-    
-    func applyingTransformations(_ transformations: [Transformation]) -> Instruction {
+    func applying(transformations: [Transformation]) -> Instruction {
         var points: [(x: Float, y: Float)] = []
         
         switch self {
@@ -205,100 +183,8 @@ public extension Instruction {
     }
 }
 
-internal extension Instruction {
-    var isComplete: Bool {
-        switch self {
-        case .close:
-            return true
-        case .move(let x, let y), .line(let x, let y), .circle(let x, let y, _), .rectangle(let x, let y, _, _, _, _):
-            if x.isNaN || y.isNaN {
-                return false
-            }
-            
-            return true
-        case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-            if x.isNaN || y.isNaN || cx1.isNaN || cy1.isNaN || cx2.isNaN || cy2.isNaN {
-                return false
-            }
-            
-            return true
-        case .quadraticCurve(let x, let y, let cx, let cy):
-            if x.isNaN || y.isNaN || cx.isNaN || cy.isNaN {
-                return false
-            }
-            
-            return true
-        }
-    }
-    
-    func adjusting(relativeValue: Float, at argumentPosition: Int) throws -> Instruction {
-        switch self {
-        case .move(let x, let y):
-            switch argumentPosition {
-            case 0:
-                return .move(x: (x.isNaN) ? relativeValue : x + relativeValue, y: y)
-            case 1:
-                return .move(x: x, y: (y.isNaN) ? relativeValue : y + relativeValue)
-            default:
-                throw Error.invalidArgumentPosition
-            }
-        case .line(let x, let y):
-            switch argumentPosition {
-            case 0:
-                return .line(x: (x.isNaN) ? relativeValue : x + relativeValue, y: y)
-            case 1:
-                return .line(x: x, y: (y.isNaN) ? relativeValue : y + relativeValue)
-            default:
-                throw Error.invalidArgumentPosition
-            }
-        case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-            switch argumentPosition {
-            case 0:
-                return .bezierCurve(x: (x.isNaN) ? relativeValue : x + relativeValue, y: y, cx1: cx1, cy1: cy1, cx2: cx2, cy2: cy2)
-            case 1:
-                return .bezierCurve(x: x, y: (y.isNaN) ? relativeValue : y + relativeValue, cx1: cx1, cy1: cy1, cx2: cx2, cy2: cy2)
-            case 2:
-                return .bezierCurve(x: x, y: y, cx1: (cx1.isNaN) ? relativeValue : cx1 + relativeValue, cy1: cy1, cx2: cx2, cy2: cy2)
-            case 3:
-                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: (cy1.isNaN) ? relativeValue : cy1 + relativeValue, cx2: cx2, cy2: cy2)
-            case 4:
-                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: cy1, cx2: (cx2.isNaN) ? relativeValue : cx2 + relativeValue, cy2: cy2)
-            case 5:
-                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: cy1, cx2: cx2, cy2: (cy2.isNaN) ? relativeValue : cy2 + relativeValue)
-            default:
-                throw Error.invalidArgumentPosition
-            }
-        case .quadraticCurve(let x, let y, let cx, let cy):
-            switch argumentPosition {
-            case 0:
-                return .quadraticCurve(x: (x.isNaN) ? relativeValue : x + relativeValue, y: y, cx: cx, cy: cy)
-            case 1:
-                return .quadraticCurve(x: x, y: (y.isNaN) ? relativeValue : y + relativeValue, cx: cx, cy: cy)
-            case 2:
-                return .quadraticCurve(x: x, y: y, cx: (cx.isNaN) ? relativeValue : cx + relativeValue, cy: cy)
-            case 3:
-                return .quadraticCurve(x: x, y: y, cx: cx, cy: (cy.isNaN) ? relativeValue : cy + relativeValue)
-            default:
-                throw Error.invalidArgumentPosition
-            }
-        case .circle:
-            throw Error.invalidArgumentPosition
-        case .rectangle:
-            throw Error.invalidArgumentPosition
-        case .close:
-            throw Error.invalidArgumentPosition
-        }
-    }
-}
 
-private extension Instruction {
-    func mirror(controlPoint: (Float, Float), endPoint: (Float, Float)) -> (x: Float, y: Float) {
-        let x = endPoint.0 + (endPoint.0 - controlPoint.0)
-        let y = endPoint.1 + (endPoint.1 - controlPoint.1)
-        return (x, y)
-    }
-}
-
+// MARK: - CustomStringConvertible
 extension Instruction: CustomStringConvertible {
     /// A description of the the instruction that can be used to _print-out_ the values in the form of the enumeration.
     public var description: String {
@@ -323,4 +209,5 @@ extension Instruction: CustomStringConvertible {
     }
 }
 
+// MARK: - Equatable
 extension Instruction: Equatable {}

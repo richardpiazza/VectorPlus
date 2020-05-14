@@ -1,8 +1,15 @@
 import Foundation
 import XMLCoder
+import Core
 
+/// The closed shape consisting of a set of connected straight line segments.
+///
+/// If an odd number of coordinates is provided, then the element is in error.
+///
+/// [Polygon Specification](https://www.w3.org/TR/SVG11/shapes.html#PolygonElement)
 public class Polygon: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     
+    /// The points that make up the polygon.
     public var points: String = ""
     
     enum CodingKeys: String, CodingKey {
@@ -18,48 +25,82 @@ public class Polygon: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     }
     
     public init() {
-        
     }
     
     public init(points: String) {
         self.points = points
     }
+    
+    public init(instructions: [Instruction]) {
+        let pointsData = instructions.compactMap({ $0.polygonPoints })
+        points = pointsData.joined(separator: " ")
+    }
 }
 
-public extension Polygon {
-    func asPath() -> Path {
-        let path = Path()
-        
-        guard !points.isEmpty else {
-            return path
-        }
-        
-        let components = points.components(separatedBy: " ")
+// MARK: - CustomStringConvertible
+extension Polygon: CustomStringConvertible {
+    public var description: String {
+        let instructionData = instructions.map({ $0.description }).joined(separator: " ")
+        return String(format: "<polygon points=\"%@\" />", instructionData)
+    }
+}
+
+// MARK: - InstructionRepresentable
+extension Polygon: InstructionRepresentable {
+    public var instructions: [Instruction] {
+        let pairs = points.components(separatedBy: " ")
+        let components = pairs.flatMap({ $0.components(separatedBy: ",") })
         guard components.count > 0 else {
-            return path
+            return []
         }
         
         guard components.count % 2 == 0 else {
-            return path
+            // An odd number of components means that parsing probably failed
+            return []
         }
         
-        var index: Int = 0
+        var instructions: [Instruction] = []
         
+        var firstValue: Bool = true
         for (idx, component) in components.enumerated() {
-            if idx == index {
-                if index == 0 {
-                    path.data.append(String(format: "%@%@", Instruction.Prefix.move.stringValue, component))
+            guard let value = Float(component) else {
+                return instructions
+            }
+            
+            if firstValue {
+                if idx == 0 {
+                    instructions.append(.move(x: value, y: .nan))
                 } else {
-                    path.data.append(String(format: "%@%@", Instruction.Prefix.line.stringValue, component))
+                    instructions.append(.line(x: value, y: .nan))
                 }
+                firstValue = false
             } else {
-                path.data.append(String(format: ",%@ ", component))
-                index += 2
+                let count = instructions.count
+                guard let modified = try? instructions.last?.adjusting(relativeValue: value, at: 1) else {
+                    return instructions
+                }
+                
+                instructions[count - 1] = modified
+                firstValue = true
             }
         }
         
-        path.data.append(Instruction.Prefix.close.stringValue)
+        instructions.append(.close)
         
-        return path
+        return instructions
+    }
+}
+
+// MARK: - Instruction (polygonPoints)
+private extension Instruction {
+    var polygonPoints: String? {
+        switch self {
+        case .move(let x, let y):
+            return String(format: "%.5f,%.5f", x, y)
+        case .line(let x, let y):
+            return String(format: "%.5f,%.5f", x, y)
+        default:
+            return nil
+        }
     }
 }

@@ -1,11 +1,11 @@
 import Foundation
-import CoreGraphics
 import XMLCoder
+import Core
 
 /// SVG is a language for describing two-dimensional graphics in XML.
 ///
 /// [https://www.w3.org/TR/SVG11/](https://www.w3.org/TR/SVG11/)
-public class Document: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
+public struct Document: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     
     public var viewBox: String?
     public var width: String?
@@ -57,7 +57,6 @@ public class Document: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     }
     
     public init() {
-        
     }
     
     public init(width: Int, height: Int) {
@@ -77,23 +76,45 @@ public extension Document {
     /// Original size of the document image.
     ///
     /// Primarily uses the `viewBox` attribute, and will fallback to the 'pixelSize'
-    var originalSize: CGSize {
+    var originalSize: Size {
         return (viewBoxSize ?? pixelSize) ?? .zero
     }
     
     /// Size of the design in a square 'viewBox'.
     ///
     /// All paths created by this framework are outputed in a 'square'.
-    var outputSize: CGSize {
-        let size = self.originalSize
+    var outputSize: Size {
+        let size = originalSize
         let maxDimension = max(size.width, size.height)
-        return CGSize(width: maxDimension, height: maxDimension)
+        return Size(width: maxDimension, height: maxDimension)
     }
 }
 
+// MARK: - InstructionRepresentable
+extension Document: InstructionRepresentable {
+    public var instructions: [Instruction] {
+        var output: [Instruction] = []
+        
+        if let paths = self.paths {
+            paths.forEach { (path) in
+                output.append(contentsOf: path.instructions)
+            }
+        }
+        
+        if let groups = self.groups {
+            groups.forEach { (group) in
+                output.append(contentsOf: group.instructions)
+            }
+        }
+        
+        return output
+    }
+}
+
+// MARK: - Private
 private extension Document {
     /// Size derived from the 'viewbox' document attribute
-    var viewBoxSize: CGSize? {
+    var viewBoxSize: Size? {
         guard let viewBox = self.viewBox else {
             return nil
         }
@@ -111,11 +132,11 @@ private extension Document {
             return nil
         }
         
-        return CGSize(width: width, height: height)
+        return Size(width: width, height: height)
     }
     
     /// Size derived from the 'width' & 'height' document attributes
-    var pixelSize: CGSize? {
+    var pixelSize: Size? {
         guard let width = self.width, !width.isEmpty else {
             return nil
         }
@@ -131,6 +152,6 @@ private extension Document {
             return nil
         }
         
-        return CGSize(width: w, height: h)
+        return Size(width: w, height: h)
     }
 }

@@ -1,4 +1,5 @@
 import XCTest
+import Core
 import SVG
 
 final class PathTests: XCTestCase {
@@ -7,13 +8,15 @@ final class PathTests: XCTestCase {
         ("testSketchStylePathData", testSketchStylePathData),
         ("testAppleSymbolsStylePathData", testAppleSymbolsStylePathData),
         ("testPixelmatorProStylePathData", testPixelmatorProStylePathData),
+        ("testPathImplementation", testPathImplementation),
+        ("testRelativePath", testRelativePath),
     ]
     
     func testSketchStylePathData() throws {
         let pathData = "M22,40.333 C11.875,40.333 3.667,32.125 3.667,22 C3.667,21.988 3.668,21.976 3.668,21.964 L14.481,21.964 L19.74,34.229 L25.544,18.92 L27.31,21.964 L33,21.964 C34.013,21.964 34.833,21.143 34.833,20.131 C34.833,19.118 34.013,18.297 33,18.297 L29.422,18.297 L24.849,10.413 L19.531,24.437 L16.898,18.297 L4.041,18.297 C5.754,9.947 13.143,3.666 22,3.666 C32.125,3.666 40.333,11.875 40.333,22 C40.333,32.125 32.125,40.333 22,40.333 M22,0 C9.85,0 0,9.85 0,22 C0,34.15 9.85,44 22,44 C34.15,44 44,34.15 44,22 C44,9.85 34.15,0 22,0"
         let path = Path(data: pathData)
         
-        let instructionSubpaths = try path.asSubpaths()
+        let instructionSubpaths = try path.subpaths()
         
         XCTAssertEqual(instructionSubpaths.count, 2)
         
@@ -46,7 +49,7 @@ final class PathTests: XCTestCase {
         let pathData = "M 11.709 2.91016 C 17.1582 2.91016 21.6699 -1.60156 21.6699 -7.05078 C 21.6699 -12.4902 17.1484 -17.0117 11.6992 -17.0117 C 6.25977 -17.0117 1.74805 -12.4902 1.74805 -7.05078 C 1.74805 -1.60156 6.26953 2.91016 11.709 2.91016 Z M 11.709 1.25 C 7.09961 1.25 3.41797 -2.44141 3.41797 -7.05078 C 3.41797 -11.6504 7.08984 -15.3516 11.6992 -15.3516 C 16.3086 -15.3516 20 -11.6504 20.0098 -7.05078 C 20.0195 -2.44141 16.3184 1.25 11.709 1.25 Z M 11.6895 -2.41211 C 12.207 -2.41211 12.5195 -2.77344 12.5195 -3.33984 L 12.5195 -6.23047 L 15.5762 -6.23047 C 16.123 -6.23047 16.5039 -6.51367 16.5039 -7.03125 C 16.5039 -7.55859 16.1426 -7.86133 15.5762 -7.86133 L 12.5195 -7.86133 L 12.5195 -10.9277 C 12.5195 -11.5039 12.207 -11.8555 11.6895 -11.8555 C 11.1719 -11.8555 10.8789 -11.4844 10.8789 -10.9277 L 10.8789 -7.86133 L 7.83203 -7.86133 C 7.26562 -7.86133 6.89453 -7.55859 6.89453 -7.03125 C 6.89453 -6.51367 7.28516 -6.23047 7.83203 -6.23047 L 10.8789 -6.23047 L 10.8789 -3.33984 C 10.8789 -2.79297 11.1719 -2.41211 11.6895 -2.41211 Z"
         let path = Path(data: pathData)
         
-        let instructionSubpaths = try path.asSubpaths()
+        let instructionSubpaths = try path.subpaths()
         
         XCTAssertEqual(instructionSubpaths.count, 3)
     }
@@ -55,7 +58,7 @@ final class PathTests: XCTestCase {
         let pathData = "M96.083 307 C82.23 307 71 295.77 71 281.917 L71 145.75 C71 131.899 82.23 120.667 96.083 120.667 96.083 120.667 109.056 120.667 128.522 120.667 128.522 92.001 151.578 92 155.425 92 185.826 92 210.976 92.056 243.595 92.056 252.61 92.056 271.87 95.585 271.87 120.667 291.116 120.667 303.916 120.667 303.916 120.667 317.768 120.667 329 131.899 329 145.75 L329 281.917 C329 295.77 317.768 307 303.916 307 L96.083 307 Z M200 264 C231.663 264 257.333 238.332 257.333 206.667 257.333 175.004 231.663 149.334 200 149.334 168.335 149.334 142.666 175.004 142.666 206.667 142.666 238.332 168.335 264 200 264 Z M200 235.334 C184.167 235.334 171.333 222.499 171.333 206.667 171.333 190.836 184.167 178 200 178 215.831 178 228.667 190.836 228.667 206.667 228.667 222.499 215.831 235.334 200 235.334 Z"
         let path = Path(data: pathData)
         
-        let instructionSubpaths = try path.asSubpaths()
+        let instructionSubpaths = try path.subpaths()
         
         XCTAssertEqual(instructionSubpaths.count, 3)
     }
@@ -73,9 +76,9 @@ final class PathTests: XCTestCase {
         XCTAssertEqual(appleSymbolsPath, pixelmatorPath)
         XCTAssertEqual(pixelmatorPath, sketchPath)
         
-        let sketchInstructions = try sketchPath.asSubpaths()
-        let appleSymbolsInstructions = try appleSymbolsPath.asSubpaths()
-        let pixelmatorInstructions = try pixelmatorPath.asSubpaths()
+        let sketchInstructions = try sketchPath.subpaths()
+        let appleSymbolsInstructions = try appleSymbolsPath.subpaths()
+        let pixelmatorInstructions = try pixelmatorPath.subpaths()
         
         XCTAssertEqual(sketchInstructions, appleSymbolsInstructions)
         XCTAssertEqual(appleSymbolsInstructions, pixelmatorInstructions)
@@ -89,8 +92,8 @@ final class PathTests: XCTestCase {
         let absolutePath = Path(data: absolute)
         let relativePath = Path(data: relative)
         
-        let absoluteInstructions = try absolutePath.asSubpaths()
-        let relativeInstructions = try relativePath.asSubpaths()
+        let absoluteInstructions = try absolutePath.subpaths()
+        let relativeInstructions = try relativePath.subpaths()
         
         XCTAssertEqual(absoluteInstructions.count, relativeInstructions.count)
         

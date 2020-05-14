@@ -1,13 +1,13 @@
 import Foundation
 import XMLCoder
+import Core
 
-/// Represents the outline of a shape
+/// A [Path](https://www.w3.org/TR/SVG11/paths.html) represents the outline of a shape
 ///
-/// A path is defined by including a ‘path’ element in a SVG document which contains a **d="(path data)"** attribute, where the **‘d’** attribute contains the
-/// moveto, line, curve (both cubic and quadratic Béziers), arc and closepath instructions.
-///
-/// The full 'Path' specification can be found at [https://www.w3.org/TR/SVG11/paths.html](https://www.w3.org/TR/SVG11/paths.html)
-public class Path: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
+/// A path is defined by including a ‘path’ element in a SVG document which contains a **d="(path data)"**
+/// attribute, where the **‘d’** attribute contains the moveto, line, curve (both cubic and quadratic Béziers),
+/// arc and closepath instructions.
+public struct Path: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     
     /// The definition of the outline of a shape.
     public var data: String = ""
@@ -31,19 +31,128 @@ public class Path: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     public init(data: String) {
         self.data = data
     }
+    
+    public init(instructions: [Instruction]) {
+        let instructionData = instructions.compactMap({ $0.pathData })
+        data = instructionData.joined(separator: " ")
+    }
 }
 
-public extension Path {
+// MARK: - InstructionRepresentable
+extension Path: InstructionRepresentable {
+    public var instructions: [Instruction] {
+        return (try? asInstructions()) ?? []
+    }
+}
+
+// MARK: - CustomStringConvertible
+extension Path: CustomStringConvertible {
+    public var description: String {
+        let instructionData = instructions.map({ $0.description }).joined(separator: " ")
+        return String(format: "<path d=\"%@\" />", instructionData)
+    }
+}
+
+// MARK: - Equatable
+extension Path: Equatable {
+    public static func == (lhs: Path, rhs: Path) -> Bool {
+        do {
+            let lhsInstructions = try lhs.asInstructions()
+            let rhsInstructions = try rhs.asInstructions()
+            return lhsInstructions == rhsInstructions
+        } catch {
+            return false
+        }
+    }
+}
+
+// MARK: - Private
+private extension Path {
+    /// Deconstructs the `data` string into its component parts.
+    func dataComponents() -> [String] {
+        var output: [String] = []
+        
+        var component: String = ""
+        
+        data.unicodeScalars.forEach { (character) in
+            // Account for exponential notation
+            if character == "e" {
+                component.append(String(character))
+                return
+            }
+            
+            if CharacterSet.letters.contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                output.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet.whitespaces.contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: ",").contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: "-").contains(character) {
+                // Account for exponential notation
+                if !component.isEmpty && component.last != "e" {
+                    output.append(component)
+                    component = ""
+                }
+                
+                component.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: ".").contains(character) {
+                component.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet.decimalDigits.contains(character) {
+                component.append(String(character))
+                
+                return
+            }
+            
+            print("UNHANDLED CHARACTER: \(character)")
+        }
+        
+        if !component.isEmpty {
+            output.append(component)
+            component = ""
+        }
+        
+        return output.filter({ !$0.isEmpty })
+    }
+    
     /// A collection of all the `Instruction`s represented by the 'data'
-    ///
-    ///
     func asInstructions() throws -> [Instruction] {
         var output: [Instruction] = []
         var instruction: Instruction?
         
         var positioning: Instruction.Positioning = .absolute
-        var pathOrigin: (x: Float, y: Float) = (.nan, .nan)
-        var currentPoint: (x: Float, y: Float) = (0.0, 0.0)
+        var pathOrigin: Point = .nan
+        var currentPoint: Point = .zero
         var argumentPosition: Int = 0
         var singleValue: Bool = false
         
@@ -384,140 +493,24 @@ public extension Path {
         
         return output
     }
-    
-    /// All instructions regrouped as individual subpaths ('close' terminated).
-    ///
-    /// A 'set' of instructions is determined by spliting the `commands` whenever a 'move' instruction is encountered.
-    func asSubpaths(applying transformations: [Transformation]? = nil) throws -> [[Instruction]] {
-        var output: [[Instruction]] = []
-        
-        let instructions = try self.asInstructions()
-        
-        guard instructions.count > 0 else {
-            return output
-        }
-        
-        guard case .move = instructions.first else {
-            print("First Instruction Invalid")
-            return output
-        }
-        
-        var index: Int = -1
-        
-        for instruction in instructions {
-
-            switch instruction {
-            case .move:
-                output.append([])
-                index += 1
-                fallthrough
-            default:
-                output[index].append(instruction)
-            }
-        }
-        
-        guard let transforms = transformations else {
-            return output
-        }
-        
-        var transformedOutput: [[Instruction]] = []
-        
-        for subpath in output {
-            transformedOutput.append(subpath.map({ $0.applyingTransformations(transforms) }))
-        }
-        
-        return transformedOutput
-    }
 }
 
-private extension Path {
-    /// Deconstructs the `data` string into its component parts.
-    ///
-    func dataComponents() -> [String] {
-        var output: [String] = []
-        
-        var component: String = ""
-        
-        data.unicodeScalars.forEach { (character) in
-            // Account for exponential notation
-            if character == "e" {
-                component.append(String(character))
-                return
-            }
-            
-            if CharacterSet.letters.contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                output.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet.whitespaces.contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: ",").contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: "-").contains(character) {
-                // Account for exponential notation
-                if !component.isEmpty && component.last != "e" {
-                    output.append(component)
-                    component = ""
-                }
-                
-                component.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: ".").contains(character) {
-                component.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet.decimalDigits.contains(character) {
-                component.append(String(character))
-                
-                return
-            }
-            
-            print("UNHANDLED CHARACTER: \(character)")
-        }
-        
-        if !component.isEmpty {
-            output.append(component)
-            component = ""
-        }
-        
-        return output.filter({ !$0.isEmpty })
-    }
-}
-
-extension Path: Equatable {
-    public static func == (lhs: Path, rhs: Path) -> Bool {
-        do {
-            let lhsInstructions = try lhs.asInstructions()
-            let rhsInstructions = try rhs.asInstructions()
-            return lhsInstructions == rhsInstructions
-        } catch {
-            return false
+// MARK: - Instruction (pathData)
+private extension Instruction {
+    var pathData: String? {
+        switch self {
+        case .move(let x, let y):
+            return String(format: "%@%.5f,%.5f", Prefix.move.stringValue, x, y)
+        case .line(let x, let y):
+            return String(format: "%@%.5f,%.5f", Prefix.line.stringValue, x, y)
+        case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
+            return String(format: "%@%.5f,%.5f %.5f,%.5f %.5f,%.5f", Prefix.bezierCurve.stringValue, cx1, cy1, cx2, cy2, x, y)
+        case .quadraticCurve(let x, let y, let cx, let cy):
+            return String(format: "%@%.5f,%.5f %.5f,%.5f", Prefix.quadraticCurve.stringValue, cx, cy, x, y)
+        case .close:
+            return Prefix.close.stringValue
+        default:
+            return nil
         }
     }
 }

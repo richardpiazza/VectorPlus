@@ -13,7 +13,11 @@ let package = Package(
     products: [
         .executable(
             name: "vectorplus",
-            targets: ["VectorPlus"]
+            targets: ["Executable"]
+        ),
+        .library(
+            name: "Core",
+            targets: ["Core"]
         ),
         .library(
             name: "SVG",
@@ -36,20 +40,24 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "VectorPlus",
-            dependencies: ["SVG", "Translation", .product(name: "ArgumentParser", package: "swift-argument-parser")]
+            name: "Executable",
+            dependencies: ["Core", "SVG", "Translation", .product(name: "ArgumentParser", package: "swift-argument-parser")]
+        ),
+        .target(
+            name: "Core",
+            dependencies: []
         ),
         .target(
             name: "SVG",
-            dependencies: ["XMLCoder"]
+            dependencies: ["Core", "XMLCoder"]
         ),
         .target(
             name: "Translation",
-            dependencies: ["SVG"]
+            dependencies: ["Core", "SVG"]
         ),
         .testTarget(
             name: "VectorPlusTests",
-            dependencies: ["VectorPlus", "SVG", "Translation"]
+            dependencies: ["Executable", "Core", "SVG", "Translation"]
         ),
     ]
 )
