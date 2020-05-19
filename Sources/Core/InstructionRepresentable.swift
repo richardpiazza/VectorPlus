@@ -1,7 +1,7 @@
 import Foundation
 
 public protocol InstructionRepresentable {
-    var instructions: [Instruction] { get }
+    func instructions() throws ->  [Instruction]
 }
 
 public extension InstructionRepresentable {
@@ -15,7 +15,9 @@ public extension InstructionRepresentable {
     ///
     /// - returns: A collection of subpaths
     /// - throws: `Instruction.Error`
-    func subpaths() throws -> [[Instruction]] {
+    func subpaths() throws -> [Subpath] {
+        let instructions = try self.instructions()
+        
         guard instructions.count > 0 else {
             return []
         }
@@ -28,7 +30,6 @@ public extension InstructionRepresentable {
         var index: Int = -1
         
         for instruction in instructions {
-
             switch instruction {
             case .move:
                 subpaths.append([])
@@ -39,41 +40,6 @@ public extension InstructionRepresentable {
             }
         }
         
-        guard let transformable = self as? TransformationRepresentable else {
-            return subpaths
-        }
-        
-        var transformedSubpaths: [[Instruction]] = []
-        
-        for subpath in subpaths {
-            var path = [Instruction]()
-            subpath.forEach { (instruction) in
-                path.append(instruction.applying(transformations: transformable.transformations))
-            }
-            transformedSubpaths.append(path)
-        }
-        
-        return transformedSubpaths
-    }
-    
-    
-    func subpaths(applying transformations: [Transformation]) throws -> [[Instruction]] {
-        var output: [[Instruction]] = []
-        
-        var transforms = transformations
-        if let transformable = self as? TransformationRepresentable {
-            transforms.append(contentsOf: transformable.transformations)
-        }
-        
-        let subpaths = try self.subpaths()
-        subpaths.forEach { (subpath) in
-            var set = [Instruction]()
-            subpath.forEach { (instruction) in
-                set.append(instruction.applying(transformations: transformations))
-            }
-            output.append(set)
-        }
-        
-        return output
+        return subpaths
     }
 }

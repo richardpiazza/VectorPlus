@@ -27,4 +27,66 @@ final class InstructionTests: XCTestCase {
         XCTAssertEqual(quadraticCurve.point, Point(x: 110.0, y: 110.0))
         XCTAssertEqual(close.point, .zero)
     }
+    
+    func testPathTranslateTransformation() throws {
+        let path = Path(instructions: [
+            .move(x: 10, y: 10),
+            .line(x: 90, y: 10),
+            .line(x: 90, y: 90),
+            .line(x: 10, y: 90),
+            .close
+        ])
+        
+        let translate = Transformation.translate(x: -10.0, y: 10.0)
+        let subpaths = try path.subpaths(applying: [translate])
+        guard subpaths.count == 1 else {
+            XCTFail()
+            return
+        }
+        
+        let subpath = subpaths[0]
+        guard subpath.count == 5 else {
+            XCTFail()
+            return
+        }
+        
+        if case let .move(x, y) = subpath[0] {
+            XCTAssertEqual(x, 0.0)
+            XCTAssertEqual(y, 20.0)
+        } else {
+            XCTFail()
+            return
+        }
+        
+        if case let .line(x, y) = subpath[1] {
+            XCTAssertEqual(x, 80.0)
+            XCTAssertEqual(y, 20.0)
+        } else {
+            XCTFail()
+            return
+        }
+        
+        if case let .line(x, y) = subpath[2] {
+            XCTAssertEqual(x, 80.0)
+            XCTAssertEqual(y, 100.0)
+        } else {
+            XCTFail()
+            return
+        }
+        
+        if case let .line(x, y) = subpath[3] {
+            XCTAssertEqual(x, 0.0)
+            XCTAssertEqual(y, 100.0)
+        } else {
+            XCTFail()
+            return
+        }
+        
+        if case .close = subpath[4] {
+            
+        } else {
+            XCTFail()
+            return
+        }
+    }
 }

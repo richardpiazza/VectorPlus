@@ -62,11 +62,15 @@ extension Circle: CustomStringConvertible {
 
 // MARK: - InstructionRepresentable
 extension Circle: InstructionRepresentable {
-    public var instructions: [Instruction] {
+    public func instructions() throws -> [Instruction] {
         return [
             .move(x: x, y: y),
             .circle(x: x, y: y, r: r),
             .close
         ]
     }
+}
+
+// MARK: - SubpathRepresentable
+extension Circle: SubpathRepresentable {
 }

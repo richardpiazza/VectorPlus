@@ -90,21 +90,21 @@ public extension Document {
     }
 }
 
-// MARK: - InstructionRepresentable
-extension Document: InstructionRepresentable {
-    public var instructions: [Instruction] {
-        var output: [Instruction] = []
+// MARK: - SubpathRepresentable
+extension Document: SubpathRepresentable {
+    public func subpaths() throws -> [Subpath] {
+        var output: [Subpath] = []
         
         if let paths = self.paths {
-            paths.forEach { (path) in
-                output.append(contentsOf: path.instructions)
-            }
+            try paths.forEach({
+                try output.append(contentsOf: $0.subpaths())
+            })
         }
         
         if let groups = self.groups {
-            groups.forEach { (group) in
-                output.append(contentsOf: group.instructions)
-            }
+            try groups.forEach({
+                try output.append(contentsOf: $0.subpaths())
+            })
         }
         
         return output

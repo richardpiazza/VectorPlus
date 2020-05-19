@@ -23,6 +23,6 @@ final class PolygonTests: XCTestCase {
             .close
         ]
         
-        XCTAssertEqual(instructions, expected)
+        XCTAssertEqual(try instructions(), expected)
     }
 }

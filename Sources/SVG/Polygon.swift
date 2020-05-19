@@ -40,14 +40,13 @@ public class Polygon: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
 // MARK: - CustomStringConvertible
 extension Polygon: CustomStringConvertible {
     public var description: String {
-        let instructionData = instructions.map({ $0.description }).joined(separator: " ")
-        return String(format: "<polygon points=\"%@\" />", instructionData)
+        return String(format: "<polygon points=\"%@\" />", points)
     }
 }
 
 // MARK: - InstructionRepresentable
 extension Polygon: InstructionRepresentable {
-    public var instructions: [Instruction] {
+    public func instructions() throws -> [Instruction] {
         let pairs = points.components(separatedBy: " ")
         let components = pairs.flatMap({ $0.components(separatedBy: ",") })
         guard components.count > 0 else {
@@ -89,4 +88,8 @@ extension Polygon: InstructionRepresentable {
         
         return instructions
     }
+}
+
+// MARK: - SubpathRepresentable
+extension Polygon: SubpathRepresentable {
 }

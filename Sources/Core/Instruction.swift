@@ -136,20 +136,7 @@ public extension Instruction {
         return Point(x: x, y: y)
     }
     
-    func applying(transformations: [Transformation]) -> Instruction {
-        var instruction = self
-        
-        transformations.forEach { (transformation) in
-            instruction = instruction.applying(transformation: transformation)
-        }
-        
-        return instruction
-    }
-}
-
-// MARK: - Transformable
-extension Instruction: Transformable {
-    public func applying(transformation: Transformation) -> Instruction {
+    func applying(transformation: Transformation) -> Instruction {
         switch transformation {
         case .translate(let _x, let _y):
             switch self {
@@ -169,6 +156,16 @@ extension Instruction: Transformable {
                 return .close
             }
         }
+    }
+    
+    func applying(transformations: [Transformation]) -> Instruction {
+        var instruction = self
+        
+        transformations.forEach { (transformation) in
+            instruction = instruction.applying(transformation: transformation)
+        }
+        
+        return instruction
     }
 }
 

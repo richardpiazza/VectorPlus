@@ -40,113 +40,7 @@ public struct Path: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
 
 // MARK: - InstructionRepresentable
 extension Path: InstructionRepresentable {
-    public var instructions: [Instruction] {
-        return (try? asInstructions()) ?? []
-    }
-}
-
-// MARK: - CustomStringConvertible
-extension Path: CustomStringConvertible {
-    public var description: String {
-        let instructionData = instructions.map({ $0.description }).joined(separator: " ")
-        return String(format: "<path d=\"%@\" />", instructionData)
-    }
-}
-
-// MARK: - Equatable
-extension Path: Equatable {
-    public static func == (lhs: Path, rhs: Path) -> Bool {
-        do {
-            let lhsInstructions = try lhs.asInstructions()
-            let rhsInstructions = try rhs.asInstructions()
-            return lhsInstructions == rhsInstructions
-        } catch {
-            return false
-        }
-    }
-}
-
-// MARK: - Private
-private extension Path {
-    /// Deconstructs the `data` string into its component parts.
-    func dataComponents() -> [String] {
-        var output: [String] = []
-        
-        var component: String = ""
-        
-        data.unicodeScalars.forEach { (character) in
-            // Account for exponential notation
-            if character == "e" {
-                component.append(String(character))
-                return
-            }
-            
-            if CharacterSet.letters.contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                output.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet.whitespaces.contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: ",").contains(character) {
-                if !component.isEmpty {
-                    output.append(component)
-                    component = ""
-                }
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: "-").contains(character) {
-                // Account for exponential notation
-                if !component.isEmpty && component.last != "e" {
-                    output.append(component)
-                    component = ""
-                }
-                
-                component.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet(charactersIn: ".").contains(character) {
-                component.append(String(character))
-                
-                return
-            }
-            
-            if CharacterSet.decimalDigits.contains(character) {
-                component.append(String(character))
-                
-                return
-            }
-            
-            print("UNHANDLED CHARACTER: \(character)")
-        }
-        
-        if !component.isEmpty {
-            output.append(component)
-            component = ""
-        }
-        
-        return output.filter({ !$0.isEmpty })
-    }
-    
-    /// A collection of all the `Instruction`s represented by the 'data'
-    func asInstructions() throws -> [Instruction] {
+    public func instructions() throws -> [Instruction] {
         var output: [Instruction] = []
         var instruction: Instruction?
         
@@ -492,5 +386,109 @@ private extension Path {
         }
         
         return output
+    }
+}
+
+// MARK: - SubpathRepresentable
+extension Path: SubpathRepresentable {
+}
+
+// MARK: - CustomStringConvertible
+extension Path: CustomStringConvertible {
+    public var description: String {
+        return String(format: "<path d=\"%@\" />", data)
+    }
+}
+
+// MARK: - Equatable
+extension Path: Equatable {
+    public static func == (lhs: Path, rhs: Path) -> Bool {
+        do {
+            let lhsInstructions = try lhs.instructions()
+            let rhsInstructions = try rhs.instructions()
+            return lhsInstructions == rhsInstructions
+        } catch {
+            return false
+        }
+    }
+}
+
+// MARK: - Private
+private extension Path {
+    /// Deconstructs the `data` string into its component parts.
+    func dataComponents() -> [String] {
+        var output: [String] = []
+        
+        var component: String = ""
+        
+        data.unicodeScalars.forEach { (character) in
+            // Account for exponential notation
+            if character == "e" {
+                component.append(String(character))
+                return
+            }
+            
+            if CharacterSet.letters.contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                output.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet.whitespaces.contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: ",").contains(character) {
+                if !component.isEmpty {
+                    output.append(component)
+                    component = ""
+                }
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: "-").contains(character) {
+                // Account for exponential notation
+                if !component.isEmpty && component.last != "e" {
+                    output.append(component)
+                    component = ""
+                }
+                
+                component.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet(charactersIn: ".").contains(character) {
+                component.append(String(character))
+                
+                return
+            }
+            
+            if CharacterSet.decimalDigits.contains(character) {
+                component.append(String(character))
+                
+                return
+            }
+            
+            print("UNHANDLED CHARACTER: \(character)")
+        }
+        
+        if !component.isEmpty {
+            output.append(component)
+            component = ""
+        }
+        
+        return output.filter({ !$0.isEmpty })
     }
 }

@@ -47,53 +47,50 @@ public struct Group: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     
     public init() {
     }
-}
-
-// MARK: - TransformationRepresentable
-extension Group: TransformationRepresentable {
+    
     public var transformations: [Transformation] {
-        guard let value = transform, !value.isEmpty else {
+        let value = transform?.replacingOccurrences(of: " ", with: "") ?? ""
+        guard !value.isEmpty else {
             return []
         }
         
-        let transforms = value.components(separatedBy: " ")
-        return transforms.compactMap({ Transformation($0) })
+        let values = value.split(separator: ")").map({ $0.appending(")") })
+        return values.compactMap({ Transformation($0) })
     }
 }
 
-// MARK: - InstructionRepresentable
-extension Group: InstructionRepresentable {
-    public var instructions: [Instruction] {
-        var output: [Instruction] = []
+extension Group: SubpathRepresentable {
+    public func subpaths() throws -> [Subpath] {
+        var output: [Subpath] = []
         
         if let circles = self.circles {
-            circles.forEach { (circle) in
-                output.append(contentsOf: circle.instructions)
-            }
+            try circles.forEach({
+                try output.append(contentsOf: $0.subpaths(applying: transformations))
+            })
         }
         
         if let rectangles = self.rectangles {
-            rectangles.forEach { (rectangle) in
-                output.append(contentsOf: rectangle.instructions)
-            }
+            try rectangles.forEach({
+                try output.append(contentsOf: $0.subpaths(applying: transformations))
+            })
         }
         
         if let polygons = self.polygons {
-            polygons.forEach { (polygon) in
-                output.append(contentsOf: polygon.instructions)
-            }
+            try polygons.forEach({
+                try output.append(contentsOf: $0.subpaths(applying: transformations))
+            })
         }
         
         if let paths = self.paths {
-            paths.forEach { (path) in
-                output.append(contentsOf: path.instructions)
-            }
+            try paths.forEach({
+                try output.append(contentsOf: $0.subpaths(applying: transformations))
+            })
         }
         
         if let groups = self.groups {
-            groups.forEach { (group) in
-                output.append(contentsOf: group.instructions)
-            }
+            try groups.forEach({
+                try output.append(contentsOf: $0.subpaths(applying: transformations))
+            })
         }
         
         return output

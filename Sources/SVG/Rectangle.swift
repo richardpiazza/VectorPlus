@@ -88,11 +88,15 @@ extension Rectangle: CustomStringConvertible {
 
 // MARK: - InstructionRepresentable
 extension Rectangle: InstructionRepresentable {
-    public var instructions: [Instruction] {
+    public func instructions() throws -> [Instruction] {
         return [
             .move(x: x, y: y),
             .rectangle(x: x, y: y, w: width, h: height, rx: rx, ry: ry),
             .close
         ]
     }
+}
+
+// MARK: - SubpathRepresentable
+extension Rectangle: SubpathRepresentable {
 }
