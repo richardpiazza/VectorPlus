@@ -11,7 +11,7 @@ public struct Document: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     public var width: String?
     public var height: String?
     public var title: String?
-    public var description: String?
+    public var desc: String?
     public var groups: [Group]?
     public var paths: [Path]?
     
@@ -20,7 +20,7 @@ public struct Document: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
         case height
         case viewBox
         case title
-        case description = "desc"
+        case desc
         case groups = "g"
         case paths = "path"
     }
@@ -87,6 +87,29 @@ public extension Document {
         let size = originalSize
         let maxDimension = max(size.width, size.height)
         return Size(width: maxDimension, height: maxDimension)
+    }
+}
+
+// MARK: - CustomStringConvertible
+extension Document: CustomStringConvertible {
+    public var description: String {
+        var contents: String = ""
+        
+        if let title = self.title {
+            contents.append("\n<title>\(title)</title>")
+        }
+        
+        if let desc = self.desc {
+            contents.append("\n<desc>\(desc)</desc>")
+        }
+        
+        let paths = self.paths?.compactMap({ $0.description }) ?? []
+        paths.forEach({ contents.append("\n\($0)") })
+        
+        let groups = self.groups?.compactMap({ $0.description }) ?? []
+        groups.forEach({ contents.append("\n\($0)") })
+        
+        return String(format: "<svg viewBox=\"%@\" width=\"%@\", height=\"%@\">%@\n</svg>", viewBox ?? "", width ?? "", height ?? "", contents)
     }
 }
 

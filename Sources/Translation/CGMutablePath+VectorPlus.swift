@@ -1,6 +1,5 @@
 import Foundation
 import Core
-import SVG
 #if canImport(CoreGraphics)
 import CoreGraphics
 

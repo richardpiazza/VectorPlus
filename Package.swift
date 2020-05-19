@@ -41,7 +41,12 @@ let package = Package(
     targets: [
         .target(
             name: "Executable",
-            dependencies: ["Core", "SVG", "Translation", .product(name: "ArgumentParser", package: "swift-argument-parser")]
+            dependencies: [
+                "Core",
+                "SVG",
+                "Translation",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ]
         ),
         .target(
             name: "Core",

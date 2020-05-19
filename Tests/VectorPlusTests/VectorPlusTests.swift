@@ -1,5 +1,6 @@
 import XCTest
 import class Foundation.Bundle
+import class Foundation.NSTask
 
 final class VectorPlusTests: XCTestCase {
     

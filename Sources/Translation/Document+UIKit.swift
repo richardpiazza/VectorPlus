@@ -5,16 +5,14 @@ import SVG
 import UIKit
 
 public extension Document {
-    func path(sized size: CGSize, subpaths: [[Instruction]]) -> CGPath {
+    func path(sized size: CGSize, subpaths: [Subpath]) -> CGPath {
         guard size.height > 0.0 && size.width > 0.0 else {
             return CGMutablePath()
         }
         
         let mutablePath = CGMutablePath()
         subpaths.forEach { (path) in
-            path.forEach { (instruction) in
-                mutablePath.addInstruction(instruction, originalSize: originalSize, outputSize: size.size)
-            }
+            mutablePath.addPath(path.cgPath(originalSize: originalSize, outputSize: size.size))
         }
         
         return mutablePath
@@ -25,7 +23,7 @@ public extension Document {
             return nil
         }
         
-        guard let subpaths = try? asSubpaths() else {
+        guard let subpaths = try? subpaths() else {
             return nil
         }
         
