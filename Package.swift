@@ -16,16 +16,29 @@ let package = Package(
             targets: ["Executable"]
         ),
         .library(
-            name: "Core",
-            targets: ["Core"]
-        ),
-        .library(
             name: "SVG",
             targets: ["SVG"]
         ),
         .library(
-            name: "Translation",
-            targets: ["Translation"]
+            name: "Swift2D",
+            targets: ["Swift2D"]
+        ),
+        .library(
+            name: "Graphics",
+            targets: ["Graphics"]
+        ),
+        .library(
+            name: "Templates",
+            targets: ["Templates"]
+        ),
+        .library(
+            name: "VectorPlus",
+            targets: [
+                "SVG",
+                "Swift2D",
+                "Graphics",
+                "Templates"
+            ]
         ),
     ],
     dependencies: [
@@ -42,27 +55,32 @@ let package = Package(
         .target(
             name: "Executable",
             dependencies: [
-                "Core",
                 "SVG",
-                "Translation",
+                "Swift2D",
+                "Graphics",
+                "Templates",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]
         ),
         .target(
-            name: "Core",
+            name: "SVG",
+            dependencies: ["XMLCoder"]
+        ),
+        .target(
+            name: "Swift2D",
             dependencies: []
         ),
         .target(
-            name: "SVG",
-            dependencies: ["Core", "XMLCoder"]
+            name: "Graphics",
+            dependencies: ["SVG", "Swift2D"]
         ),
         .target(
-            name: "Translation",
-            dependencies: ["Core", "SVG"]
+            name: "Templates",
+            dependencies: ["SVG", "Graphics", "Swift2D"]
         ),
         .testTarget(
             name: "VectorPlusTests",
-            dependencies: ["Executable", "Core", "SVG", "Translation"]
+            dependencies: ["Executable", "SVG", "Swift2D", "Graphics", "Templates"]
         ),
     ]
 )

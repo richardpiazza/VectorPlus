@@ -1,19 +1,19 @@
 import Foundation
 
-enum VectorSign: String {
-    case plus = "+"
-    case minus = "-"
-}
-
-typealias VectorOffset = (sign: VectorSign, multiplier: Float)
-
 /// A cartesian-based vector that describes the relationship of any particular `Point` to the _center_ of a `Rect`.
 public struct VectorPoint {
-    var x: VectorOffset
-    var y: VectorOffset
+    public enum Sign: String {
+        case plus = "+"
+        case minus = "-"
+    }
+    
+    public typealias Offset = (sign: Sign, multiplier: Float)
+    
+    public var x: Offset
+    public var y: Offset
     
     /// Returns the `CGPoint` in the desired output size
-    func translate(to outputSize: Size) -> Point {
+    public func translate(to outputSize: Size) -> Point {
         let center = outputSize.center
         let radius = outputSize.minRadius
         
@@ -30,6 +30,7 @@ public struct VectorPoint {
     }
 }
 
+// MARK: - CustomStringConvertible
 extension VectorPoint: CustomStringConvertible {
     public var description: String {
         return String(format: "CGPoint(x: center.x %@ (radius * %.5f), y: center.y %@ (radius * %.5f))", x.sign.rawValue, x.multiplier, y.sign.rawValue, y.multiplier)

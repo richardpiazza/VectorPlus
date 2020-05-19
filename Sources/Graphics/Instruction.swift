@@ -1,4 +1,5 @@
 import Foundation
+import Swift2D
 
 /// `Path` data  instructions.
 ///

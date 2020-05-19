@@ -1,6 +1,6 @@
 import XCTest
-import Core
-import SVG
+@testable import SVG
+@testable import Graphics
 
 final class PathTests: XCTestCase {
     

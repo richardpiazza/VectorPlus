@@ -1,5 +1,6 @@
 import Foundation
 
+/// A structure that contains width and height values.
 public struct Size: Equatable {
     public var width: Float
     public var height: Float
@@ -39,8 +40,30 @@ public extension Size {
     }
 }
 
+// MARK: - CustomStringConvertible
 extension Size: CustomStringConvertible {
     public var description: String {
         return String(format: "CGSize(width: %.5f, height: %.5f)", width, height)
     }
 }
+
+#if canImport(CoreGraphics)
+import CoreGraphics
+
+public extension Size {
+    var cgSize: CGSize {
+        return .init(width: CGFloat(width), height: CGFloat(height))
+    }
+}
+
+public extension CGSize {
+    init(_ size: Size) {
+        self.init(width: CGFloat(size.width), height: CGFloat(size.height))
+    }
+    
+    var size: Size {
+        return Size(width: Float(width), height: Float(width))
+    }
+}
+
+#endif

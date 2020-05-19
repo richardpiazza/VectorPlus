@@ -1,6 +1,5 @@
 import Foundation
 import XMLCoder
-import Core
 
 /// Defines a [Circle](https://www.w3.org/TR/SVG11/shapes.html#CircleElement).
 ///
@@ -38,19 +37,6 @@ public struct Circle: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
         self.y = y
         self.r = r
     }
-    
-    public init?(instructions: [Instruction]) {
-        instructions.forEach { (instruction) in
-            if case let .circle(x, y, r) = instruction {
-                self.x = x
-                self.y = y
-                self.r = r
-                return
-            }
-        }
-        
-        return nil
-    }
 }
 
 // MARK: - CustomStringConvertible
@@ -58,19 +44,4 @@ extension Circle: CustomStringConvertible {
     public var description: String {
         return String(format: "<circle cx=\"%.5f\" cy=\"%.5f\" r=\"%.5f\" />", x, y, r)
     }
-}
-
-// MARK: - InstructionRepresentable
-extension Circle: InstructionRepresentable {
-    public func instructions() throws -> [Instruction] {
-        return [
-            .move(x: x, y: y),
-            .circle(x: x, y: y, r: r),
-            .close
-        ]
-    }
-}
-
-// MARK: - SubpathRepresentable
-extension Circle: SubpathRepresentable {
 }

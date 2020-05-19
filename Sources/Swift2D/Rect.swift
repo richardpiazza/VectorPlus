@@ -1,5 +1,6 @@
 import Foundation
 
+/// A structure that contains the location and dimensions of a rectangle.
 public struct Rect: Equatable {
     public var origin: Point
     public var size: Size

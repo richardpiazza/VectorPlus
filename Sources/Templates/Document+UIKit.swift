@@ -1,6 +1,6 @@
 import Foundation
-import Core
 import SVG
+import Graphics
 #if canImport(UIKit)
 import UIKit
 
