@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol SubpathRepresentable {
+public protocol InstructionSetRepresentable {
     /// All instructions regrouped as individual subpaths
     ///
     /// A 'set' of instructions is determined using the following:
@@ -11,17 +11,17 @@ public protocol SubpathRepresentable {
     ///
     /// - returns: A collection of subpaths
     /// - throws: `Instruction.Error`
-    func subpaths() throws -> [Subpath]
+    func instructionSets() throws -> [InstructionSet]
 }
 
-public extension SubpathRepresentable {
-    func subpaths(applying transformations: [Transformation]) throws -> [Subpath] {
-        var output: [Subpath] = []
+public extension InstructionSetRepresentable {
+    func instructionSets(applying transformations: [Transformation]) throws -> [InstructionSet] {
+        var output: [InstructionSet] = []
         
-        let subpaths = try self.subpaths()
+        let subpaths = try self.instructionSets()
         
         subpaths.forEach { (subpath) in
-            var set = Subpath()
+            var set = InstructionSet()
             subpath.forEach { (instruction) in
                 set.append(instruction.applying(transformations: transformations))
             }

@@ -5,13 +5,13 @@ import Graphics
 import UIKit
 
 public extension Document {
-    func path(sized size: CGSize, subpaths: [Subpath]) -> CGPath {
+    func path(sized size: CGSize, instructionSets: [InstructionSet]) -> CGPath {
         guard size.height > 0.0 && size.width > 0.0 else {
             return CGMutablePath()
         }
         
         let mutablePath = CGMutablePath()
-        subpaths.forEach { (path) in
+        instructionSets.forEach { (path) in
             mutablePath.addPath(path.cgPath(originalSize: originalSize, outputSize: size.size))
         }
         
@@ -23,7 +23,7 @@ public extension Document {
             return nil
         }
         
-        guard let subpaths = try? subpaths() else {
+        guard let instructionSets = try? instructionSets() else {
             return nil
         }
         
@@ -37,7 +37,7 @@ public extension Document {
             return nil
         }
         
-        context.addPath(path(sized: size, subpaths: subpaths))
+        context.addPath(path(sized: size, instructionSets: instructionSets))
         context.setFillColor(fillColor.cgColor)
         context.fillPath()
         

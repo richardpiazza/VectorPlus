@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "SwiftColor",
+        "repositoryURL": "https://github.com/richardpiazza/SwiftColor.git",
+        "state": {
+          "branch": null,
+          "revision": "47da9cd06bc1694b67d3b756361981bc668179bd",
+          "version": "0.1.0"
+        }
+      },
+      {
         "package": "XMLCoder",
         "repositoryURL": "https://github.com/MaxDesiatov/XMLCoder.git",
         "state": {

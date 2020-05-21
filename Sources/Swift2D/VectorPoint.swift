@@ -33,6 +33,6 @@ public struct VectorPoint {
 // MARK: - CustomStringConvertible
 extension VectorPoint: CustomStringConvertible {
     public var description: String {
-        return String(format: "CGPoint(x: center.x %@ (radius * %.5f), y: center.y %@ (radius * %.5f))", x.sign.rawValue, x.multiplier, y.sign.rawValue, y.multiplier)
+        return String(format: "VectorPoint(x: (%@, %.5f), y: (%@, %.5f))", x.sign.rawValue, x.multiplier, y.sign.rawValue, y.multiplier)
     }
 }

@@ -47,7 +47,7 @@ public extension Point {
 // MARK: - CustomStringConvertible
 extension Point: CustomStringConvertible {
     public var description: String {
-        return String(format: "CGPoint(x: %.5f, y: %.5f)", x, y)
+        return String(format: "Point(x: %.5f, y: %.5f)", x, y)
     }
 }
 

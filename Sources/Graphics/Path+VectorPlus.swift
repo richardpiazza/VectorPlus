@@ -362,7 +362,7 @@ extension Path: InstructionRepresentable {
 }
 
 // MARK: - SubpathRepresentable
-extension Path: SubpathRepresentable {
+extension Path: InstructionSetRepresentable {
 }
 
 // MARK: - Equatable

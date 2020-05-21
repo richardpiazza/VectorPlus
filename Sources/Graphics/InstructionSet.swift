@@ -3,15 +3,15 @@ import Swift2D
 
 /// A collection of instructions that make a complete shape.
 ///
-/// Subpaths should:
+/// InstructionSets should:
 /// * Begin (first) with `Instruction.move`
 /// * End (last) with `Instruction.close`
-public typealias Subpath = [Instruction]
+public typealias InstructionSet = [Instruction]
 
 #if canImport(CoreGraphics)
 import CoreGraphics
 
-public extension Subpath {
+public extension InstructionSet {
     func cgPath(originalSize: Size, outputSize: Size) -> CGPath {
         let path = CGMutablePath()
         forEach { (instruction) in

@@ -41,7 +41,7 @@ private extension Document {
     func asCoreGraphicsDescription(variableName: String = "path") throws -> String {
         var outputs: [String] = []
         
-        let subpaths = try self.subpaths()
+        let subpaths = try self.instructionSets()
         
         subpaths.forEach { (path) in
             path.forEach { (instruction) in

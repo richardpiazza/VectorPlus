@@ -6,7 +6,7 @@ public protocol InstructionRepresentable {
 
 // MARK: - SubpathRepresentable
 public extension InstructionRepresentable {
-    func subpaths() throws -> [Subpath] {
+    func instructionSets() throws -> [InstructionSet] {
         let instructions = try self.instructions()
         
         guard instructions.count > 0 else {

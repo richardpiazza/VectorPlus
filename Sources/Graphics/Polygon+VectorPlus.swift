@@ -56,5 +56,5 @@ extension SVG.Polygon: InstructionRepresentable {
 }
 
 // MARK: - SubpathRepresentable
-extension SVG.Polygon: SubpathRepresentable {
+extension SVG.Polygon: InstructionSetRepresentable {
 }

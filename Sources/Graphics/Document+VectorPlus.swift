@@ -69,19 +69,19 @@ public extension Document {
 }
 
 // MARK: - SubpathRepresentable
-extension Document: SubpathRepresentable {
-    public func subpaths() throws -> [Subpath] {
-        var output: [Subpath] = []
+extension Document: InstructionSetRepresentable {
+    public func instructionSets() throws -> [InstructionSet] {
+        var output: [InstructionSet] = []
         
         if let paths = self.paths {
             try paths.forEach({
-                try output.append(contentsOf: $0.subpaths())
+                try output.append(contentsOf: $0.instructionSets())
             })
         }
         
         if let groups = self.groups {
             try groups.forEach({
-                try output.append(contentsOf: $0.subpaths())
+                try output.append(contentsOf: $0.instructionSets())
             })
         }
         

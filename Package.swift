@@ -50,6 +50,10 @@ let package = Package(
             url: "https://github.com/MaxDesiatov/XMLCoder.git",
             from: "0.11.1"
         ),
+        .package(
+            url: "https://github.com/richardpiazza/SwiftColor.git",
+            from: "0.1.0"
+        ),
     ],
     targets: [
         .target(
@@ -72,7 +76,7 @@ let package = Package(
         ),
         .target(
             name: "Graphics",
-            dependencies: ["SVG", "Swift2D"]
+            dependencies: ["SVG", "Swift2D", "SwiftColor"]
         ),
         .target(
             name: "Templates",
@@ -80,7 +84,7 @@ let package = Package(
         ),
         .testTarget(
             name: "VectorPlusTests",
-            dependencies: ["Executable", "SVG", "Swift2D", "Graphics", "Templates"]
+            dependencies: ["Executable", "SVG", "Swift2D", "SwiftColor", "Graphics", "Templates"]
         ),
     ]
 )

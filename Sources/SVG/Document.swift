@@ -1,6 +1,5 @@
 import Foundation
 import XMLCoder
-import Core
 
 /// SVG is a language for describing two-dimensional graphics in XML.
 ///

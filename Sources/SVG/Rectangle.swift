@@ -5,7 +5,7 @@ import XMLCoder
 ///
 /// The values used for the x- and y-axis rounded corner radii are determined implicitly
 /// if the ‘rx’ or ‘ry’ attributes (or both) are not specified, or are specified but with invalid values.
-public struct Rectangle: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
+public struct Rectangle: Codable, PresentationAttributes, DynamicNodeEncoding, DynamicNodeDecoding {
     
     /// The x-axis coordinate of the side of the rectangle which
     /// has the smaller x-axis coordinate value.
@@ -23,6 +23,12 @@ public struct Rectangle: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
     /// For rounded rectangles, the y-axis radius of the ellipse used
     /// to round off the corners of the rectangle.
     public var ry: Float?
+    public var fill: String?
+    public var fillOpacity: Float?
+    public var stroke: String?
+    public var strokeWidth: Float?
+    public var strokeOpacity: Float?
+    public var transform: String?
     
     enum CodingKeys: String, CodingKey {
         case x
@@ -31,6 +37,12 @@ public struct Rectangle: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
         case height
         case rx
         case ry
+        case fill
+        case fillOpacity = "fill-opacity"
+        case stroke
+        case strokeWidth = "stroke-width"
+        case strokeOpacity = "stroke-opacity"
+        case transform
     }
     
     public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {

@@ -18,7 +18,7 @@ public struct Rect: Equatable {
 
 extension Rect: CustomStringConvertible {
     public var description: String {
-        return String(format: "CGRect(origin: %@, size: %@)", origin.description, size.description)
+        return String(format: "Rect(origin: %@, size: %@)", origin.description, size.description)
     }
 }
 

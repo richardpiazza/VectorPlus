@@ -43,7 +43,7 @@ public extension Size {
 // MARK: - CustomStringConvertible
 extension Size: CustomStringConvertible {
     public var description: String {
-        return String(format: "CGSize(width: %.5f, height: %.5f)", width, height)
+        return String(format: "Size(width: %.5f, height: %.5f)", width, height)
     }
 }
 
