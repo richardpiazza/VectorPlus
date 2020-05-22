@@ -52,17 +52,21 @@ struct Command: ParsableCommand {
             let value = try svg.asImageViewSubclass()
             print(value)
         case .png:
-            let value = svg.asData()
-            let image = directory.appendingPathComponent("image.png")
-            try value.write(to: image)
-            try shellOut(to: .openFile(at: image.lastPathComponent))
-        case .preview:
-            let value = svg.asData()
             #if canImport(AppKit)
-            let app = NSApplication.shared
-            let delegate = AppDelegate(data: value)
-            app.delegate = delegate
-            app.run()
+            if let value = svg.pngData(size: svg.outputSize.cgSize) {
+                let image = directory.appendingPathComponent("image.png")
+                try value.write(to: image)
+                try shellOut(to: .openFile(at: image.lastPathComponent))
+            }
+            #endif
+        case .preview:
+            #if canImport(AppKit)
+            if let value = svg.pngData(size: svg.outputSize.cgSize) {
+                let app = NSApplication.shared
+                let delegate = AppDelegate(data: value)
+                app.delegate = delegate
+                app.run()
+            }
             #endif
         }
     }

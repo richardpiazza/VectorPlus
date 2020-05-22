@@ -46,12 +46,4 @@ public extension Document {
         
         return outputs.joined(separator: "\n        ")
     }
-    
-    func asData() -> Data {
-        #if canImport(AppKit)
-        return pngData(sized: outputSize.cgSize) ?? Data()
-        #else
-        return Data()
-        #endif
-    }
 }

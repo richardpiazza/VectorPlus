@@ -10,6 +10,13 @@ public extension Document {
             return nil
         }
         
+        let paths: [Path]
+        do {
+            paths = try self.allPaths()
+        } catch {
+            return nil
+        }
+        
         defer {
             UIGraphicsEndImageContext()
         }
@@ -20,12 +27,15 @@ public extension Document {
             return nil
         }
         
-        let path = self.path(size: size)
-        context.addPath(path)
-        context.setFillColor(UIColor.black.cgColor)
-        context.fillPath()
+        paths.forEach { (path) in
+            try? context.render(path: path, originalSize: originalSize.cgSize, outputSize: size)
+        }
         
         return UIGraphicsGetImageFromCurrentImageContext()
+    }
+    
+    func pngData(size: CGSize) -> Data? {
+        return uiImage(size: size)?.pngData()
     }
 }
 #endif

@@ -205,28 +205,30 @@ public extension Instruction {
     ///
     /// - parameter originalSize: Supplied to correctly determine how to proportionally scale the instruction.
     func coreGraphicsDescription(originalSize: Size) -> String {
+        let rect = Rect(origin: .zero, size: originalSize)
+        
         switch self {
         case .move(let x, let y):
-            let vector = Point(x: x, y: y).vectorPoint(from: originalSize)
+            let vector = VectorPoint(point: Point(x: x, y: y), in: rect)
             return String(format: ".move(to: %@)", vector.coreGraphicsDescription)
         
         case .line(let x, let y):
-            let vector = Point(x: x, y: y).vectorPoint(from: originalSize)
+            let vector = VectorPoint(point: Point(x: x, y: y), in: rect)
             return String(format: ".addLine(to: %@)", vector.coreGraphicsDescription)
         
         case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-            let pointVector = Point(x: x, y: y).vectorPoint(from: originalSize)
-            let control1Vector = Point(x: cx1, y: cy1).vectorPoint(from: originalSize)
-            let control2Vector = Point(x: cx2, y: cy2).vectorPoint(from: originalSize)
+            let pointVector = VectorPoint(point: Point(x: x, y: y), in: rect)
+            let control1Vector = VectorPoint(point: Point(x: cx1, y: cy1), in: rect)
+            let control2Vector = VectorPoint(point: Point(x: cx2, y: cy2), in: rect)
             return String(format: ".addCurve(to: %@, control1: %@, control2: %@)", pointVector.coreGraphicsDescription, control1Vector.coreGraphicsDescription, control2Vector.coreGraphicsDescription)
         
-        case .quadraticCurve(let x, let y, let cX, let cY):
-            let pointVector = Point(x: x, y: y).vectorPoint(from: originalSize)
-            let controlVector = Point(x: cX, y: cY).vectorPoint(from: originalSize)
+        case .quadraticCurve(let x, let y, let cx, let cy):
+            let pointVector = VectorPoint(point: Point(x: x, y: y), in: rect)
+            let controlVector = VectorPoint(point: Point(x: cx, y: cy), in: rect)
             return String(format: ".addQuadCurve(to: %@, control: %@)", pointVector.coreGraphicsDescription, controlVector.coreGraphicsDescription)
         
         case .circle(let x, let y, let r):
-            let vector = Point(x: x, y: y).vectorPoint(from: originalSize)
+            let vector = VectorPoint(point: Point(x: x, y: y), in: rect)
             let designRadius = originalSize.maxRadius
             let radiusMultiplier = r / designRadius
             let radius = String(format: "(radius * %.5f)", radiusMultiplier)
@@ -240,7 +242,7 @@ public extension Instruction {
             let widthMultiplier = w / designRadius
             let heightMultiplier = h / designRadius
             
-            let vector = Point(x: x, y: y).vectorPoint(from: originalSize)
+            let vector = VectorPoint(point: Point(x: x, y: y), in: rect)
             
             let size = String(format: "CGSize(width: (radius * %.5f), height: (radius * %.5f))", widthMultiplier, heightMultiplier)
             let rect = String(format: "CGRect(origin: %@, size: %@)", vector.coreGraphicsDescription, size)

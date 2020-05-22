@@ -29,3 +29,29 @@ public extension PresentationAttributes {
         return Color(stroke)
     }
 }
+
+#if canImport(AppKit)
+import AppKit
+
+public extension PresentationAttributes {
+    var cgFillColor: CGColor? {
+        return fillColor?.nsColor.cgColor
+    }
+    
+    var cgStrokeColor: CGColor? {
+        return strokeColor?.nsColor.cgColor
+    }
+}
+#elseif canImport(UIKit)
+import UIKit
+
+public extension PresentationAttributes {
+    var cgFillColor: CGColor? {
+        return fillColor?.uiColor.cgColor
+    }
+    
+    var cgStrokeColor: CGColor? {
+        return strokeColor?.uiColor.cgColor
+    }
+}
+#endif
