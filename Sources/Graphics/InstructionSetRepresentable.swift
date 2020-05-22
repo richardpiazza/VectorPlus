@@ -1,4 +1,5 @@
 import Foundation
+import SVG
 
 public protocol InstructionSetRepresentable {
     /// All instructions regrouped as individual subpaths

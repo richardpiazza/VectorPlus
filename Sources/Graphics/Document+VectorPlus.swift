@@ -68,7 +68,7 @@ public extension Document {
     }
 }
 
-// MARK: - SubpathRepresentable
+// MARK: - InstructionSetRepresentable
 extension Document: InstructionSetRepresentable {
     public func instructionSets() throws -> [InstructionSet] {
         var output: [InstructionSet] = []
@@ -88,3 +88,45 @@ extension Document: InstructionSetRepresentable {
         return output
     }
 }
+
+public extension Document {
+    func allPaths() throws -> [Path] {
+        var output: [Path] = []
+        
+        if let paths = self.paths {
+            output.append(contentsOf: paths)
+        }
+        
+        if let groups = self.groups {
+            try groups.forEach({
+                try output.append(contentsOf: $0.allPaths())
+            })
+        }
+        
+        return output
+    }
+}
+
+#if canImport(CoreGraphics)
+import CoreGraphics
+
+public extension Document {
+    func path(size: CGSize) -> CGPath {
+        guard size.height > 0.0 && size.width > 0.0 else {
+            return CGMutablePath()
+        }
+        
+        guard let instructionSets = try? instructionSets() else {
+            return CGMutablePath()
+        }
+        
+        let path = CGMutablePath()
+        instructionSets.forEach { (set) in
+            set.forEach { (instruction) in
+                path.addInstruction(instruction, originalSize: originalSize, outputSize: size.size)
+            }
+        }
+        return path
+    }
+}
+#endif

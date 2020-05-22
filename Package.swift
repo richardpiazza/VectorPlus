@@ -31,15 +31,6 @@ let package = Package(
             name: "Templates",
             targets: ["Templates"]
         ),
-        .library(
-            name: "VectorPlus",
-            targets: [
-                "SVG",
-                "Swift2D",
-                "Graphics",
-                "Templates"
-            ]
-        ),
     ],
     dependencies: [
         .package(
@@ -54,16 +45,20 @@ let package = Package(
             url: "https://github.com/richardpiazza/SwiftColor.git",
             from: "0.1.0"
         ),
+        .package(
+            url: "https://github.com/JohnSundell/ShellOut.git",
+            from: "2.3.0"
+        ),
     ],
     targets: [
         .target(
             name: "Executable",
             dependencies: [
                 "SVG",
-                "Swift2D",
                 "Graphics",
                 "Templates",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "ShellOut", package: "ShellOut"),
             ]
         ),
         .target(
@@ -84,7 +79,7 @@ let package = Package(
         ),
         .testTarget(
             name: "VectorPlusTests",
-            dependencies: ["Executable", "SVG", "Swift2D", "SwiftColor", "Graphics", "Templates"]
+            dependencies: ["Executable", "SVG", "Swift2D", "Graphics", "Templates"]
         ),
     ]
 )

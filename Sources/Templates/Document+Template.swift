@@ -3,22 +3,15 @@ import SVG
 import Graphics
 
 public extension Document {
-    enum Template: String, Decodable, CaseIterable {
+    enum Output: String, Decodable, CaseIterable {
         case `struct`
         case uiimageview
-    }
-    
-    func asTemplate(_ template: Template) throws -> String {
-        switch template {
-        case .struct:
-            return try asFileTemplate()
-        case .uiimageview:
-            return try asImageViewSubclass()
-        }
+        case png
+        case preview
     }
 }
 
-private extension Document {
+public extension Document {
     func asFileTemplate() throws -> String {
         let instructions = try asCoreGraphicsDescription()
         
@@ -52,5 +45,13 @@ private extension Document {
         }
         
         return outputs.joined(separator: "\n        ")
+    }
+    
+    func asData() -> Data {
+        #if canImport(AppKit)
+        return pngData(sized: outputSize.cgSize) ?? Data()
+        #else
+        return Data()
+        #endif
     }
 }

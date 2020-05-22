@@ -3,16 +3,20 @@ import ArgumentParser
 import SVG
 import Graphics
 import Templates
+import ShellOut
+#if canImport(AppKit)
+import AppKit
+#endif
 
-extension Document.Template: ExpressibleByArgument { }
+extension Document.Output: ExpressibleByArgument { }
 
 struct Command: ParsableCommand {
     
     @Argument(help: "The relative or absolute path of the SVG file to be parsed.")
     var filename: String
     
-    @Flag(name: .shortAndLong, help: "Template style to generate.")
-    var template: Document.Template?
+    @Flag(name: .shortAndLong, help: "Output style to generate.")
+    var output: Document.Output?
     
     mutating func validate() throws {
         guard !filename.isEmpty else {
@@ -34,8 +38,32 @@ struct Command: ParsableCommand {
         }
 
         let svg = try Document.make(from: fileURL)
-        let tmp = try svg.asTemplate(template ?? .struct)
         
-        print(tmp)
+        guard let output = self.output else {
+            print(svg.description)
+            return
+        }
+        
+        switch output {
+        case .struct:
+            let value = try svg.asFileTemplate()
+            print(value)
+        case .uiimageview:
+            let value = try svg.asImageViewSubclass()
+            print(value)
+        case .png:
+            let value = svg.asData()
+            let image = directory.appendingPathComponent("image.png")
+            try value.write(to: image)
+            try shellOut(to: .openFile(at: image.lastPathComponent))
+        case .preview:
+            let value = svg.asData()
+            #if canImport(AppKit)
+            let app = NSApplication.shared
+            let delegate = AppDelegate(data: value)
+            app.delegate = delegate
+            app.run()
+            #endif
+        }
     }
 }
