@@ -47,6 +47,11 @@ public struct Path: Codable, PresentationAttributes, DynamicNodeEncoding, Dynami
 // MARK: - CustomStringConvertible
 extension Path: CustomStringConvertible {
     public var description: String {
-        return String(format: "<path d=\"%@\" />", data)
+        var desc = String(format: "<path d=\"%@\"", data)
+        if !presentationDescription.isEmpty {
+            desc.append(String(format: " %@", presentationDescription))
+        }
+        desc.append(" />")
+        return desc
     }
 }

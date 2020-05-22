@@ -46,6 +46,11 @@ public class Polygon: Codable, PresentationAttributes, DynamicNodeEncoding, Dyna
 // MARK: - CustomStringConvertible
 extension Polygon: CustomStringConvertible {
     public var description: String {
-        return String(format: "<polygon points=\"%@\" />", points)
+        var desc = String(format: "<polygon points=\"%@\"", points)
+        if !presentationDescription.isEmpty {
+            desc.append(String(format: " %@", presentationDescription))
+        }
+        desc.append(" />")
+        return desc
     }
 }

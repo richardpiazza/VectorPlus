@@ -77,6 +77,6 @@ extension Group: CustomStringConvertible {
         let groups = self.groups?.compactMap({ $0.description }) ?? []
         groups.forEach({ contents.append("\n\($0)") })
         
-        return String(format: "<g id=\"%@\" transform=\"%@\">%@\n</g>", id ?? "", transform ?? "", contents)
+        return String(format: "<g id=\"%@\" %@>%@\n</g>", id ?? "", presentationDescription, contents)
     }
 }

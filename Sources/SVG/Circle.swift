@@ -54,6 +54,11 @@ public struct Circle: Codable, PresentationAttributes, DynamicNodeEncoding, Dyna
 // MARK: - CustomStringConvertible
 extension Circle: CustomStringConvertible {
     public var description: String {
-        return String(format: "<circle cx=\"%.5f\" cy=\"%.5f\" r=\"%.5f\" />", x, y, r)
+        var desc = String(format: "<circle cx=\"%.5f\" cy=\"%.5f\" r=\"%.5f\"", x, y, r)
+        if !presentationDescription.isEmpty {
+            desc.append(String(format: " %@", presentationDescription))
+        }
+        desc.append(" />")
+        return desc
     }
 }

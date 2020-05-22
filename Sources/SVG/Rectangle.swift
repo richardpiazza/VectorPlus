@@ -76,6 +76,9 @@ extension Rectangle: CustomStringConvertible {
         if let ry = self.ry {
             desc.append(String(format: " ry=\"%.5f\"", ry))
         }
+        if !presentationDescription.isEmpty {
+            desc.append(String(format: " %@", presentationDescription))
+        }
         desc.append(" />")
         return desc
     }
