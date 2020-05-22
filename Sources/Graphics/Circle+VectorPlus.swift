@@ -29,6 +29,6 @@ extension Circle: InstructionRepresentable {
     }
 }
 
-// MARK: - InstructionSetRepresentable
-extension Circle: InstructionSetRepresentable {
+// MARK: - PathRepresentable
+extension Circle: PathRepresentable {
 }

@@ -34,11 +34,11 @@ public extension Document {
     func asCoreGraphicsDescription(variableName: String = "path") throws -> String {
         var outputs: [String] = []
         
-        let subpaths = try self.instructionSets()
-        
-        subpaths.forEach { (path) in
-            path.forEach { (instruction) in
-                let method = instruction.coreGraphicsDescription(originalSize: originalSize)
+        let paths = try allPaths()
+        paths.forEach { (p) in
+            let instructions = (try? p.instructions()) ?? []
+            instructions.forEach { (i) in
+                let method = i.coreGraphicsDescription(originalSize: originalSize)
                 let code = String(format: "%@%@", variableName, method)
                 outputs.append(code)
             }

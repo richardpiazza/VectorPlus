@@ -39,7 +39,8 @@ final class InstructionTests: XCTestCase {
         ])
         
         let translate = Transformation.translate(x: -10.0, y: 10.0)
-        let subpaths = try path.instructionSets(applying: [translate])
+        let subpaths = try path.asPath(applying: [translate]).instructionSets()
+//        let subpaths = try path.instructionSets(applying: [translate])
         guard subpaths.count == 1 else {
             XCTFail()
             return

@@ -68,38 +68,17 @@ public extension Document {
     }
 }
 
-// MARK: - InstructionSetRepresentable
-extension Document: InstructionSetRepresentable {
-    public func instructionSets() throws -> [InstructionSet] {
-        var output: [InstructionSet] = []
-        
-        if let paths = self.paths {
-            try paths.forEach({
-                try output.append(contentsOf: $0.instructionSets())
-            })
-        }
-        
-        if let groups = self.groups {
-            try groups.forEach({
-                try output.append(contentsOf: $0.instructionSets())
-            })
-        }
-        
-        return output
-    }
-}
-
 public extension Document {
     func allPaths() throws -> [Path] {
         var output: [Path] = []
         
         if let paths = self.paths {
-            output.append(contentsOf: paths)
+            try output.append(contentsOf: paths.map({ try $0.asPath(applying: []) }))
         }
         
         if let groups = self.groups {
             try groups.forEach({
-                try output.append(contentsOf: $0.allPaths())
+                try output.append(contentsOf: $0.allPaths(applying: []))
             })
         }
         
@@ -116,16 +95,19 @@ public extension Document {
             return CGMutablePath()
         }
         
-        guard let instructionSets = try? instructionSets() else {
+        guard let paths = try? allPaths() else {
             return CGMutablePath()
         }
         
         let path = CGMutablePath()
-        instructionSets.forEach { (set) in
-            set.forEach { (instruction) in
-                path.addInstruction(instruction, originalSize: originalSize, outputSize: size.size)
+        
+        paths.forEach { (p) in
+            let instructions = (try? p.instructions()) ?? []
+            instructions.forEach { (i) in
+                path.addInstruction(i, originalSize: originalSize, outputSize: size.size)
             }
         }
+        
         return path
     }
 }

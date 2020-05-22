@@ -34,17 +34,4 @@ public extension InstructionRepresentable {
         
         return subpaths
     }
-    
-    func asPath() throws -> Path {
-        var path = Path(instructions: try instructions())
-        if let attributes = self as? PresentationAttributes {
-            path.fill = attributes.fill
-            path.fillOpacity = attributes.fillOpacity
-            path.stroke = attributes.stroke
-            path.strokeWidth = attributes.strokeWidth
-            path.strokeOpacity = attributes.strokeOpacity
-            path.transform = attributes.transform
-        }
-        return path
-    }
 }

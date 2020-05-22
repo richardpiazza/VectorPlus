@@ -33,20 +33,37 @@ public extension Document {
                 
                 context.addPath(cgPath)
                 
-                if let fillColor = path.fillColor?.nsColor {
+                switch (path.fillColor, path.strokeColor) {
+                case (.some(let fillColor), .some(let strokeColor)):
                     if let opacity = path.fillOpacity, opacity != 0.0 {
-                        let color = fillColor.withAlphaComponent(CGFloat(opacity)).cgColor
+                        let color = fillColor.nsColor.withAlphaComponent(CGFloat(opacity)).cgColor
                         context.setFillColor(color)
                         context.fillPath()
                     }
-                }
-                
-                if let strokeWidth = path.strokeWidth, let strokeColor = path.strokeColor?.nsColor {
-                    let opacity = CGFloat(path.strokeOpacity ?? 1.0)
-                    let color = strokeColor.withAlphaComponent(opacity).cgColor
-                    context.setLineWidth(CGFloat(strokeWidth))
-                    context.setStrokeColor(color)
-                    context.strokePath()
+                    if let strokeWidth = path.strokeWidth {
+                        let opacity = CGFloat(path.strokeOpacity ?? 1.0)
+                        let color = strokeColor.nsColor.withAlphaComponent(opacity).cgColor
+                        context.setLineWidth(CGFloat(strokeWidth))
+                        context.setStrokeColor(color)
+                        context.strokePath()
+                    }
+                case (.some(let fillColor), .none):
+                    if let opacity = path.fillOpacity, opacity != 0.0 {
+                        let color = fillColor.nsColor.withAlphaComponent(CGFloat(opacity)).cgColor
+                        context.setFillColor(color)
+                        context.fillPath()
+                    }
+                case (.none, .some(let strokeColor)):
+                    if let strokeWidth = path.strokeWidth {
+                        let opacity = CGFloat(path.strokeOpacity ?? 1.0)
+                        let color = strokeColor.nsColor.withAlphaComponent(opacity).cgColor
+                        context.setLineWidth(CGFloat(strokeWidth))
+                        context.setStrokeColor(color)
+                        context.strokePath()
+                    }
+                case (.none, .none):
+                    context.setFillColor(NSColor.black.cgColor)
+                    context.fillPath()
                 }
                 
                 context.restoreGState()

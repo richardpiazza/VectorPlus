@@ -31,6 +31,6 @@ extension Rectangle: InstructionRepresentable {
     }
 }
 
-// MARK: - InstructionSetRepresentable
-extension Rectangle: InstructionSetRepresentable {
+// MARK: - PathRepresentable
+extension Rectangle: PathRepresentable {
 }
