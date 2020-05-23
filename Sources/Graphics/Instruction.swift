@@ -188,7 +188,7 @@ extension Instruction: CustomStringConvertible {
         case .rectangle(let x, let y, let w, let h, let rx, let ry):
             let radiusX = (rx != nil) ? String(format: "%.5f", rx!) : "nil"
             let radiusY = (ry != nil) ? String(format: "%.5f", ry!) : "nil"
-            return String(format: ".rectangle(x: %.5f, y: %.5f, w: %.5f, y: %.5f, rx: %@, ry: %@)", x, y, w, h, radiusX, radiusY)
+            return String(format: ".rectangle(x: %.5f, y: %.5f, w: %.5f, y: %.5f, rx: \(radiusX), ry: \(radiusY))", x, y, w, h)
         case .close:
             return ".close"
         }
@@ -210,29 +210,29 @@ public extension Instruction {
         switch self {
         case .move(let x, let y):
             let vector = VectorPoint(point: Point(x: x, y: y), in: rect)
-            return String(format: ".move(to: %@)", vector.coreGraphicsDescription)
+            return ".move(to: \(vector.coreGraphicsDescription))"
         
         case .line(let x, let y):
             let vector = VectorPoint(point: Point(x: x, y: y), in: rect)
-            return String(format: ".addLine(to: %@)", vector.coreGraphicsDescription)
+            return ".addLine(to: \(vector.coreGraphicsDescription))"
         
         case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
             let pointVector = VectorPoint(point: Point(x: x, y: y), in: rect)
             let control1Vector = VectorPoint(point: Point(x: cx1, y: cy1), in: rect)
             let control2Vector = VectorPoint(point: Point(x: cx2, y: cy2), in: rect)
-            return String(format: ".addCurve(to: %@, control1: %@, control2: %@)", pointVector.coreGraphicsDescription, control1Vector.coreGraphicsDescription, control2Vector.coreGraphicsDescription)
+            return ".addCurve(to: \(pointVector.coreGraphicsDescription), control1: \(control1Vector.coreGraphicsDescription), control2: \(control2Vector.coreGraphicsDescription))"
         
         case .quadraticCurve(let x, let y, let cx, let cy):
             let pointVector = VectorPoint(point: Point(x: x, y: y), in: rect)
             let controlVector = VectorPoint(point: Point(x: cx, y: cy), in: rect)
-            return String(format: ".addQuadCurve(to: %@, control: %@)", pointVector.coreGraphicsDescription, controlVector.coreGraphicsDescription)
+            return ".addQuadCurve(to: \(pointVector.coreGraphicsDescription), control: \(controlVector.coreGraphicsDescription))"
         
         case .circle(let x, let y, let r):
             let vector = VectorPoint(point: Point(x: x, y: y), in: rect)
             let designRadius = originalSize.maxRadius
             let radiusMultiplier = r / designRadius
             let radius = String(format: "(radius * %.5f)", radiusMultiplier)
-            return String(format: ".addArc(center: %@, radius: %@, startAngle: radians(0.0), endAngle: radians(360.0), clockwise: false)", vector.coreGraphicsDescription, radius)
+            return ".addArc(center: \(vector.coreGraphicsDescription), radius: \(radius), startAngle: radians(0.0), endAngle: radians(360.0), clockwise: false)"
         
         case .rectangle(let x, let y, let w, let h, let rx, let ry):
             let radiusX = rx ?? 0.0
@@ -245,12 +245,13 @@ public extension Instruction {
             let vector = VectorPoint(point: Point(x: x, y: y), in: rect)
             
             let size = String(format: "CGSize(width: (radius * %.5f), height: (radius * %.5f))", widthMultiplier, heightMultiplier)
-            let rect = String(format: "CGRect(origin: %@, size: %@)", vector.coreGraphicsDescription, size)
+            let rect = "CGRect(origin: \(vector.coreGraphicsDescription), size: \(size))"
             
             if radiusX > 0.0 || radiusY > 0.0 {
-                return String(format: ".addRoundedRect(in: %@, cornerWidth: %.5f, cornerHeight: %.5f)", rect, radiusX, radiusY)
+                let corners = String(format: "cornerWidth: %.5f, cornerHeight: %.5f", radiusX, radiusY)
+                return ".addRoundedRect(in: \(rect), \(corners))"
             } else {
-                return String(format: ".addRect(%@)", rect)
+                return ".addRect(\(rect))"
             }
         
         case .close:
@@ -372,13 +373,13 @@ internal extension Instruction {
     var pathData: String? {
         switch self {
         case .move(let x, let y):
-            return String(format: "%@%.5f,%.5f", Prefix.move.stringValue, x, y)
+            return String(format: "\(Prefix.move.stringValue)%.5f,%.5f", x, y)
         case .line(let x, let y):
-            return String(format: "%@%.5f,%.5f", Prefix.line.stringValue, x, y)
+            return String(format: "\(Prefix.line.stringValue)%.5f,%.5f", x, y)
         case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-            return String(format: "%@%.5f,%.5f %.5f,%.5f %.5f,%.5f", Prefix.bezierCurve.stringValue, cx1, cy1, cx2, cy2, x, y)
+            return String(format: "\(Prefix.bezierCurve.stringValue)%.5f,%.5f %.5f,%.5f %.5f,%.5f", cx1, cy1, cx2, cy2, x, y)
         case .quadraticCurve(let x, let y, let cx, let cy):
-            return String(format: "%@%.5f,%.5f %.5f,%.5f", Prefix.quadraticCurve.stringValue, cx, cy, x, y)
+            return String(format: "\(Prefix.quadraticCurve.stringValue)%.5f,%.5f %.5f,%.5f", cx, cy, x, y)
         case .close:
             return Prefix.close.stringValue
         default:

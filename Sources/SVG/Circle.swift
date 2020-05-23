@@ -56,7 +56,7 @@ extension Circle: CustomStringConvertible {
     public var description: String {
         var desc = String(format: "<circle cx=\"%.5f\" cy=\"%.5f\" r=\"%.5f\"", x, y, r)
         if !presentationDescription.isEmpty {
-            desc.append(String(format: " %@", presentationDescription))
+            desc.append(" \(presentationDescription)")
         }
         desc.append(" />")
         return desc

@@ -84,6 +84,6 @@ extension Document: CustomStringConvertible {
         let groups = self.groups?.compactMap({ $0.description }) ?? []
         groups.forEach({ contents.append("\n\($0)") })
         
-        return String(format: "<svg viewBox=\"%@\" width=\"%@\" height=\"%@\">%@\n</svg>", viewBox ?? "", width ?? "", height ?? "", contents)
+        return "<svg viewBox=\"\(viewBox ?? "")\" width=\"\(width ?? "")\" height=\"\(height ?? "")\">\(contents)\n</svg>"
     }
 }

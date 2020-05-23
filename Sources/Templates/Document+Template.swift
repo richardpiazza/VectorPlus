@@ -54,7 +54,7 @@ extension Path {
         let instructions = (try? self.instructions()) ?? []
         instructions.forEach { (i) in
             let method = i.coreGraphicsDescription(originalSize: originalSize)
-            let code = String(format: "%@%@", variable, method)
+            let code = "\(variable)\(method)"
             outputs.append(code)
         }
         return outputs.joined(separator: "\n        ")
