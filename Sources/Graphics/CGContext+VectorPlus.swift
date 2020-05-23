@@ -26,7 +26,8 @@ public extension CGContext {
             if let strokeWidth = path.strokeWidth {
                 let opacity = CGFloat(path.strokeOpacity ?? 1.0)
                 let color = strokeColor.copy(alpha: opacity) ?? strokeColor
-                setLineWidth(CGFloat(strokeWidth))
+                let lineWidth = CGFloat(strokeWidth) * (outputSize.width / originalSize.width)
+                setLineWidth(lineWidth)
                 setStrokeColor(color)
                 strokePath()
             }
@@ -40,7 +41,8 @@ public extension CGContext {
             if let strokeWidth = path.strokeWidth {
                 let opacity = CGFloat(path.strokeOpacity ?? 1.0)
                 let color = strokeColor.copy(alpha: opacity) ?? strokeColor
-                setLineWidth(CGFloat(strokeWidth))
+                let lineWidth = CGFloat(strokeWidth) * (outputSize.width / originalSize.width)
+                setLineWidth(lineWidth)
                 setStrokeColor(color)
                 strokePath()
             }

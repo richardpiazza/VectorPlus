@@ -8,15 +8,24 @@ import ShellOut
 import AppKit
 #endif
 
-extension Document.Output: ExpressibleByArgument { }
-
 struct Command: ParsableCommand {
     
     @Argument(help: "The relative or absolute path of the SVG file to be parsed.")
     var filename: String
     
-    @Flag(name: .shortAndLong, help: "Output style to generate.")
-    var output: Document.Output?
+    @Flag(name: .long, help: "Outputs a 'UIImageView' subclass that supports dynamic resizing")
+    var `class`: Bool
+    
+    #if canImport(AppKit)
+    @Flag(name: .long, help: "Writes a png image to input file path.")
+    var png: Bool
+    
+    @Option(name: .long, help: "Image size when --png is used.")
+    var size: Float?
+    
+    @Flag(name: .long, help: "Generates a preview window.")
+    var preview: Bool
+    #endif
     
     mutating func validate() throws {
         guard !filename.isEmpty else {
@@ -39,35 +48,45 @@ struct Command: ParsableCommand {
 
         let svg = try Document.make(from: fileURL)
         
-        guard let output = self.output else {
+        if `class` {
+            let value = try svg.asImageViewSubclass()
+            print(value)
+        }
+        
+        #if canImport(AppKit)
+        if `class` == false && (png == false && preview == false) {
             print(svg.description)
             return
         }
+        #else
+        print(svg.description)
+        return
+        #endif
         
-        switch output {
-        case .struct:
-            let value = try svg.asFileTemplate()
-            print(value)
-        case .uiimageview:
-            let value = try svg.asImageViewSubclass()
-            print(value)
-        case .png:
-            #if canImport(AppKit)
-            if let value = svg.pngData(size: svg.outputSize.cgSize) {
-                let image = directory.appendingPathComponent("image.png")
-                try value.write(to: image)
-                try shellOut(to: .openFile(at: image.lastPathComponent))
-            }
-            #endif
-        case .preview:
-            #if canImport(AppKit)
-            if let value = svg.pngData(size: svg.outputSize.cgSize) {
-                let app = NSApplication.shared
-                let delegate = AppDelegate(data: value)
-                app.delegate = delegate
-                app.run()
-            }
-            #endif
+        #if canImport(AppKit)
+        let outputSize: CGSize
+        if let size = self.size {
+            outputSize = CGSize(width: CGFloat(size), height: CGFloat(size))
+        } else {
+            outputSize = svg.outputSize.cgSize
         }
+        
+        guard let data = svg.pngData(size: outputSize) else {
+            return
+        }
+        
+        if png {
+            let outputURL = fileURL.deletingPathExtension().appendingPathExtension("\(Int(outputSize.width))pt.png")
+            try data.write(to: outputURL)
+            try shellOut(to: .openFile(at: outputURL.absoluteString))
+        }
+        
+        if preview {
+            let app = NSApplication.shared
+            let delegate = AppDelegate(data: data)
+            app.delegate = delegate
+            app.run()
+        }
+        #endif
     }
 }

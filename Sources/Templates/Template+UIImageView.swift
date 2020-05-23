@@ -7,6 +7,8 @@ import UIKit
 @IBDesignable
 public class {{name}}: UIImageView {
     
+    public static let width: CGFloat = {{width}}
+    public static let height: CGFloat = {{height}}
     public let width: CGFloat = {{width}}
     public let height: CGFloat = {{height}}
     
@@ -65,100 +67,108 @@ public class {{name}}: UIImageView {
     }
     
     public func updateSubviews() {
-        image = Image.image(sized: bounds.size, fillColor: tintColor)
+        image = Self.image(size: bounds.size)
     }
     
-    private struct Image {
-        
-        private static var pathCache: [String: CGPath] = [:]
-        private static var imageCache: [String: UIImage] = [:]
-        
-        private static func key(for size: CGSize) -> String {
-            return String(format: "%.3f,%.3f", size.width, size.height)
+    public static func path(size: CGSize) -> CGPath {
+        guard size.height > 0.0 && size.width > 0.0 else {
+            return CGMutablePath()
         }
         
-        private static func key(for size: CGSize, color: UIColor) -> String {
-            let sizeKey = key(for: size)
-            
-            var red: CGFloat = 0.0
-            var green: CGFloat = 0.0
-            var blue: CGFloat = 0.0
-            var alpha: CGFloat = 0.0
-            color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-            
-            return String(format: "%@,%.3f,%.3f,%.3f,%.3f", sizeKey, red, green, blue, alpha)
+        let radius = max(size.width / 2.0, size.height / 2.0)
+        let center = CGPoint(x: size.width / 2.0, y: size.height / 2.0)
+        
+        let path = CGMutablePath()
+        {{instructions}}
+        return path
+    }
+    
+    public static func image(size: CGSize) -> UIImage? {
+        guard size.height > 0.0 && size.width > 0.0 else {
+            return nil
         }
         
-        public static func path(sized size: CGSize) -> CGPath {
-            let pathKey = key(for: size)
-            
-            if let path = pathCache[pathKey] {
-                return path
-            }
-            
-            let path = makePath(sized: size)
-            pathCache[pathKey] = path
-            
-            return path
+        let radius = max(size.width / 2.0, size.height / 2.0)
+        let center = CGPoint(x: size.width / 2.0, y: size.height / 2.0)
+        
+        defer {
+            UIGraphicsEndImageContext()
         }
         
-        public static func image(sized size: CGSize, fillColor: UIColor) -> UIImage? {
-            let imageKey = key(for: size, color: fillColor)
-            
-            if let image = imageCache[imageKey] {
-                return image
-            }
-            
-            guard let image = makeImage(sized: size, fillColor: fillColor) else {
-                return nil
-            }
-            
-            imageCache[imageKey] = image
-            
-            return image
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
         }
         
-        private static func makePath(sized size: CGSize) -> CGPath {
-            guard size.height > 0.0 && size.width > 0.0 else {
-                return CGMutablePath()
-            }
-            
-            let radius = max(size.width / 2.0, size.height / 2.0)
-            let center = CGPoint(x: size.width / 2.0, y: size.height / 2.0)
-            
-            let path = CGMutablePath()
-            {{instructions}}
-            return path
-        }
+        {{render}}
         
-        private static func makeImage(sized size: CGSize, fillColor: UIColor) -> UIImage? {
-            guard size.height > 0.0 && size.width > 0.0 else {
-                return nil
-            }
-            
-            defer {
-                UIGraphicsEndImageContext()
-            }
-            
-            UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
-            
-            guard let context = UIGraphicsGetCurrentContext() else {
-                return nil
-            }
-            
-            context.addPath(path(sized: size))
-            context.setFillColor(fillColor.cgColor)
-            context.fillPath()
-            
-            return UIGraphicsGetImageFromCurrentImageContext()
-        }
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+    
+    private static func radians(_ degree: Float) -> CGFloat {
+        return CGFloat(degree) * (.pi / CGFloat(180))
+    }
+}
 
-        private static func radians(_ degree: Float) -> CGFloat {
-            return CGFloat(degree) * (.pi / CGFloat(180))
-        }
+private extension CGContext {
+    func rendering(_ block: (CGContext) -> Void) {
+        block(self)
     }
 }
 
 #endif
 
+"""
+
+internal let contextTemplate: String = """
+        context.rendering { (ctx) in
+            ctx.saveGState()
+            
+            let path = CGMutablePath()
+            {{instructions}}
+            ctx.addPath(path)
+            
+            let defaultColor: CGColor = CGColor(srgbRed: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
+            let pathFillColor: CGColor? = {{fillColor}}
+            let pathFillOpacity: CGFloat? = {{fillOpacity}}
+            let pathStrokeColor: CGColor? = {{strokeColor}}
+            let pathStrokeOpacity: CGFloat? = {{strokeOpacity}}
+            let pathStrokeWidth: CGFloat? = {{strokeWidth}}
+            
+            switch (pathFillColor, pathStrokeColor) {
+            case (.some(let fillColor), .some(let strokeColor)):
+                if let opacity = pathFillOpacity, opacity != 0.0 {
+                    let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
+                    ctx.setFillColor(color)
+                    ctx.fillPath()
+                }
+                if let strokeWidth = pathStrokeWidth {
+                    let opacity = CGFloat(pathStrokeOpacity ?? 1.0)
+                    let color = strokeColor.copy(alpha: opacity) ?? strokeColor
+                    ctx.setLineWidth(CGFloat(strokeWidth))
+                    ctx.setStrokeColor(color)
+                    ctx.strokePath()
+                }
+            case (.some(let fillColor), .none):
+                if let opacity = pathFillOpacity, opacity != 0.0 {
+                    let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
+                    ctx.setFillColor(color)
+                    ctx.fillPath()
+                }
+            case (.none, .some(let strokeColor)):
+                if let strokeWidth = pathStrokeWidth {
+                    let opacity = CGFloat(pathStrokeOpacity ?? 1.0)
+                    let color = strokeColor.copy(alpha: opacity) ?? strokeColor
+                    ctx.setLineWidth(CGFloat(strokeWidth))
+                    ctx.setStrokeColor(color)
+                    ctx.strokePath()
+                }
+            case (.none, .none):
+                ctx.setFillColor(defaultColor)
+                ctx.fillPath()
+            }
+            
+            ctx.restoreGState()
+        }
 """
