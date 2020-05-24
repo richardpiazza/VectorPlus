@@ -1,17 +1,18 @@
 import Foundation
 import SVG
+import Swift2D
 #if canImport(CoreGraphics)
 import CoreGraphics
 
 public extension CGContext {
-    func render(path: Path, originalSize: CGSize, outputSize: CGSize) throws {
+    func render(path: Path, from: Rect, to: Rect) throws {
         saveGState()
         
         let cgPath = CGMutablePath()
         
         let instructions = (try? path.instructions()) ?? []
         instructions.forEach { (instruction) in
-            cgPath.addInstruction(instruction, originalSize: originalSize.size, outputSize: outputSize.size)
+            cgPath.addInstruction(instruction, from: from, to: to)
         }
         
         addPath(cgPath)
@@ -26,7 +27,7 @@ public extension CGContext {
             if let strokeWidth = path.strokeWidth {
                 let opacity = CGFloat(path.strokeOpacity ?? 1.0)
                 let color = strokeColor.copy(alpha: opacity) ?? strokeColor
-                let lineWidth = CGFloat(strokeWidth) * (outputSize.width / originalSize.width)
+                let lineWidth = CGFloat(strokeWidth * (to.size.width / from.size.width))
                 setLineWidth(lineWidth)
                 setStrokeColor(color)
                 strokePath()
@@ -41,7 +42,7 @@ public extension CGContext {
             if let strokeWidth = path.strokeWidth {
                 let opacity = CGFloat(path.strokeOpacity ?? 1.0)
                 let color = strokeColor.copy(alpha: opacity) ?? strokeColor
-                let lineWidth = CGFloat(strokeWidth) * (outputSize.width / originalSize.width)
+                let lineWidth = CGFloat(strokeWidth * (to.size.width / from.size.width))
                 setLineWidth(lineWidth)
                 setStrokeColor(color)
                 strokePath()

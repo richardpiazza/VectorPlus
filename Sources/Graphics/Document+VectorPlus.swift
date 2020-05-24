@@ -18,7 +18,7 @@ public extension Document {
     
     /// Size of the design in a square 'viewBox'.
     ///
-    /// All paths created by this framework are outputed in a 'square'.
+    /// All paths created by this framework are outputted in a 'square'.
     var outputSize: Size {
         let size = originalSize
         let maxDimension = max(size.width, size.height)
@@ -99,12 +99,15 @@ public extension Document {
             return CGMutablePath()
         }
         
+        let from = Rect(origin: .zero, size: originalSize)
+        let to = Rect(origin: .zero, size: size.size)
+        
         let path = CGMutablePath()
         
         paths.forEach { (p) in
             let instructions = (try? p.instructions()) ?? []
             instructions.forEach { (i) in
-                path.addInstruction(i, originalSize: originalSize, outputSize: size.size)
+                path.addInstruction(i, from: from, to: to)
             }
         }
         

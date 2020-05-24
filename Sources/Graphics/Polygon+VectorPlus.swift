@@ -40,7 +40,7 @@ extension SVG.Polygon: InstructionRepresentable {
                 firstValue = false
             } else {
                 let count = instructions.count
-                guard let modified = try? instructions.last?.adjusting(relativeValue: value, at: 1) else {
+                guard let modified = try? instructions.last?.adjustingArgument(at: 1, by: value) else {
                     return instructions
                 }
                 

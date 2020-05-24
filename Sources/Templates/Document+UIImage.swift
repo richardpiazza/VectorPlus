@@ -1,5 +1,6 @@
 import Foundation
 import SVG
+import Swift2D
 import Graphics
 #if canImport(UIKit)
 import UIKit
@@ -9,6 +10,9 @@ public extension Document {
         guard size.height > 0.0 && size.width > 0.0 else {
             return nil
         }
+        
+        let from = Rect(origin: .zero, size: originalSize)
+        let to = Rect(origin: .zero, size: size.size)
         
         let paths: [Path]
         do {
@@ -28,7 +32,7 @@ public extension Document {
         }
         
         paths.forEach { (path) in
-            try? context.render(path: path, originalSize: originalSize.cgSize, outputSize: size)
+            try? context.render(path: path, from: from, to: to)
         }
         
         return UIGraphicsGetImageFromCurrentImageContext()

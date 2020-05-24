@@ -165,10 +165,10 @@ extension Path: InstructionRepresentable {
                         case .relative:
                             switch argumentPosition {
                             case 0:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition += 1
                             case 1:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition = -1
                             default:
                                 break
@@ -185,7 +185,7 @@ extension Path: InstructionRepresentable {
                         case .relative:
                             switch argumentPosition {
                             case 0:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 if singleValue {
                                     argumentPosition = -1
                                     singleValue = false
@@ -193,7 +193,7 @@ extension Path: InstructionRepresentable {
                                     argumentPosition += 1
                                 }
                             case 1:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition = -1
                             default:
                                 break
@@ -218,13 +218,13 @@ extension Path: InstructionRepresentable {
                         case .relative:
                             switch argumentPosition {
                             case 0, 2...4:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition += 1
                             case 1:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition = -1
                             case 5:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition = 0
                             default:
                                 break
@@ -245,13 +245,13 @@ extension Path: InstructionRepresentable {
                         case .relative:
                             switch argumentPosition {
                             case 0, 2:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition += 1
                             case 1:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition = -1
                             case 3:
-                                instruction = try currentInstruction.adjusting(relativeValue: value, at: argumentPosition)
+                                instruction = try currentInstruction.adjustingArgument(at: argumentPosition, by: value)
                                 argumentPosition = 0
                             default:
                                 break
@@ -275,7 +275,7 @@ extension Path: InstructionRepresentable {
                             instruction = .move(x: value, y: .nan)
                         case .relative:
                             instruction = .move(x: lastInstruction.x, y: lastInstruction.y)
-                            instruction = try instruction!.adjusting(relativeValue: value, at: 0)
+                            instruction = try instruction!.adjustingArgument(at: 0, by: value)
                             argumentPosition = 1
                         }
                     case .line:
@@ -284,7 +284,7 @@ extension Path: InstructionRepresentable {
                             instruction = .line(x: value, y: .nan)
                         case .relative:
                             instruction = .line(x: lastInstruction.x, y: lastInstruction.y)
-                            instruction = try instruction!.adjusting(relativeValue: value, at: 0)
+                            instruction = try instruction!.adjustingArgument(at: 0, by: value)
                             argumentPosition = 1
                         }
                     case .bezierCurve:
@@ -297,7 +297,7 @@ extension Path: InstructionRepresentable {
                             }
                             
                             instruction = .bezierCurve(x: x, y: y, cx1: cx1, cy1: cy1, cx2: cx2, cy2: cy2)
-                            instruction = try instruction!.adjusting(relativeValue: value, at: 2)
+                            instruction = try instruction!.adjustingArgument(at: 2, by: value)
                             argumentPosition = 3
                         }
                     case .quadraticCurve:
@@ -310,7 +310,7 @@ extension Path: InstructionRepresentable {
                             }
                             
                             instruction = .quadraticCurve(x: x, y: y, cx: cx, cy: cy)
-                            instruction = try instruction!.adjusting(relativeValue: value, at: 2)
+                            instruction = try instruction!.adjustingArgument(at: 2, by: value)
                             argumentPosition = 3
                         }
                     case .circle, .rectangle, .close:

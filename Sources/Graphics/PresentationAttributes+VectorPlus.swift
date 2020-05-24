@@ -35,11 +35,11 @@ import AppKit
 
 public extension PresentationAttributes {
     var cgFillColor: CGColor? {
-        return fillColor?.nsColor.cgColor
+        return fillColor?.cgColor
     }
     
     var cgStrokeColor: CGColor? {
-        return strokeColor?.nsColor.cgColor
+        return strokeColor?.cgColor
     }
 }
 #elseif canImport(UIKit)
@@ -47,11 +47,11 @@ import UIKit
 
 public extension PresentationAttributes {
     var cgFillColor: CGColor? {
-        return fillColor?.uiColor.cgColor
+        return fillColor?.cgColor
     }
     
     var cgStrokeColor: CGColor? {
-        return strokeColor?.uiColor.cgColor
+        return strokeColor?.cgColor
     }
 }
 #endif

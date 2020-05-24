@@ -40,7 +40,7 @@ public enum Instruction {
     ///
     case circle(x: Float, y: Float, r: Float)
     
-    /// A **Rect** (rouned or not) element.
+    /// A **Rect** (rounded or not) element.
     ///
     case rectangle(x: Float, y: Float, w: Float, h: Float, rx: Float?, ry: Float?)
     
@@ -60,7 +60,7 @@ public enum Instruction {
         case invalidArgumentPosition
         /// The previous instruction is missing/invalid
         ///
-        /// Relative insructions are typically only used after another instruction
+        /// Relative instructions are typically only used after another instruction
         case relativeInstruction
         /// The last control point is invalid.
         ///
@@ -139,20 +139,20 @@ public extension Instruction {
     
     func applying(transformation: Transformation) -> Instruction {
         switch transformation {
-        case .translate(let _x, let _y):
+        case .translate(let Δx, let Δy):
             switch self {
             case .move(let x, let y):
-                return .move(x: x + _x, y: y + _y)
+                return .move(x: x + Δx, y: y + Δy)
             case .line(let x, let y):
-                return .line(x: x + _x, y: y + _y)
+                return .line(x: x + Δx, y: y + Δy)
             case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-                return .bezierCurve(x: x + _x, y: y + _y, cx1: cx1 + _x, cy1: cy1 + _y, cx2: cx2 + _x, cy2: cy2 + _y)
+                return .bezierCurve(x: x + Δx, y: y + Δy, cx1: cx1 + Δx, cy1: cy1 + Δy, cx2: cx2 + Δx, cy2: cy2 + Δy)
             case .quadraticCurve(let x, let y, let cx, let cy):
-                return .quadraticCurve(x: x + _x, y: y + _y, cx: cx + _x, cy: cy + _y)
+                return .quadraticCurve(x: x + Δx, y: y + Δy, cx: cx + Δx, cy: cy + Δy)
             case .circle(let x, let y, let r):
-                return .circle(x: x + _x, y: y + _y, r: r)
+                return .circle(x: x + Δx, y: y + Δy, r: r)
             case .rectangle(let x, let y, let w, let h, let rx, let ry):
-                return .rectangle(x: x + _x, y: y + _y, w: w, h: h, rx: rx, ry: ry)
+                return .rectangle(x: x + Δx, y: y + Δy, w: w, h: h, rx: rx, ry: ry)
             case .close:
                 return .close
             }
@@ -167,6 +167,39 @@ public extension Instruction {
         }
         
         return instruction
+    }
+    
+    func translate(from: Rect, to: Rect) -> Instruction {
+        switch self {
+        case .move(let x, let y):
+            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            return .move(x: point.x, y: point.y)
+        case .line(let x, let y):
+            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            return .line(x: point.x, y: point.y)
+        case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
+            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            let control1 = VectorPoint(x: cx1, y: cy1, in: from).translate(to: to)
+            let control2 = VectorPoint(x: cx2, y: cy2, in: from).translate(to: to)
+            return .bezierCurve(x: point.x, y: point.y, cx1: control1.x, cy1: control1.y, cx2: control2.x, cy2: control2.y)
+        case .quadraticCurve(let x, let y, let cx, let cy):
+            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            let control = VectorPoint(x: cx, y: cy, in: from).translate(to: to)
+            return .quadraticCurve(x: point.x, y: point.y, cx: control.x, cy: control.y)
+        case .circle(let x, let y, let r):
+            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            let toRadius = (r / from.size.minRadius) * to.size.maxRadius
+            return .circle(x: point.x, y: point.y, r: toRadius)
+        case .rectangle(let x, let y, let w, let h, let rx, let ry):
+            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            let width = (w / from.size.minRadius) * to.size.maxRadius
+            let height = (h / from.size.minRadius) * to.size.maxRadius
+            let radiusX = (rx != nil) ? (rx! / w) * width : nil
+            let radiusY = (ry != nil) ? (ry! / h) * height : nil
+            return .rectangle(x: point.x, y: point.y, w: width, h: height, rx: radiusX, ry: radiusY)
+        case .close:
+            return .close
+        }
     }
 }
 
@@ -311,53 +344,57 @@ internal extension Instruction {
         }
     }
     
-    func adjusting(relativeValue: Float, at argumentPosition: Int) throws -> Instruction {
+    /// Adjusts the value contained at the specified argument position (i.e., x, y, cx2) by the specified amount.
+    ///
+    /// - parameter position: The index of the instructions values to adjust.
+    /// - parameter value: The value to add to the existing value. (If the current value `.isNaN`, the supplied value is used.
+    func adjustingArgument(at position: Int, by value: Float) throws -> Instruction {
         switch self {
         case .move(let x, let y):
-            switch argumentPosition {
+            switch position {
             case 0:
-                return .move(x: (x.isNaN) ? relativeValue : x + relativeValue, y: y)
+                return .move(x: (x.isNaN) ? value : x + value, y: y)
             case 1:
-                return .move(x: x, y: (y.isNaN) ? relativeValue : y + relativeValue)
+                return .move(x: x, y: (y.isNaN) ? value : y + value)
             default:
                 throw Error.invalidArgumentPosition
             }
         case .line(let x, let y):
-            switch argumentPosition {
+            switch position {
             case 0:
-                return .line(x: (x.isNaN) ? relativeValue : x + relativeValue, y: y)
+                return .line(x: (x.isNaN) ? value : x + value, y: y)
             case 1:
-                return .line(x: x, y: (y.isNaN) ? relativeValue : y + relativeValue)
+                return .line(x: x, y: (y.isNaN) ? value : y + value)
             default:
                 throw Error.invalidArgumentPosition
             }
         case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-            switch argumentPosition {
+            switch position {
             case 0:
-                return .bezierCurve(x: (x.isNaN) ? relativeValue : x + relativeValue, y: y, cx1: cx1, cy1: cy1, cx2: cx2, cy2: cy2)
+                return .bezierCurve(x: (x.isNaN) ? value : x + value, y: y, cx1: cx1, cy1: cy1, cx2: cx2, cy2: cy2)
             case 1:
-                return .bezierCurve(x: x, y: (y.isNaN) ? relativeValue : y + relativeValue, cx1: cx1, cy1: cy1, cx2: cx2, cy2: cy2)
+                return .bezierCurve(x: x, y: (y.isNaN) ? value : y + value, cx1: cx1, cy1: cy1, cx2: cx2, cy2: cy2)
             case 2:
-                return .bezierCurve(x: x, y: y, cx1: (cx1.isNaN) ? relativeValue : cx1 + relativeValue, cy1: cy1, cx2: cx2, cy2: cy2)
+                return .bezierCurve(x: x, y: y, cx1: (cx1.isNaN) ? value : cx1 + value, cy1: cy1, cx2: cx2, cy2: cy2)
             case 3:
-                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: (cy1.isNaN) ? relativeValue : cy1 + relativeValue, cx2: cx2, cy2: cy2)
+                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: (cy1.isNaN) ? value : cy1 + value, cx2: cx2, cy2: cy2)
             case 4:
-                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: cy1, cx2: (cx2.isNaN) ? relativeValue : cx2 + relativeValue, cy2: cy2)
+                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: cy1, cx2: (cx2.isNaN) ? value : cx2 + value, cy2: cy2)
             case 5:
-                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: cy1, cx2: cx2, cy2: (cy2.isNaN) ? relativeValue : cy2 + relativeValue)
+                return .bezierCurve(x: x, y: y, cx1: cx1, cy1: cy1, cx2: cx2, cy2: (cy2.isNaN) ? value : cy2 + value)
             default:
                 throw Error.invalidArgumentPosition
             }
         case .quadraticCurve(let x, let y, let cx, let cy):
-            switch argumentPosition {
+            switch position {
             case 0:
-                return .quadraticCurve(x: (x.isNaN) ? relativeValue : x + relativeValue, y: y, cx: cx, cy: cy)
+                return .quadraticCurve(x: (x.isNaN) ? value : x + value, y: y, cx: cx, cy: cy)
             case 1:
-                return .quadraticCurve(x: x, y: (y.isNaN) ? relativeValue : y + relativeValue, cx: cx, cy: cy)
+                return .quadraticCurve(x: x, y: (y.isNaN) ? value : y + value, cx: cx, cy: cy)
             case 2:
-                return .quadraticCurve(x: x, y: y, cx: (cx.isNaN) ? relativeValue : cx + relativeValue, cy: cy)
+                return .quadraticCurve(x: x, y: y, cx: (cx.isNaN) ? value : cx + value, cy: cy)
             case 3:
-                return .quadraticCurve(x: x, y: y, cx: cx, cy: (cy.isNaN) ? relativeValue : cy + relativeValue)
+                return .quadraticCurve(x: x, y: y, cx: cx, cy: (cy.isNaN) ? value : cy + value)
             default:
                 throw Error.invalidArgumentPosition
             }
