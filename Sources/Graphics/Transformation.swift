@@ -81,17 +81,31 @@ public enum Transformation {
                 return nil
             }
             
-            var components = String(string[start...stop])
-            components = components.replacingOccurrences(of: "(", with: "")
-            components = components.replacingOccurrences(of: ")", with: "")
-            components = components.replacingOccurrences(of: " ", with: "")
+            var substring = String(string[start...stop])
+            substring = substring.replacingOccurrences(of: "(", with: "")
+            substring = substring.replacingOccurrences(of: ")", with: "")
             
-            let values = components.components(separatedBy: ",").compactMap({ Float($0) })
+            var components = substring.split(separator: " ", omittingEmptySubsequences: true).map({ String($0) })
+            components = components.flatMap({ $0.components(separatedBy: ",") })
+            
+            let values = components.compactMap({ Float($0) })
             guard values.count > 5 else {
                 return nil
             }
             
             self = .matrix(a: values[0], b: values[1], c: values[2], d: values[3], e: values[4], f: values[5])
+        }
+    }
+}
+
+// MARK: - CustomStringConvertible
+extension Transformation: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .translate(let x, let y):
+            return String(format: "translate(%.5f, %.5f)", x, y)
+        case .matrix(let a, let b, let c, let d, let e, let f):
+            return String(format: "matrix(%.5f, %.5f, %.5f, %.5f, %.5f, %.5f)", a, b, c, d, e, f)
         }
     }
 }

@@ -1,6 +1,7 @@
 import Foundation
 import ArgumentParser
 import SVG
+import Swift2D
 import Graphics
 import Templates
 import ShellOut
@@ -15,6 +16,9 @@ struct Command: ParsableCommand {
     
     @Flag(name: .long, help: "Outputs a 'UIImageView' subclass that supports dynamic resizing")
     var `class`: Bool
+    
+    @Flag(name: .long, help: "Generates an Apple Symbols SVG document.")
+    var symbols: Bool
     
     #if canImport(AppKit)
     @Flag(name: .long, help: "Writes a png image to input file path.")
@@ -51,6 +55,19 @@ struct Command: ParsableCommand {
         if `class` {
             let value = try svg.asImageViewSubclass()
             print(value)
+        }
+        
+        if symbols {
+            if let path = try svg.allPaths().first {
+                let from = Rect(origin: .zero, size: svg.originalSize)
+                let to = Rect(origin: .zero, size: Size(width: 100, height: 100))
+                let instructions = try path.instructions().map({ $0.translate(from: from, to: to) })
+                let p = Path(instructions: instructions)
+                let symbolsDoc = Document.appleSymbols(path: p)
+                let data = try Document.encodeSymbols(symbolsDoc)
+                let outputURL = fileURL.deletingPathExtension().appendingPathExtension("symbols.svg")
+                try data.write(to: outputURL)
+            }
         }
         
         #if canImport(AppKit)
