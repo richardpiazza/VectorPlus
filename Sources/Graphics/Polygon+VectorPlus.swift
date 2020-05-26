@@ -2,7 +2,7 @@ import Foundation
 import SVG
 
 public extension SVG.Polygon {
-    convenience init(instructions: [Instruction]) {
+    init(instructions: [Instruction]) {
         self.init()
         let pointsData = instructions.compactMap({ $0.polygonPoints })
         points = pointsData.joined(separator: " ")

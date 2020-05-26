@@ -30,20 +30,8 @@ public extension PresentationAttributes {
     }
 }
 
-#if canImport(AppKit)
-import AppKit
-
-public extension PresentationAttributes {
-    var cgFillColor: CGColor? {
-        return fillColor?.cgColor
-    }
-    
-    var cgStrokeColor: CGColor? {
-        return strokeColor?.cgColor
-    }
-}
-#elseif canImport(UIKit)
-import UIKit
+#if canImport(CoreGraphics)
+import CoreGraphics
 
 public extension PresentationAttributes {
     var cgFillColor: CGColor? {

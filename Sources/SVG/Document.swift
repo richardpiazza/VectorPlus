@@ -3,8 +3,14 @@ import XMLCoder
 
 /// SVG is a language for describing two-dimensional graphics in XML.
 ///
-/// [https://www.w3.org/TR/SVG11/](https://www.w3.org/TR/SVG11/)
-public struct Document: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
+/// The svg element is a container that defines a new coordinate system and viewport.
+/// It is used as the outermost element of SVG documents, but it can also be used to
+/// embed a SVG fragment inside an SVG or HTML document.
+///
+/// ## Documentation
+/// [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/svg)
+/// | [W3](https://www.w3.org/TR/SVG11/)
+public struct Document: Codable {
     
     public var viewBox: String?
     public var width: String?
@@ -24,38 +30,8 @@ public struct Document: Codable, DynamicNodeEncoding, DynamicNodeDecoding {
         case paths = "path"
     }
     
-    public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
-        switch key {
-        case CodingKeys.width, CodingKeys.height, CodingKeys.viewBox:
-            return .attribute
-        default:
-            return .element
-        }
-    }
-    
-    public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
-        switch key {
-        case CodingKeys.width, CodingKeys.height, CodingKeys.viewBox:
-            return .attribute
-        default:
-            return .element
-        }
-    }
-    
-    public static func make(from url: URL) throws -> Document {
-        guard FileManager.default.fileExists(atPath: url.path) else {
-            throw CocoaError(.fileNoSuchFile)
-        }
-        
-        let data = try Data(contentsOf: url)
-        return try make(with: data)
-    }
-    
-    public static func make(with data: Data, decoder: XMLDecoder = XMLDecoder()) throws -> Document {
-        return try decoder.decode(Document.self, from: data)
-    }
-    
     public init() {
+        
     }
     
     public init(width: Int, height: Int) {
@@ -85,5 +61,45 @@ extension Document: CustomStringConvertible {
         groups.forEach({ contents.append("\n\($0)") })
         
         return "<svg viewBox=\"\(viewBox ?? "")\" width=\"\(width ?? "")\" height=\"\(height ?? "")\">\(contents)\n</svg>"
+    }
+}
+
+// MARK: - DynamicNodeEncoding
+extension Document: DynamicNodeEncoding {
+    public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+        switch key {
+        case CodingKeys.width, CodingKeys.height, CodingKeys.viewBox:
+            return .attribute
+        default:
+            return .element
+        }
+    }
+}
+
+// MARK: - DynamicNodeDecoding
+extension Document: DynamicNodeDecoding {
+    public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
+        switch key {
+        case CodingKeys.width, CodingKeys.height, CodingKeys.viewBox:
+            return .attribute
+        default:
+            return .element
+        }
+    }
+}
+
+// MARK: - Creation
+public extension Document {
+    static func make(from url: URL) throws -> Document {
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            throw CocoaError(.fileNoSuchFile)
+        }
+        
+        let data = try Data(contentsOf: url)
+        return try make(with: data)
+    }
+    
+    static func make(with data: Data, decoder: XMLDecoder = XMLDecoder()) throws -> Document {
+        return try decoder.decode(Document.self, from: data)
     }
 }

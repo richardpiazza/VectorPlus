@@ -1,14 +1,23 @@
 import Foundation
 import XMLCoder
 
-/// A [Path](https://www.w3.org/TR/SVG11/paths.html) represents the outline of a shape
+/// Generic element to define a shape.
 ///
 /// A path is defined by including a ‘path’ element in a SVG document which contains a **d="(path data)"**
 /// attribute, where the **‘d’** attribute contains the moveto, line, curve (both cubic and quadratic Béziers),
 /// arc and closepath instructions.
-public struct Path: Codable, PresentationAttributes, DynamicNodeEncoding, DynamicNodeDecoding {
+///
+/// ## Documentation
+/// [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path)
+/// | [W3](https://www.w3.org/TR/SVG11/paths.html)
+public struct Path: Codable, CoreAttributes, PresentationAttributes, StylingAttributes {
     
     /// The definition of the outline of a shape.
+    
+    // CoreAttributes
+    public var id: String?
+    
+    // PresentationAttributes
     public var data: String = ""
     public var fill: String?
     public var fillOpacity: Float?
@@ -17,22 +26,19 @@ public struct Path: Codable, PresentationAttributes, DynamicNodeEncoding, Dynami
     public var strokeOpacity: Float?
     public var transform: String?
     
+    // StylingAttributes
+    public var style: String?
+    
     enum CodingKeys: String, CodingKey {
         case data = "d"
+        case id
         case fill
         case fillOpacity = "fill-opacity"
         case stroke
         case strokeWidth = "stroke-width"
         case strokeOpacity = "stroke-opacity"
         case transform
-    }
-    
-    public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
-        return .attribute
-    }
-    
-    public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
-        return .attribute
+        case style
     }
     
     public init() {
@@ -47,11 +53,31 @@ public struct Path: Codable, PresentationAttributes, DynamicNodeEncoding, Dynami
 // MARK: - CustomStringConvertible
 extension Path: CustomStringConvertible {
     public var description: String {
-        var desc = "<path d=\"\(data)\""
-        if !presentationDescription.isEmpty {
-            desc.append(" \(presentationDescription)")
+        var components: [String] = []
+        if !coreDescription.isEmpty {
+            components.append(coreDescription)
         }
-        desc.append(" />")
-        return desc
+        if !presentationDescription.isEmpty {
+            components.append(presentationDescription)
+        }
+        if !stylingDescription.isEmpty {
+            components.append(stylingDescription)
+        }
+        
+        return "<path d=\"\(data)\" " + components.joined(separator: " ") + " />"
+    }
+}
+
+// MARK: - DynamicNodeEncoding
+extension Path: DynamicNodeEncoding {
+    public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+        return .attribute
+    }
+}
+
+// MARK: - DynamicNodeDecoding
+extension Path: DynamicNodeDecoding {
+    public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
+        return .attribute
     }
 }

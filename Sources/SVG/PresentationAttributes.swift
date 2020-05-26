@@ -7,6 +7,7 @@ public protocol PresentationAttributes {
     var strokeWidth: Float? { get set }
     var strokeOpacity: Float? { get set }
     var transform: String? { get set }
+    
 }
 
 public extension PresentationAttributes {

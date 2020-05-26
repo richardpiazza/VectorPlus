@@ -1,23 +1,26 @@
 import Foundation
 import XMLCoder
 
-/// Defines a closed shape consisting of a set of connected straight line segments.
-///
-/// The last point is connected to the first point. For open shapes, see the `Polyline` element.
-/// If an odd number of coordinates is provided, then the element is in error.
+/// SVG basic shape used to create a line connecting two points.
 ///
 /// ## Documentation
-/// [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon)
-/// | [W3](https://www.w3.org/TR/SVG11/shapes.html#PolygonElement)
-public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingAttributes {
+/// [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/line)
+/// | [W3](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/line)
+public struct Line: Codable, CoreAttributes, PresentationAttributes, StylingAttributes {
     
-    /// The points that make up the polygon.
+    /// Defines the x-axis coordinate of the line starting point.
+    public var x1: Float = 0.0
+    /// Defines the x-axis coordinate of the line ending point.
+    public var y1: Float = 0.0
+    /// Defines the y-axis coordinate of the line starting point.
+    public var x2: Float = 0.0
+    /// Defines the y-axis coordinate of the line ending point.
+    public var y2: Float = 0.0
     
     // CoreAttributes
     public var id: String?
     
     // PresentationAttributes
-    public var points: String = ""
     public var fill: String?
     public var fillOpacity: Float?
     public var stroke: String?
@@ -29,7 +32,10 @@ public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingA
     public var style: String?
     
     enum CodingKeys: String, CodingKey {
-        case points
+        case x1
+        case y1
+        case x2
+        case y2
         case id
         case fill
         case fillOpacity = "fill-opacity"
@@ -43,13 +49,16 @@ public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingA
     public init() {
     }
     
-    public init(points: String) {
-        self.points = points
+    public init(x1: Float, y1: Float, x2: Float, y2: Float) {
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
     }
 }
 
 // MARK: - CustomStringConvertible
-extension Polygon: CustomStringConvertible {
+extension Line: CustomStringConvertible {
     public var description: String {
         var components: [String] = []
         if !coreDescription.isEmpty {
@@ -62,19 +71,20 @@ extension Polygon: CustomStringConvertible {
             components.append(stylingDescription)
         }
         
-        return "<polygon points=\"\(points)\"" + components.joined(separator: " ") + " />"
+        let desc = String(format: "<line x1=\"%.5f\", y1=\"%.5f\", x2=\"%.5f\", y2=\"%.5f\"", x1, y1, x2, y2)
+        return desc + " " + components.joined(separator: " ") + " />"
     }
 }
 
 // MARK: - DynamicNodeEncoding
-extension Polygon: DynamicNodeEncoding {
+extension Line: DynamicNodeEncoding {
     public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
         return .attribute
     }
 }
 
 // MARK: - DynamicNodeDecoding
-extension Polygon: DynamicNodeDecoding {
+extension Line: DynamicNodeDecoding {
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         return .attribute
     }

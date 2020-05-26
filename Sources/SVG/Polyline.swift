@@ -1,23 +1,22 @@
 import Foundation
 import XMLCoder
 
-/// Defines a closed shape consisting of a set of connected straight line segments.
+/// SVG basic shape that creates straight lines connecting several points.
 ///
-/// The last point is connected to the first point. For open shapes, see the `Polyline` element.
-/// If an odd number of coordinates is provided, then the element is in error.
+/// Typically a polyline is used to create open shapes as the last point doesn't have to be connected to the first point.
+/// For closed shapes see the `Polygon` element.
 ///
 /// ## Documentation
-/// [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon)
-/// | [W3](https://www.w3.org/TR/SVG11/shapes.html#PolygonElement)
-public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingAttributes {
+/// [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polyline)
+/// | [W3](https://www.w3.org/TR/SVG11/shapes.html#PolylineElement)
+public struct Polyline: Codable, CoreAttributes, PresentationAttributes, StylingAttributes {
     
-    /// The points that make up the polygon.
+    public var points: String = ""
     
     // CoreAttributes
     public var id: String?
     
     // PresentationAttributes
-    public var points: String = ""
     public var fill: String?
     public var fillOpacity: Float?
     public var stroke: String?
@@ -49,7 +48,7 @@ public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingA
 }
 
 // MARK: - CustomStringConvertible
-extension Polygon: CustomStringConvertible {
+extension Polyline: CustomStringConvertible {
     public var description: String {
         var components: [String] = []
         if !coreDescription.isEmpty {
@@ -62,19 +61,19 @@ extension Polygon: CustomStringConvertible {
             components.append(stylingDescription)
         }
         
-        return "<polygon points=\"\(points)\"" + components.joined(separator: " ") + " />"
+        return "<polyline points=\"\(points)\" " + components.joined(separator: " ") + " />"
     }
 }
 
 // MARK: - DynamicNodeEncoding
-extension Polygon: DynamicNodeEncoding {
+extension Polyline: DynamicNodeEncoding {
     public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
         return .attribute
     }
 }
 
 // MARK: - DynamicNodeDecoding
-extension Polygon: DynamicNodeDecoding {
+extension Polyline: DynamicNodeDecoding {
     public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
         return .attribute
     }

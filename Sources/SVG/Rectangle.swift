@@ -1,11 +1,15 @@
 import Foundation
 import XMLCoder
 
-/// Defines a rectangle ([Rect](https://www.w3.org/TR/SVG11/shapes.html#RectElement))
+/// Basic SVG shape that draws rectangles, defined by their position, width, and height.
 ///
 /// The values used for the x- and y-axis rounded corner radii are determined implicitly
 /// if the ‘rx’ or ‘ry’ attributes (or both) are not specified, or are specified but with invalid values.
-public struct Rectangle: Codable, PresentationAttributes, DynamicNodeEncoding, DynamicNodeDecoding {
+///
+/// ## Documentation
+/// [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/rect)
+/// | [W3](https://www.w3.org/TR/SVG11/shapes.html#RectElement)
+public struct Rectangle: Codable, CoreAttributes, PresentationAttributes, StylingAttributes {
     
     /// The x-axis coordinate of the side of the rectangle which
     /// has the smaller x-axis coordinate value.
@@ -23,12 +27,20 @@ public struct Rectangle: Codable, PresentationAttributes, DynamicNodeEncoding, D
     /// For rounded rectangles, the y-axis radius of the ellipse used
     /// to round off the corners of the rectangle.
     public var ry: Float?
+    
+    // CoreAttributes
+    public var id: String?
+    
+    // PresentationAttributes
     public var fill: String?
     public var fillOpacity: Float?
     public var stroke: String?
     public var strokeWidth: Float?
     public var strokeOpacity: Float?
     public var transform: String?
+    
+    // StylingAttributes
+    public var style: String?
     
     enum CodingKeys: String, CodingKey {
         case x
@@ -37,20 +49,14 @@ public struct Rectangle: Codable, PresentationAttributes, DynamicNodeEncoding, D
         case height
         case rx
         case ry
+        case id
         case fill
         case fillOpacity = "fill-opacity"
         case stroke
         case strokeWidth = "stroke-width"
         case strokeOpacity = "stroke-opacity"
         case transform
-    }
-    
-    public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
-        return .attribute
-    }
-    
-    public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
-        return .attribute
+        case style
     }
     
     public init() {
@@ -76,10 +82,32 @@ extension Rectangle: CustomStringConvertible {
         if let ry = self.ry {
             desc.append(String(format: " ry=\"%.5f\"", ry))
         }
-        if !presentationDescription.isEmpty {
-            desc.append(" \(presentationDescription)")
+        
+        var components: [String] = []
+        if !coreDescription.isEmpty {
+            components.append(coreDescription)
         }
-        desc.append(" />")
-        return desc
+        if !presentationDescription.isEmpty {
+            components.append(presentationDescription)
+        }
+        if !stylingDescription.isEmpty {
+            components.append(stylingDescription)
+        }
+        
+        return desc + " " + components.joined(separator: " ") + " />"
+    }
+}
+
+// MARK: - DynamicNodeEncoding
+extension Rectangle: DynamicNodeEncoding {
+    public static func nodeEncoding(for key: CodingKey) -> XMLEncoder.NodeEncoding {
+        return .attribute
+    }
+}
+
+// MARK: - DynamicNodeDecoding
+extension Rectangle: DynamicNodeDecoding {
+    public static func nodeDecoding(for key: CodingKey) -> XMLDecoder.NodeDecoding {
+        return .attribute
     }
 }
