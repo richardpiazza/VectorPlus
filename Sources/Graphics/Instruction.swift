@@ -156,6 +156,9 @@ public extension Instruction {
             case .close:
                 return .close
             }
+        case .matrix:
+            // TODO: determine what should happen here.
+            return self
         }
     }
     

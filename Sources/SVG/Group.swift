@@ -83,6 +83,8 @@ extension Group: CustomStringConvertible {
         let rectangles = self.rectangles?.compactMap({ $0.description }) ?? []
         rectangles.forEach({ contents.append("\n\($0)") })
         
+        let texts = self.texts?.compactMap({ $0.description }) ?? []
+        texts.forEach({ contents.append("\n\($0)") })
         
         var components: [String] = []
         if !coreDescription.isEmpty {

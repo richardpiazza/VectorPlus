@@ -1,7 +1,6 @@
 import Foundation
 
-/// A [Transform](https://www.w3.org/TR/SVG11/coords.html#TransformAttribute) is a modification that should be
-/// applied to a path or instruction. 
+/// A  modification that should be applied to an element and its children..
 ///
 /// If a list of transforms is provided, then the net effect is as if each transform had been specified separately in the order provided.
 ///
@@ -25,31 +24,28 @@ import Foundation
 /// ```
 ///
 /// The ‘transform’ attribute is applied to an element before processing any other coordinate or length values supplied for that element.
+///
+/// ## Documentation
+/// [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/transform)
+/// | [W3](https://www.w3.org/TR/SVG11/coords.html#TransformAttribute)
 public enum Transformation {
-    /// Specifies a 'translation' (offset)
-    ///
-    /// [https://www.w3.org/TR/SVG11/coords.html#TranslationDefined](https://www.w3.org/TR/SVG11/coords.html#TranslationDefined)
+    /// Moves an object by x & y. (Y is assumed to be '0' if not provided)
     case translate(x: Float, y: Float)
+    /// Specifies a transformation in the form of a transformation matrix of six values.
+    case matrix(a: Float, b: Float, c: Float, d: Float, e: Float, f: Float)
     
     public enum Prefix: String, CaseIterable {
         case translate
+        case matrix
     }
     
     /// Initializes a new `Transformation` with a raw SVG transformation string.
     public init?(_ string: String) {
-        var prefix: Prefix? = nil
-        for p in Prefix.allCases {
-            if string.lowercased().hasPrefix(p.rawValue) {
-                prefix = p
-                break
-            }
-        }
-        
-        guard let transformationPrefix = prefix else {
+        guard let prefix = Prefix.allCases.first(where: { string.lowercased().hasPrefix($0.rawValue) }) else {
             return nil
         }
         
-        switch transformationPrefix {
+        switch prefix {
         case .translate:
             guard let start = string.firstIndex(of: "(") else {
                 return nil
@@ -64,15 +60,38 @@ public enum Transformation {
             components = components.replacingOccurrences(of: ")", with: "")
             
             let values = components.components(separatedBy: ",")
-            guard values.count > 1 else {
+            guard values.count > 0 else {
                 return nil
             }
             
             let x = Float(values[0].trimmingCharacters(in: .whitespaces)) ?? 0.0
-            let y = Float(values[1].trimmingCharacters(in: .whitespaces)) ?? 0.0
             
-            self = .translate(x: x, y: y)
-            return
+            if values.count > 1 {
+                let y = Float(values[1].trimmingCharacters(in: .whitespaces)) ?? 0.0
+                self = .translate(x: x, y: y)
+            } else {
+                self = .translate(x: x, y: 0.0)
+            }
+        case .matrix:
+            guard let start = string.firstIndex(of: "(") else {
+                return nil
+            }
+            
+            guard let stop = string.lastIndex(of: ")") else {
+                return nil
+            }
+            
+            var components = String(string[start...stop])
+            components = components.replacingOccurrences(of: "(", with: "")
+            components = components.replacingOccurrences(of: ")", with: "")
+            components = components.replacingOccurrences(of: " ", with: "")
+            
+            let values = components.components(separatedBy: ",").compactMap({ Float($0) })
+            guard values.count > 5 else {
+                return nil
+            }
+            
+            self = .matrix(a: values[0], b: values[1], c: values[2], d: values[3], e: values[4], f: values[5])
         }
     }
 }
