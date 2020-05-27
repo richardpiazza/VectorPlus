@@ -11,8 +11,8 @@ import XMLCoder
 public struct Text: Codable, CoreAttributes, PresentationAttributes, StylingAttributes {
     
     public var value: String = ""
-    public var x: Float = 0.0
-    public var y: Float = 0.0
+    public var x: Float?
+    public var y: Float?
     public var dx: Float?
     public var dy: Float?
     
@@ -59,10 +59,10 @@ extension Text: CustomStringConvertible {
     public var description: String {
         var components: [String] = []
         
-        if !x.isNaN && !x.isZero {
+        if let x = self.x, !x.isNaN && !x.isZero {
             components.append(String(format: "x=\"%.5f\"", x))
         }
-        if !y.isNaN && !y.isZero {
+        if let y = self.y, !y.isNaN && !y.isZero {
             components.append(String(format: "y=\"%.5f\"", y))
         }
         if let dx = self.dx, !dx.isNaN, !dx.isZero {
