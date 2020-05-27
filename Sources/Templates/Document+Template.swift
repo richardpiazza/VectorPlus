@@ -33,6 +33,9 @@ private extension Document {
             let strokeColor = path.strokeColor?.coreGraphicsDescription ?? "nil"
             let strokeOpacity = (path.strokeOpacity != nil) ? "\(path.strokeOpacity!)" : "nil"
             let strokeWidth = (path.strokeWidth != nil) ? "\(path.strokeWidth!) * (size.width / width)" : "nil"
+            let strokeLineCap = (path.strokeLineCap != nil) ? "\(path.strokeLineCap!.coreGraphicsDescription)" : "nil"
+            let strokeLineJoin = (path.strokeLineJoin != nil) ? "\(path.strokeLineJoin!.coreGraphicsDescription)" : "nil"
+            let strokeMiterLimit = (path.strokeMiterLimit != nil) ? "\(path.strokeMiterLimit!)" : "nil"
             
             outputs.append(contextTemplate
                 .replacingOccurrences(of: "{{instructions}}", with: instructions)
@@ -41,6 +44,9 @@ private extension Document {
                 .replacingOccurrences(of: "{{strokeColor}}", with: strokeColor)
                 .replacingOccurrences(of: "{{strokeOpacity}}", with: strokeOpacity)
                 .replacingOccurrences(of: "{{strokeWidth}}", with: strokeWidth)
+                .replacingOccurrences(of: "{{strokeLineCap}}", with: strokeLineCap)
+                .replacingOccurrences(of: "{{strokeLineJoin}}", with: strokeLineJoin)
+                .replacingOccurrences(of: "{{strokeMiterLimit}}", with: strokeMiterLimit)
             )
         }
         

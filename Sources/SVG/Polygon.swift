@@ -23,6 +23,9 @@ public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingA
     public var stroke: String?
     public var strokeWidth: Float?
     public var strokeOpacity: Float?
+    public var strokeLineCap: Stroke.LineCap?
+    public var strokeLineJoin: Stroke.LineJoin?
+    public var strokeMiterLimit: Float?
     public var transform: String?
     
     // StylingAttributes
@@ -36,6 +39,9 @@ public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingA
         case stroke
         case strokeWidth = "stroke-width"
         case strokeOpacity = "stroke-opacity"
+        case strokeLineCap = "stroke-linecap"
+        case strokeLineJoin = "stroke-linejoin"
+        case strokeMiterLimit = "stroke-miterlimit"
         case transform
         case style
     }

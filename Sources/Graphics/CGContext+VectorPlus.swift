@@ -30,6 +30,15 @@ public extension CGContext {
                 let lineWidth = CGFloat(strokeWidth * (to.size.width / from.size.width))
                 setLineWidth(lineWidth)
                 setStrokeColor(color)
+                if let lineCap = path.cgStrokeLineCap {
+                    setLineCap(lineCap)
+                }
+                if let lineJoin = path.cgStrokeLineJoin {
+                    setLineJoin(lineJoin)
+                    if let miterLimit = path.strokeMiterLimit, lineJoin == .miter {
+                        setMiterLimit(CGFloat(miterLimit))
+                    }
+                }
                 strokePath()
             }
         case (.some(let fillColor), .none):
@@ -45,6 +54,15 @@ public extension CGContext {
                 let lineWidth = CGFloat(strokeWidth * (to.size.width / from.size.width))
                 setLineWidth(lineWidth)
                 setStrokeColor(color)
+                if let lineCap = path.cgStrokeLineCap {
+                    setLineCap(lineCap)
+                }
+                if let lineJoin = path.cgStrokeLineJoin {
+                    setLineJoin(lineJoin)
+                    if let miterLimit = path.strokeMiterLimit, lineJoin == .miter {
+                        setMiterLimit(CGFloat(miterLimit))
+                    }
+                }
                 strokePath()
             }
         case (.none, .none):

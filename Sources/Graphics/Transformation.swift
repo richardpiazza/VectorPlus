@@ -1,6 +1,6 @@
 import Foundation
 
-/// A  modification that should be applied to an element and its children..
+/// A modification that should be applied to an element and its children.
 ///
 /// If a list of transforms is provided, then the net effect is as if each transform had been specified separately in the order provided.
 ///

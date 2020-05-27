@@ -135,6 +135,9 @@ internal let contextTemplate: String = """
             let pathStrokeColor: CGColor? = {{strokeColor}}
             let pathStrokeOpacity: CGFloat? = {{strokeOpacity}}
             let pathStrokeWidth: CGFloat? = {{strokeWidth}}
+            let pathStrokeLineCap: CGLineCap? = {{strokeLineCap}}
+            let pathStrokeLineJoin: CGLineJoin? = {{strokeLineJoin}}
+            let pathStrokeMiterLimit: CGFloat? = {{strokeMiterLimit}}
             
             switch (pathFillColor, pathStrokeColor) {
             case (.some(let fillColor), .some(let strokeColor)):
@@ -148,6 +151,15 @@ internal let contextTemplate: String = """
                     let color = strokeColor.copy(alpha: opacity) ?? strokeColor
                     ctx.setLineWidth(CGFloat(strokeWidth))
                     ctx.setStrokeColor(color)
+                    if let lineCap = pathStrokeLineCap {
+                        ctx.setLineCap(lineCap)
+                    }
+                    if let lineJoin = pathStrokeLineJoin {
+                        ctx.setLineJoin(lineJoin)
+                        if let miterLimit = pathStrokeMiterLimit, lineJoin == .miter {
+                            ctx.setMiterLimit(miterLimit)
+                        }
+                    }
                     ctx.strokePath()
                 }
             case (.some(let fillColor), .none):
@@ -162,6 +174,15 @@ internal let contextTemplate: String = """
                     let color = strokeColor.copy(alpha: opacity) ?? strokeColor
                     ctx.setLineWidth(CGFloat(strokeWidth))
                     ctx.setStrokeColor(color)
+                    if let lineCap = pathStrokeLineCap {
+                        ctx.setLineCap(lineCap)
+                    }
+                    if let lineJoin = pathStrokeLineJoin {
+                        ctx.setLineJoin(lineJoin)
+                        if let miterLimit = pathStrokeMiterLimit, lineJoin == .miter {
+                            ctx.setMiterLimit(miterLimit)
+                        }
+                    }
                     ctx.strokePath()
                 }
             case (.none, .none):

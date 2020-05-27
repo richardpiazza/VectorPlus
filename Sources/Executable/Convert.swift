@@ -17,6 +17,11 @@ struct Convert: ParsableCommand {
         let discussion: String = """
         Parses an SVG document and creates a PNG rendered version of the instructions. Do to limitations,
         this command is only available when the `AppKit` framework is present.
+
+        Supported conversion options are:
+        * absolute: Updates all path instructions to 'absolute' values.
+        * symbols: Generates an Apple Symbols compatible SVG.
+        * uikit: A UIImageView subclass that supports dynamic sizing.
         """
         
         return CommandConfiguration(
@@ -34,7 +39,7 @@ struct Convert: ParsableCommand {
     @Argument(help: "The relative or absolute path of the SVG file to be parsed.")
     var filename: String
     
-    @Option(help: "The type of conversion to perform.")
+    @Option(name: [.customShort("t"), .customLong("type")], help: "The type of conversion to perform. [absolute, symbols, uikit]")
     var conversion: Conversion
     
     mutating func validate() throws {
