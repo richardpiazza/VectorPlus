@@ -55,22 +55,22 @@ public enum Transformation {
                 return nil
             }
             
-            var components = String(string[start...stop])
-            components = components.replacingOccurrences(of: "(", with: "")
-            components = components.replacingOccurrences(of: ")", with: "")
+            var substring = String(string[start...stop])
+            substring = substring.replacingOccurrences(of: "(", with: "")
+            substring = substring.replacingOccurrences(of: ")", with: "")
             
-            let values = components.components(separatedBy: ",")
+            var components = substring.split(separator: " ", omittingEmptySubsequences: true).map({ String($0) })
+            components = components.flatMap({ $0.components(separatedBy: ",") })
+            
+            let values = components.compactMap({ Float($0) })
             guard values.count > 0 else {
                 return nil
             }
             
-            let x = Float(values[0].trimmingCharacters(in: .whitespaces)) ?? 0.0
-            
             if values.count > 1 {
-                let y = Float(values[1].trimmingCharacters(in: .whitespaces)) ?? 0.0
-                self = .translate(x: x, y: y)
+                self = .translate(x: values[0], y: values[1])
             } else {
-                self = .translate(x: x, y: 0.0)
+                self = .translate(x: values[0], y: 0.0)
             }
         case .matrix:
             guard let start = string.firstIndex(of: "(") else {
