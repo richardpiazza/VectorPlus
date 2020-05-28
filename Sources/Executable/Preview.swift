@@ -1,7 +1,7 @@
 import Foundation
 import ArgumentParser
 import SVG
-import Templates
+import VectorPlus
 #if canImport(AppKit)
 import AppKit
 

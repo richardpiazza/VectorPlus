@@ -7,9 +7,13 @@ public protocol CoreAttributes {
 public extension CoreAttributes {
     var coreDescription: String {
         if let id = self.id {
-            return "id=\"\(id)\""
+            return "\(CodingKeys.id.rawValue)=\"\(id)\""
         } else {
             return ""
         }
     }
+}
+
+fileprivate enum CodingKeys: String, CodingKey {
+    case id
 }

@@ -1,9 +1,9 @@
 import Foundation
 import ArgumentParser
-import SVG
 import Swift2D
-import Templates
 import ShellOut
+import SVG
+import VectorPlus
 
 struct Convert: ParsableCommand {
     

@@ -13,12 +13,12 @@ import XMLCoder
 public struct Path: Codable, CoreAttributes, PresentationAttributes, StylingAttributes {
     
     /// The definition of the outline of a shape.
+    public var data: String = ""
     
     // CoreAttributes
     public var id: String?
     
     // PresentationAttributes
-    public var data: String = ""
     public var fill: String?
     public var fillOpacity: Float?
     public var stroke: String?

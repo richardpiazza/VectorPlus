@@ -2,7 +2,7 @@ import Foundation
 import SVG
 import Swift2D
 import Graphics
-#if canImport(AppKit)
+#if canImport(AppKit) && !targetEnvironment(macCatalyst)
 import AppKit
 
 public extension Document {

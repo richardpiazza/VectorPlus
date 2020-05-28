@@ -1,6 +1,5 @@
 import Foundation
 import SVG
-import Swift2D
 import Graphics
 #if canImport(UIKit)
 import UIKit
@@ -43,5 +42,3 @@ public extension Document {
     }
 }
 #endif
-
-

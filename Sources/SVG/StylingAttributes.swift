@@ -7,9 +7,13 @@ public protocol StylingAttributes {
 public extension StylingAttributes {
     var stylingDescription: String {
         if let style = self.style {
-            return "style=\"\(style)\""
+            return "\(CodingKeys.style.rawValue)=\"\(style)\""
         } else {
             return ""
         }
     }
+}
+
+fileprivate enum CodingKeys: String, CodingKey {
+    case style
 }

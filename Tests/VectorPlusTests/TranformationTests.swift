@@ -1,4 +1,5 @@
 import XCTest
+@testable import SVG
 @testable import Graphics
 
 final class TransformationTests: XCTestCase {

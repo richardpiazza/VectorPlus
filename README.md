@@ -10,7 +10,7 @@
     </a>
 </p>
 
-<p align="center">A utility &amp; library for converting SVG paths to Core Graphics images.</p>
+<p align="center">A utility &amp; library for interacting with SVG documents.</p>
 
 ## Usage
 
@@ -29,9 +29,27 @@ let package = Package(
 Then import the **VectorPlus** packages wherever you'd like to use it:
 
 ```swift
-import VectorPlusSVG
-import VectorPlusGraphics
-import VectorPlusTemplates
+import SVG
+import Graphics
+import VectorPlus
 ```
 
 ## Packages
+
+### SVG
+
+### Graphics
+
+### VectorPlus
+
+## Command Line Interface
+
+### Inspect
+
+### Convert
+
+### Preview
+_macOS only_
+
+### Render
+_macOS only_

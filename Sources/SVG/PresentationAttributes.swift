@@ -47,6 +47,16 @@ public extension PresentationAttributes {
         
         return attributes.joined(separator: " ")
     }
+    
+    var transformations: [Transformation] {
+        let value = transform?.replacingOccurrences(of: " ", with: "") ?? ""
+        guard !value.isEmpty else {
+            return []
+        }
+        
+        let values = value.split(separator: ")").map({ $0.appending(")") })
+        return values.compactMap({ Transformation($0) })
+    }
 }
 
 fileprivate enum CodingKeys: String, CodingKey {

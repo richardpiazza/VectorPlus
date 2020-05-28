@@ -1,8 +1,8 @@
 import Foundation
 import ArgumentParser
-import SVG
-import Templates
 import ShellOut
+import SVG
+import VectorPlus
 
 struct Inspect: ParsableCommand {
     
