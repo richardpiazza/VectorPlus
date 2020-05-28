@@ -23,6 +23,10 @@ public extension CGContext {
                 let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                 setFillColor(color)
                 fillPath()
+            } else {
+                // If opacity is not defined, assume 1.0
+                setFillColor(fillColor)
+                fillPath()
             }
             if let strokeWidth = path.strokeWidth {
                 let opacity = CGFloat(path.strokeOpacity ?? 1.0)
@@ -45,6 +49,10 @@ public extension CGContext {
             if let opacity = path.fillOpacity, opacity != 0.0 {
                 let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                 setFillColor(color)
+                fillPath()
+            } else {
+                // If opacity is not defined, assume 1.0
+                setFillColor(fillColor)
                 fillPath()
             }
         case (.none, .some(let strokeColor)):

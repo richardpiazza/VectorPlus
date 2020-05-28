@@ -145,6 +145,10 @@ internal let contextTemplate: String = """
                     let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                     ctx.setFillColor(color)
                     ctx.fillPath()
+                } else {
+                    // If opacity is not defined, assume 1.0
+                    setFillColor(fillColor)
+                    fillPath()
                 }
                 if let strokeWidth = pathStrokeWidth {
                     let opacity = CGFloat(pathStrokeOpacity ?? 1.0)
@@ -167,6 +171,10 @@ internal let contextTemplate: String = """
                     let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                     ctx.setFillColor(color)
                     ctx.fillPath()
+                } else {
+                    // If opacity is not defined, assume 1.0
+                    setFillColor(fillColor)
+                    fillPath()
                 }
             case (.none, .some(let strokeColor)):
                 if let strokeWidth = pathStrokeWidth {
