@@ -56,9 +56,7 @@ struct Convert: ParsableCommand {
         case .absolute:
             throw CocoaError(.featureUnsupported)
         case .symbols:
-            guard let path = try document.allPaths().first else {
-                throw CocoaError(.formatting)
-            }
+            let path = try document.masterPath()
             
             let from = Rect(origin: .zero, size: document.originalSize)
             let to = Rect(origin: .zero, size: Size(width: 100, height: 100))
