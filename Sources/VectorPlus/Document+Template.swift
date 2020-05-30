@@ -30,6 +30,7 @@ private extension Document {
             let instructions = try path.asCoreGraphicsDescription(variable: "path", originalSize: originalSize)
             let fillColor = path.fillColor?.coreGraphicsDescription ?? "nil"
             let fillOpacity = (path.fillOpacity != nil) ? "\(path.fillOpacity!)" : "nil"
+            let fillRule = (path.fillRule ?? .nonZero).coreGraphicsDescription
             let strokeColor = path.strokeColor?.coreGraphicsDescription ?? "nil"
             let strokeOpacity = (path.strokeOpacity != nil) ? "\(path.strokeOpacity!)" : "nil"
             let strokeWidth = (path.strokeWidth != nil) ? "\(path.strokeWidth!) * (size.width / width)" : "nil"
@@ -41,6 +42,7 @@ private extension Document {
                 .replacingOccurrences(of: "{{instructions}}", with: instructions)
                 .replacingOccurrences(of: "{{fillColor}}", with: fillColor)
                 .replacingOccurrences(of: "{{fillOpacity}}", with: fillOpacity)
+                .replacingOccurrences(of: "{{fillRule}}", with: fillRule)
                 .replacingOccurrences(of: "{{strokeColor}}", with: strokeColor)
                 .replacingOccurrences(of: "{{strokeOpacity}}", with: strokeOpacity)
                 .replacingOccurrences(of: "{{strokeWidth}}", with: strokeWidth)

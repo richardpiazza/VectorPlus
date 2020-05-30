@@ -20,6 +20,7 @@ public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingA
     public var points: String = ""
     public var fill: String?
     public var fillOpacity: Float?
+    public var fillRule: Fill.Rule?
     public var stroke: String?
     public var strokeWidth: Float?
     public var strokeOpacity: Float?
@@ -36,6 +37,7 @@ public struct Polygon: Codable, CoreAttributes, PresentationAttributes, StylingA
         case id
         case fill
         case fillOpacity = "fill-opacity"
+        case fillRule = "fill-rule"
         case stroke
         case strokeWidth = "stroke-width"
         case strokeOpacity = "stroke-opacity"

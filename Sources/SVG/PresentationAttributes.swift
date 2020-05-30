@@ -3,6 +3,7 @@ import Foundation
 public protocol PresentationAttributes {
     var fill: String? { get set }
     var fillOpacity: Float? { get set }
+    var fillRule: Fill.Rule? { get set }
     var stroke: String? { get set }
     var strokeWidth: Float? { get set }
     var strokeOpacity: Float? { get set }
@@ -22,6 +23,9 @@ public extension PresentationAttributes {
         }
         if let fillOpacity = self.fillOpacity {
             attributes.append("\(CodingKeys.fillOpacity.rawValue)=\"\(fillOpacity)\"")
+        }
+        if let fillRule = self.fillRule {
+            attributes.append("\(CodingKeys.fillRule.rawValue)=\"\(fillRule.description)\"")
         }
         if let stroke = self.stroke {
             attributes.append("\(CodingKeys.stroke.rawValue)=\"\(stroke)\"")
@@ -62,6 +66,7 @@ public extension PresentationAttributes {
 fileprivate enum CodingKeys: String, CodingKey {
     case fill
     case fillOpacity = "fill-opacity"
+    case fillRule = "fill-rule"
     case stroke
     case strokeWidth = "stroke-width"
     case strokeOpacity = "stroke-opacity"

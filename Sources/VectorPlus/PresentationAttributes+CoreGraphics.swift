@@ -8,6 +8,17 @@ public extension PresentationAttributes {
         return fillColor?.cgColor
     }
     
+    var cgFillRule: CGPathFillRule {
+        guard let fillRule = self.fillRule else {
+            return .winding
+        }
+        
+        switch fillRule {
+        case .evenOdd: return .evenOdd
+        case .nonZero: return .winding
+        }
+    }
+    
     var cgStrokeColor: CGColor? {
         return strokeColor?.cgColor
     }

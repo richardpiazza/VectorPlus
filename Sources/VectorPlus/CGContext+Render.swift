@@ -22,11 +22,11 @@ public extension CGContext {
             if let opacity = path.fillOpacity, opacity != 0.0 {
                 let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                 setFillColor(color)
-                fillPath()
+                fillPath(using: path.cgFillRule)
             } else {
                 // If opacity is not defined, assume 1.0
                 setFillColor(fillColor)
-                fillPath()
+                fillPath(using: path.cgFillRule)
             }
             if let strokeWidth = path.strokeWidth {
                 let opacity = CGFloat(path.strokeOpacity ?? 1.0)
@@ -49,11 +49,11 @@ public extension CGContext {
             if let opacity = path.fillOpacity, opacity != 0.0 {
                 let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                 setFillColor(color)
-                fillPath()
+                fillPath(using: path.cgFillRule)
             } else {
                 // If opacity is not defined, assume 1.0
                 setFillColor(fillColor)
-                fillPath()
+                fillPath(using: path.cgFillRule)
             }
         case (.none, .some(let strokeColor)):
             if let strokeWidth = path.strokeWidth {
@@ -75,7 +75,7 @@ public extension CGContext {
             }
         case (.none, .none):
             setFillColor(CGColor(srgbRed: 0.0, green: 0.0, blue: 0.0, alpha: 1.0))
-            fillPath()
+            fillPath(using: path.cgFillRule)
         }
         
         restoreGState()

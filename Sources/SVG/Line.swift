@@ -23,6 +23,7 @@ public struct Line: Codable, CoreAttributes, PresentationAttributes, StylingAttr
     // PresentationAttributes
     public var fill: String?
     public var fillOpacity: Float?
+    public var fillRule: Fill.Rule?
     public var stroke: String?
     public var strokeWidth: Float?
     public var strokeOpacity: Float?
@@ -42,6 +43,7 @@ public struct Line: Codable, CoreAttributes, PresentationAttributes, StylingAttr
         case id
         case fill
         case fillOpacity = "fill-opacity"
+        case fillRule = "fill-rule"
         case stroke
         case strokeWidth = "stroke-width"
         case strokeOpacity = "stroke-opacity"

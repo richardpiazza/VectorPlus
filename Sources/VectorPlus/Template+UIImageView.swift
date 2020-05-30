@@ -132,6 +132,7 @@ internal let contextTemplate: String = """
             let defaultColor: CGColor = CGColor(srgbRed: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
             let pathFillColor: CGColor? = {{fillColor}}
             let pathFillOpacity: CGFloat? = {{fillOpacity}}
+            let pathFillRule: CGPathFillRule = {{fillRule}}
             let pathStrokeColor: CGColor? = {{strokeColor}}
             let pathStrokeOpacity: CGFloat? = {{strokeOpacity}}
             let pathStrokeWidth: CGFloat? = {{strokeWidth}}
@@ -144,11 +145,11 @@ internal let contextTemplate: String = """
                 if let opacity = pathFillOpacity, opacity != 0.0 {
                     let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                     ctx.setFillColor(color)
-                    ctx.fillPath()
+                    ctx.fillPath(using: pathFillRule)
                 } else {
                     // If opacity is not defined, assume 1.0
-                    setFillColor(fillColor)
-                    fillPath()
+                    ctx.setFillColor(fillColor)
+                    ctx.fillPath(using: pathFillRule)
                 }
                 if let strokeWidth = pathStrokeWidth {
                     let opacity = CGFloat(pathStrokeOpacity ?? 1.0)
@@ -170,11 +171,11 @@ internal let contextTemplate: String = """
                 if let opacity = pathFillOpacity, opacity != 0.0 {
                     let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                     ctx.setFillColor(color)
-                    ctx.fillPath()
+                    ctx.fillPath(using: pathFillRule)
                 } else {
                     // If opacity is not defined, assume 1.0
-                    setFillColor(fillColor)
-                    fillPath()
+                    ctx.setFillColor(fillColor)
+                    ctx.fillPath(using: pathFillRule)
                 }
             case (.none, .some(let strokeColor)):
                 if let strokeWidth = pathStrokeWidth {
@@ -195,7 +196,7 @@ internal let contextTemplate: String = """
                 }
             case (.none, .none):
                 ctx.setFillColor(defaultColor)
-                ctx.fillPath()
+                ctx.fillPath(using: pathFillRule)
             }
             
             ctx.restoreGState()
