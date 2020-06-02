@@ -127,7 +127,6 @@ internal let contextTemplate: String = """
             
             let path = CGMutablePath()
             {{instructions}}
-            ctx.addPath(path)
             
             let defaultColor: CGColor = CGColor(srgbRed: 0.0, green: 0.0, blue: 0.0, alpha: 1.0)
             let pathFillColor: CGColor? = {{fillColor}}
@@ -145,10 +144,12 @@ internal let contextTemplate: String = """
                 if let opacity = pathFillOpacity, opacity != 0.0 {
                     let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                     ctx.setFillColor(color)
+                    ctx.addPath(path)
                     ctx.fillPath(using: pathFillRule)
                 } else {
                     // If opacity is not defined, assume 1.0
                     ctx.setFillColor(fillColor)
+                    ctx.addPath(path)
                     ctx.fillPath(using: pathFillRule)
                 }
                 if let strokeWidth = pathStrokeWidth {
@@ -165,16 +166,19 @@ internal let contextTemplate: String = """
                             ctx.setMiterLimit(miterLimit)
                         }
                     }
+                    ctx.addPath(path)
                     ctx.strokePath()
                 }
             case (.some(let fillColor), .none):
                 if let opacity = pathFillOpacity, opacity != 0.0 {
                     let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
                     ctx.setFillColor(color)
+                    ctx.addPath(path)
                     ctx.fillPath(using: pathFillRule)
                 } else {
                     // If opacity is not defined, assume 1.0
                     ctx.setFillColor(fillColor)
+                    ctx.addPath(path)
                     ctx.fillPath(using: pathFillRule)
                 }
             case (.none, .some(let strokeColor)):
@@ -192,10 +196,12 @@ internal let contextTemplate: String = """
                             ctx.setMiterLimit(miterLimit)
                         }
                     }
+                    ctx.addPath(path)
                     ctx.strokePath()
                 }
             case (.none, .none):
                 ctx.setFillColor(defaultColor)
+                ctx.addPath(path)
                 ctx.fillPath(using: pathFillRule)
             }
             
