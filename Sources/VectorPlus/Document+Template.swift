@@ -1,7 +1,7 @@
 import Foundation
+import Swift2D
 import SVG
 import Graphics
-import Swift2D
 
 public extension Document {
     func asImageViewSubclass() throws -> String {

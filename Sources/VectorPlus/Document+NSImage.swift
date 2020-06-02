@@ -1,6 +1,6 @@
 import Foundation
-import SVG
 import Swift2D
+import SVG
 import Graphics
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
 import AppKit
