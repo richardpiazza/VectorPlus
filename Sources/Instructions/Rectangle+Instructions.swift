@@ -1,8 +1,8 @@
 import Foundation
-import SVG
+import SwiftSVG
 
 public extension Rectangle {
-    init(instructions: [Instruction]) throws {
+    convenience init(instructions: [Instruction]) throws {
         self.init()
         instructions.forEach { (instruction) in
             if case let .rectangle(x, y, width, height, rx, ry) = instruction {

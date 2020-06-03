@@ -30,16 +30,13 @@ let package = Package(
 Then import the **VectorPlus** packages wherever you'd like to use it:
 
 ```swift
-import SVG
-import Graphics
+import Instructions
 import VectorPlus
 ```
 
 ## Packages
 
-### SVG
-
-### Graphics
+### Instructions
 
 ### VectorPlus
 

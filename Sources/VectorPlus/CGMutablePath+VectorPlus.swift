@@ -1,6 +1,6 @@
 import Foundation
 import Swift2D
-import Graphics
+import Instructions
 #if canImport(CoreGraphics)
 import CoreGraphics
 

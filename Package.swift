@@ -16,12 +16,8 @@ let package = Package(
             targets: ["Executable"]
         ),
         .library(
-            name: "SVG",
-            targets: ["SVG"]
-        ),
-        .library(
-            name: "Graphics",
-            targets: ["Graphics"]
+            name: "Instructions",
+            targets: ["Instructions"]
         ),
         .library(
             name: "VectorPlus",
@@ -34,8 +30,8 @@ let package = Package(
             from: "0.0.5"
         ),
         .package(
-            url: "https://github.com/MaxDesiatov/XMLCoder.git",
-            from: "0.11.1"
+            url: "https://github.com/richardpiazza/SwiftSVG.git",
+            from: "0.1.1"
         ),
         .package(
             url: "https://github.com/richardpiazza/Swift2D.git",
@@ -54,28 +50,24 @@ let package = Package(
         .target(
             name: "Executable",
             dependencies: [
-                "SVG",
-                "Graphics",
+                "SwiftSVG",
+                "Instructions",
                 "VectorPlus",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "ShellOut", package: "ShellOut"),
             ]
         ),
         .target(
-            name: "SVG",
-            dependencies: ["XMLCoder", "Swift2D"]
-        ),
-        .target(
-            name: "Graphics",
-            dependencies: ["SVG", "Swift2D", "SwiftColor"]
+            name: "Instructions",
+            dependencies: ["SwiftSVG", "Swift2D", "SwiftColor"]
         ),
         .target(
             name: "VectorPlus",
-            dependencies: ["SVG", "Graphics", "Swift2D"]
+            dependencies: ["SwiftSVG", "Swift2D", "Instructions"]
         ),
         .testTarget(
             name: "VectorPlusTests",
-            dependencies: ["Executable", "SVG", "Graphics", "VectorPlus"]
+            dependencies: ["Executable", "SwiftSVG", "Instructions", "VectorPlus"]
         ),
     ]
 )

@@ -1,5 +1,5 @@
 import Foundation
-import SVG
+import SwiftSVG
 
 public protocol PathRepresentable: InstructionRepresentable, PresentationAttributes {
     
@@ -21,10 +21,10 @@ public extension PathRepresentable {
         
         let instructions = try self.instructions().map({ $0.applying(transformations: modifications) })
         
-        var path = Path(instructions: instructions)
-        path.fill = fill
+        let path = Path(instructions: instructions)
+        path.fillColor = fillColor
         path.fillOpacity = fillOpacity
-        path.stroke = stroke
+        path.strokeColor = strokeColor
         path.strokeOpacity = strokeOpacity
         path.strokeWidth = strokeWidth
         

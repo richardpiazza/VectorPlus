@@ -1,6 +1,6 @@
 import Foundation
 import Swift2D
-import SVG
+import SwiftSVG
 
 internal extension Instruction {
     var lastControlPoint: Point? {

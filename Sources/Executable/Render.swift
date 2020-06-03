@@ -1,7 +1,7 @@
 import Foundation
 import ArgumentParser
 import ShellOut
-import SVG
+import SwiftSVG
 import VectorPlus
 #if canImport(AppKit)
 import AppKit
@@ -40,7 +40,7 @@ struct Render: ParsableCommand {
     
     func run() throws {
         let url = try FileManager.default.url(for: filename)
-        let document = try Document.make(from: url)
+        let document = try SVG.make(from: url)
         
         let outputSize: CGSize
         if let size = self.size {

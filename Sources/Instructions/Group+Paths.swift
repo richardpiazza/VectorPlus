@@ -1,5 +1,5 @@
 import Foundation
-import SVG
+import SwiftSVG
 
 public extension Group {
     func allPaths(applying transformations: [Transformation]) throws -> [Path] {

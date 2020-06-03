@@ -1,4 +1,4 @@
-import SVG
+import SwiftSVG
 #if canImport(UIKit)
 import UIKit
 
@@ -11,7 +11,7 @@ import UIKit
         return CGFloat(document.originalSize.height)
     }
     
-    open var document: Document = Document() {
+    open var svg: SVG = SVG() {
         didSet {
             updateSubviews()
         }
@@ -72,7 +72,7 @@ import UIKit
     }
     
     public func updateSubviews() {
-        image = document.uiImage(size: bounds.size)
+        image = svg.uiImage(size: bounds.size)
     }
 }
 

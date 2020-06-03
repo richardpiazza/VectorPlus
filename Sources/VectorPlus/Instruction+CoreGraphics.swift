@@ -1,6 +1,6 @@
 import Foundation
 import Swift2D
-import Graphics
+import Instructions
 
 public extension Instruction {
     /// The specific `CoreGraphics` command that is needed to execute the `Instruction`.

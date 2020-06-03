@@ -1,8 +1,8 @@
 import Foundation
-import SVG
+import SwiftSVG
 
 public extension Circle {
-    init(instructions: [Instruction]) throws {
+    convenience init(instructions: [Instruction]) throws {
         self.init()
         
         instructions.forEach { (instruction) in

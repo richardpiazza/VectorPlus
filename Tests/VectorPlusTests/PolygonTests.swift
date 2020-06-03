@@ -1,6 +1,6 @@
 import XCTest
-@testable import SVG
-@testable import Graphics
+import SwiftSVG
+@testable import Instructions
 
 final class PolygonTests: XCTestCase {
     
@@ -10,7 +10,7 @@ final class PolygonTests: XCTestCase {
     
     func testInstructionRetreival() throws {
         let points = "850,75 958,137.5 958,262.5 850,325 742,262.6 742,137.5"
-        let polygon = SVG.Polygon(points: points)
+        let polygon = SwiftSVG.Polygon(points: points)
         let instructions = polygon.instructions
         
         let expected: [Instruction] = [

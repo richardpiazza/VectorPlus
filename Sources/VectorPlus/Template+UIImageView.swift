@@ -138,68 +138,37 @@ internal let contextTemplate: String = """
             let pathStrokeLineCap: CGLineCap? = {{strokeLineCap}}
             let pathStrokeLineJoin: CGLineJoin? = {{strokeLineJoin}}
             let pathStrokeMiterLimit: CGFloat? = {{strokeMiterLimit}}
+
+            if pathFillColor != nil && pathFillOpacity != nil {
+                let opacity = pathFillOpacity ?? 1.0
+                let color = (pathFillColor ?? defaultColor).copy(alpha: opacity) ?? defaultColor
+                
+                ctx.setFillColor(color)
+                ctx.addPath(path)
+                ctx.fillPath(using: pathFillRule)
+            }
             
-            switch (pathFillColor, pathStrokeColor) {
-            case (.some(let fillColor), .some(let strokeColor)):
-                if let opacity = pathFillOpacity, opacity != 0.0 {
-                    let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
-                    ctx.setFillColor(color)
-                    ctx.addPath(path)
-                    ctx.fillPath(using: pathFillRule)
-                } else {
-                    // If opacity is not defined, assume 1.0
-                    ctx.setFillColor(fillColor)
-                    ctx.addPath(path)
-                    ctx.fillPath(using: pathFillRule)
+            if pathStrokeColor != nil && pathStrokeOpacity != nil {
+                let opacity = pathStrokeOpacity ?? 1.0
+                let color = (pathStrokeColor ?? defaultColor).copy(alpha: opacity) ?? defaultColor
+                let lineWidth = pathStrokeWidth ?? 1.0
+                
+                ctx.setLineWidth(lineWidth)
+                ctx.setStrokeColor(color)
+                if let lineCap = pathStrokeLineCap {
+                    ctx.setLineCap(lineCap)
                 }
-                if let strokeWidth = pathStrokeWidth {
-                    let opacity = CGFloat(pathStrokeOpacity ?? 1.0)
-                    let color = strokeColor.copy(alpha: opacity) ?? strokeColor
-                    ctx.setLineWidth(CGFloat(strokeWidth))
-                    ctx.setStrokeColor(color)
-                    if let lineCap = pathStrokeLineCap {
-                        ctx.setLineCap(lineCap)
+                if let lineJoin = pathStrokeLineJoin {
+                    ctx.setLineJoin(lineJoin)
+                    if let miterLimit = pathStrokeMiterLimit, lineJoin == .miter {
+                        ctx.setMiterLimit(miterLimit)
                     }
-                    if let lineJoin = pathStrokeLineJoin {
-                        ctx.setLineJoin(lineJoin)
-                        if let miterLimit = pathStrokeMiterLimit, lineJoin == .miter {
-                            ctx.setMiterLimit(miterLimit)
-                        }
-                    }
-                    ctx.addPath(path)
-                    ctx.strokePath()
                 }
-            case (.some(let fillColor), .none):
-                if let opacity = pathFillOpacity, opacity != 0.0 {
-                    let color = fillColor.copy(alpha: CGFloat(opacity)) ?? fillColor
-                    ctx.setFillColor(color)
-                    ctx.addPath(path)
-                    ctx.fillPath(using: pathFillRule)
-                } else {
-                    // If opacity is not defined, assume 1.0
-                    ctx.setFillColor(fillColor)
-                    ctx.addPath(path)
-                    ctx.fillPath(using: pathFillRule)
-                }
-            case (.none, .some(let strokeColor)):
-                if let strokeWidth = pathStrokeWidth {
-                    let opacity = CGFloat(pathStrokeOpacity ?? 1.0)
-                    let color = strokeColor.copy(alpha: opacity) ?? strokeColor
-                    ctx.setLineWidth(CGFloat(strokeWidth))
-                    ctx.setStrokeColor(color)
-                    if let lineCap = pathStrokeLineCap {
-                        ctx.setLineCap(lineCap)
-                    }
-                    if let lineJoin = pathStrokeLineJoin {
-                        ctx.setLineJoin(lineJoin)
-                        if let miterLimit = pathStrokeMiterLimit, lineJoin == .miter {
-                            ctx.setMiterLimit(miterLimit)
-                        }
-                    }
-                    ctx.addPath(path)
-                    ctx.strokePath()
-                }
-            case (.none, .none):
+                ctx.addPath(path)
+                ctx.strokePath()
+            }
+            
+            if (pathFillColor == nil && pathFillOpacity == nil) && (pathStrokeColor == nil && pathStrokeOpacity == nil) {
                 ctx.setFillColor(defaultColor)
                 ctx.addPath(path)
                 ctx.fillPath(using: pathFillRule)

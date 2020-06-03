@@ -1,11 +1,11 @@
 import Foundation
 import Swift2D
-import SVG
-import Graphics
+import SwiftSVG
+import Instructions
 #if canImport(UIKit)
 import UIKit
 
-public extension Document {
+public extension SVG {
     func uiImage(size: CGSize) -> UIImage? {
         guard size.height > 0.0 && size.width > 0.0 else {
             return nil

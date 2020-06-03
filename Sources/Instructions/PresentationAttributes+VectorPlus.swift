@@ -1,10 +1,10 @@
 import Foundation
-import SVG
+import SwiftSVG
 import SwiftColor
 
 public extension PresentationAttributes {
     var fillColor: Color? {
-        guard let fill = self.fill, !fill.isEmpty else {
+        guard let fill = self.fill?.color, !fill.isEmpty else {
             return nil
         }
         
@@ -12,7 +12,7 @@ public extension PresentationAttributes {
     }
     
     var strokeColor: Color? {
-        guard let stroke = self.stroke, !stroke.isEmpty else {
+        guard let stroke = self.stroke?.color, !stroke.isEmpty else {
             return nil
         }
         

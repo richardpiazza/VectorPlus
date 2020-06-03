@@ -38,6 +38,15 @@
         }
       },
       {
+        "package": "SwiftSVG",
+        "repositoryURL": "https://github.com/richardpiazza/SwiftSVG.git",
+        "state": {
+          "branch": null,
+          "revision": "527c329679dbf5a12eb4e21a8c2d553001b528c7",
+          "version": "0.1.1"
+        }
+      },
+      {
         "package": "XMLCoder",
         "repositoryURL": "https://github.com/MaxDesiatov/XMLCoder.git",
         "state": {

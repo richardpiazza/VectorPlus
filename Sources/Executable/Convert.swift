@@ -2,7 +2,7 @@ import Foundation
 import ArgumentParser
 import Swift2D
 import ShellOut
-import SVG
+import SwiftSVG
 import VectorPlus
 
 struct Convert: ParsableCommand {
@@ -50,7 +50,7 @@ struct Convert: ParsableCommand {
     
     func run() throws {
         let url = try FileManager.default.url(for: filename)
-        let document = try Document.make(from: url)
+        let document = try SVG.make(from: url)
         
         switch conversion {
         case .absolute:
@@ -62,8 +62,8 @@ struct Convert: ParsableCommand {
             let to = Rect(origin: .zero, size: Size(width: 100, height: 100))
             let instructions = try path.instructions().map({ $0.translate(from: from, to: to) })
             let p = Path(instructions: instructions)
-            let symbolsDoc = Document.appleSymbols(path: p)
-            let data = try Document.encodeSymbols(symbolsDoc)
+            let symbolsDoc = SVG.appleSymbols(path: p)
+            let data = try SVG.encodeSymbols(symbolsDoc)
             let outputURL = url.deletingPathExtension().appendingPathExtension("symbols.svg")
             try data.write(to: outputURL)
             

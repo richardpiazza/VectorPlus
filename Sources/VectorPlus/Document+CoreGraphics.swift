@@ -1,11 +1,11 @@
 import Foundation
 import Swift2D
-import SVG
-import Graphics
+import SwiftSVG
+import Instructions
 #if canImport(CoreGraphics)
 import CoreGraphics
 
-public extension Document {
+public extension SVG {
     func path(size: CGSize) -> CGPath {
         guard size.height > 0.0 && size.width > 0.0 else {
             return CGMutablePath()

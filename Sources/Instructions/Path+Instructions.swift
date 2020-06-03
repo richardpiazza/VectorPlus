@@ -1,9 +1,9 @@
 import Foundation
-import SVG
+import SwiftSVG
 import Swift2D
 
 public extension Path {
-    init(instructions: [Instruction]) {
+    convenience init(instructions: [Instruction]) {
         self.init()
         let instructionData = instructions.compactMap({ $0.pathData })
         data = instructionData.joined(separator: " ")

@@ -1,8 +1,8 @@
 import Foundation
-import SVG
+import SwiftSVG
 
-public extension SVG.Polygon {
-    init(instructions: [Instruction]) {
+public extension SwiftSVG.Polygon {
+    convenience init(instructions: [Instruction]) {
         self.init()
         let pointsData = instructions.compactMap({ $0.polygonPoints })
         points = pointsData.joined(separator: " ")
@@ -10,7 +10,7 @@ public extension SVG.Polygon {
 }
 
 // MARK: - InstructionRepresentable
-extension SVG.Polygon: InstructionRepresentable {
+extension SwiftSVG.Polygon: InstructionRepresentable {
     public func instructions() throws -> [Instruction] {
         let pairs = points.components(separatedBy: " ")
         let components = pairs.flatMap({ $0.components(separatedBy: ",") })
@@ -56,5 +56,5 @@ extension SVG.Polygon: InstructionRepresentable {
 }
 
 // MARK: - PathRepresentable
-extension SVG.Polygon: PathRepresentable {
+extension SwiftSVG.Polygon: PathRepresentable {
 }

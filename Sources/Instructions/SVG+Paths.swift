@@ -1,8 +1,8 @@
 import Foundation
-import SVG
+import SwiftSVG
 import Swift2D
 
-public extension Document {
+public extension SVG {
     var name: String {
         let name = title ?? "SVG Document"
         let newTitle = name.components(separatedBy: .punctuationCharacters).joined(separator: "_")
@@ -10,7 +10,7 @@ public extension Document {
     }
 }
 
-public extension Document {
+public extension SVG {
     func allPaths() throws -> [Path] {
         var output: [Path] = []
         

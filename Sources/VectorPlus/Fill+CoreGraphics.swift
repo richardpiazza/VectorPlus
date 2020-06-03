@@ -1,5 +1,5 @@
 import Foundation
-import SVG
+import SwiftSVG
 
 public extension Fill.Rule {
     var coreGraphicsDescription: String {
@@ -9,3 +9,15 @@ public extension Fill.Rule {
         }
     }
 }
+
+#if canImport(CoreGraphics)
+import CoreGraphics
+public extension Fill.Rule {
+    var cgFillRule: CGPathFillRule {
+        switch self {
+        case .evenOdd: return .evenOdd
+        case .nonZero: return .winding
+        }
+    }
+}
+#endif

@@ -1,9 +1,9 @@
 import Foundation
 import Swift2D
-import SVG
-import Graphics
+import SwiftSVG
+import Instructions
 
-public extension Document {
+public extension SVG {
     func asImageViewSubclass() throws -> String {
         let instructions = try asCoreGraphicsDescription()
         let renders = try asCGContextDescription()
@@ -17,7 +17,7 @@ public extension Document {
     }
 }
 
-private extension Document {
+private extension SVG {
     func asCoreGraphicsDescription(variable: String = "path") throws -> String {
         return try allPaths().map({ try $0.asCoreGraphicsDescription(variable: variable, originalSize: originalSize) }).joined(separator: "\n        ")
     }
