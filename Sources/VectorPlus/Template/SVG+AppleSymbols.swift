@@ -1,7 +1,6 @@
 import Foundation
 import XMLCoder
 import SwiftSVG
-import Instructions
 
 public extension SVG {
     

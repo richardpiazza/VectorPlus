@@ -16,10 +16,6 @@ let package = Package(
             targets: ["Executable"]
         ),
         .library(
-            name: "Instructions",
-            targets: ["Instructions"]
-        ),
-        .library(
             name: "VectorPlus",
             targets: ["VectorPlus"]
         ),
@@ -51,23 +47,18 @@ let package = Package(
             name: "Executable",
             dependencies: [
                 "SwiftSVG",
-                "Instructions",
                 "VectorPlus",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "ShellOut", package: "ShellOut"),
             ]
         ),
         .target(
-            name: "Instructions",
-            dependencies: ["SwiftSVG", "Swift2D", "SwiftColor"]
-        ),
-        .target(
             name: "VectorPlus",
-            dependencies: ["SwiftSVG", "Swift2D", "Instructions"]
+            dependencies: ["SwiftSVG", "Swift2D", "SwiftColor"]
         ),
         .testTarget(
             name: "VectorPlusTests",
-            dependencies: ["Executable", "SwiftSVG", "Instructions", "VectorPlus"]
+            dependencies: ["Executable", "SwiftSVG", "VectorPlus"]
         ),
     ]
 )

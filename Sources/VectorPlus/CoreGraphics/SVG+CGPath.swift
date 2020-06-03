@@ -1,7 +1,6 @@
 import Foundation
 import Swift2D
 import SwiftSVG
-import Instructions
 #if canImport(CoreGraphics)
 import CoreGraphics
 

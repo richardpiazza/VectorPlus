@@ -1,7 +1,7 @@
 import XCTest
 import Swift2D
 import SwiftSVG
-@testable import Instructions
+@testable import VectorPlus
 
 final class InstructionTests: XCTestCase {
     

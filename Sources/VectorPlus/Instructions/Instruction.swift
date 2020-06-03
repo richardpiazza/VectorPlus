@@ -176,26 +176,26 @@ public extension Instruction {
     func translate(from: Rect, to: Rect) -> Instruction {
         switch self {
         case .move(let x, let y):
-            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            let point = VectorPoint(point: Point(x: x, y: y), in: from).translate(to: to)
             return .move(x: point.x, y: point.y)
         case .line(let x, let y):
-            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            let point = VectorPoint(point: Point(x: x, y: y), in: from).translate(to: to)
             return .line(x: point.x, y: point.y)
         case .bezierCurve(let x, let y, let cx1, let cy1, let cx2, let cy2):
-            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
-            let control1 = VectorPoint(x: cx1, y: cy1, in: from).translate(to: to)
-            let control2 = VectorPoint(x: cx2, y: cy2, in: from).translate(to: to)
+            let point = VectorPoint(point: Point(x: x, y: y), in: from).translate(to: to)
+            let control1 = VectorPoint(point: Point(x: cx1, y: cy1), in: from).translate(to: to)
+            let control2 = VectorPoint(point: Point(x: cx2, y: cy2), in: from).translate(to: to)
             return .bezierCurve(x: point.x, y: point.y, cx1: control1.x, cy1: control1.y, cx2: control2.x, cy2: control2.y)
         case .quadraticCurve(let x, let y, let cx, let cy):
-            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
-            let control = VectorPoint(x: cx, y: cy, in: from).translate(to: to)
+            let point = VectorPoint(point: Point(x: x, y: y), in: from).translate(to: to)
+            let control = VectorPoint(point: Point(x: cx, y: cy), in: from).translate(to: to)
             return .quadraticCurve(x: point.x, y: point.y, cx: control.x, cy: control.y)
         case .circle(let x, let y, let r):
-            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            let point = VectorPoint(point: Point(x: x, y: y), in: from).translate(to: to)
             let toRadius = (r / from.size.minRadius) * to.size.maxRadius
             return .circle(x: point.x, y: point.y, r: toRadius)
         case .rectangle(let x, let y, let w, let h, let rx, let ry):
-            let point = VectorPoint(x: x, y: y, in: from).translate(to: to)
+            let point = VectorPoint(point: Point(x: x, y: y), in: from).translate(to: to)
             let width = (w / from.size.minRadius) * to.size.maxRadius
             let height = (h / from.size.minRadius) * to.size.maxRadius
             let radiusX = (rx != nil) ? (rx! / w) * width : nil

@@ -1,5 +1,16 @@
 import Foundation
 import SwiftSVG
+import SwiftColor
+
+public extension Stroke {
+    var swiftColor: Color? {
+        guard let color = self.color, !color.isEmpty else {
+            return nil
+        }
+        
+        return Color(color)
+    }
+}
 
 public extension Stroke.LineCap {
     var coreGraphicsDescription: String {
