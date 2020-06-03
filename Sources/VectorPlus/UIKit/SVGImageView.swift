@@ -2,7 +2,7 @@ import SwiftSVG
 #if canImport(UIKit)
 import UIKit
 
-@IBDesignable public class SVGImageView: UIImageView {
+@IBDesignable open class SVGImageView: UIImageView {
     
     public var width: CGFloat {
         return CGFloat(svg.originalSize.width)
