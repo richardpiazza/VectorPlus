@@ -39,10 +39,12 @@ public enum Instruction {
     
     /// A **Circle** element.
     ///
+    @available(*, deprecated, message: "Use `Circle.instructions()`")
     case circle(x: Float, y: Float, r: Float)
     
     /// A **Rect** (rounded or not) element.
     ///
+    @available(*, deprecated, message: "Use `Rectangle.instructions()`")
     case rectangle(x: Float, y: Float, w: Float, h: Float, rx: Float?, ry: Float?)
     
     /// The **"closepath"** command.
