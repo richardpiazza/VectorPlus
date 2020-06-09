@@ -2,7 +2,18 @@ import Foundation
 import SwiftSVG
 
 public protocol InstructionRepresentable {
-    func instructions() throws ->  [Instruction]
+    /// Returns a representation of the data as a set of `Instruction`s.
+    ///
+    /// - parameter clockwise: For elements that support directionality, this indicates the direction in which
+    ///                        the resulting instructions will be drawn.
+    func instructions(clockwise: Bool) throws -> [Instruction]
+}
+
+public extension InstructionRepresentable {
+    /// Defaults to anti/counter clockwise instruction set (where applicable).
+    func instructions() throws -> [Instruction] {
+        return try instructions(clockwise: false)
+    }
 }
 
 // MARK: - InstructionSetRepresentable

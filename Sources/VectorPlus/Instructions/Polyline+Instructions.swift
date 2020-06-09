@@ -6,7 +6,7 @@ public extension Polyline {
 
 // MARK: - InstructionRepresentable
 extension Polyline: InstructionRepresentable {
-    public func instructions() throws -> [Instruction] {
+    public func instructions(clockwise: Bool) throws -> [Instruction] {
         let pairs = points.components(separatedBy: " ")
         let components = pairs.flatMap({ $0.components(separatedBy: ",") })
         let values = components.compactMap({ Float($0) })

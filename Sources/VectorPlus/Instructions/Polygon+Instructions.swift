@@ -11,7 +11,7 @@ public extension SwiftSVG.Polygon {
 
 // MARK: - InstructionRepresentable
 extension SwiftSVG.Polygon: InstructionRepresentable {
-    public func instructions() throws -> [Instruction] {
+    public func instructions(clockwise: Bool) throws -> [Instruction] {
         let pairs = points.components(separatedBy: " ")
         let components = pairs.flatMap({ $0.components(separatedBy: ",") })
         guard components.count > 0 else {

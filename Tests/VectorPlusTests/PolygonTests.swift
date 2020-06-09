@@ -11,7 +11,7 @@ final class PolygonTests: XCTestCase {
     func testInstructionRetreival() throws {
         let points = "850,75 958,137.5 958,262.5 850,325 742,262.6 742,137.5"
         let polygon = SwiftSVG.Polygon(points: points)
-        let instructions = polygon.instructions
+        let instructions = try polygon.instructions()
         
         let expected: [Instruction] = [
             .move(x: 850.0, y: 75.0),
@@ -23,6 +23,6 @@ final class PolygonTests: XCTestCase {
             .close
         ]
         
-        XCTAssertEqual(try instructions(), expected)
+        XCTAssertEqual(instructions, expected)
     }
 }

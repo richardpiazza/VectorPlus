@@ -12,7 +12,7 @@ public extension Path {
 
 // MARK: - InstructionRepresentable
 extension Path: InstructionRepresentable {
-    public func instructions() throws -> [Instruction] {
+    public func instructions(clockwise: Bool) throws -> [Instruction] {
         var output: [Instruction] = []
         var instruction: Instruction?
         

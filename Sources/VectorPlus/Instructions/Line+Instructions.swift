@@ -7,7 +7,7 @@ public extension Line {
 
 // MARK: - InstructionRepresentable
 extension Line: InstructionRepresentable {
-    public func instructions() throws -> [Instruction] {
+    public func instructions(clockwise: Bool) throws -> [Instruction] {
         return [
         .move(x: x1, y: y1),
         .line(x: x2, y: y2),
