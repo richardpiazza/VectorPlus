@@ -60,8 +60,8 @@ struct Convert: ParsableCommand {
             
             let from = Rect(origin: .zero, size: document.originalSize)
             let to = Rect(origin: .zero, size: Size(width: 100, height: 100))
-            let instructions = try path.instructions().map({ $0.translate(from: from, to: to) })
-            let p = Path(instructions: instructions)
+            let commands = try path.commands().map({ $0.translate(from: from, to: to) })
+            let p = Path(commands: commands)
             let symbolsDoc = SVG.appleSymbols(path: p)
             let data = try SVG.encodeSymbols(symbolsDoc)
             let outputURL = url.deletingPathExtension().appendingPathExtension("symbols.svg")

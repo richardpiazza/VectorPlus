@@ -3,7 +3,7 @@ import XCTest
 final class VectorPlusTests: XCTestCase {
     
     static var allTests = [
-        ("testExample", testExample),
+        ("testCLI", testCLI),
     ]
     
     /// Returns path to the built products directory.
@@ -18,7 +18,7 @@ final class VectorPlusTests: XCTestCase {
       #endif
     }
     
-    func testExample() throws {
+    func testCLI() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.

@@ -29,7 +29,7 @@ public extension SVG {
     
     func masterPath() throws -> Path {
         let paths = try allPaths()
-        let instructions = try paths.flatMap({ try $0.instructions() })
-        return Path(instructions: instructions)
+        let commands = try paths.flatMap({ try $0.commands() })
+        return Path(commands: commands)
     }
 }

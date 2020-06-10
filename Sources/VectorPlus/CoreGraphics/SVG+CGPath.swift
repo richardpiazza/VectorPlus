@@ -20,10 +20,10 @@ public extension SVG {
         let path = CGMutablePath()
         
         paths.forEach { (p) in
-            let instructions = (try? p.instructions()) ?? []
-            instructions.forEach { (i) in
-                path.addInstruction(i, from: from, to: to)
-            }
+            let commands = (try? p.commands()) ?? []
+            commands.forEach({
+                path.addCommand($0, from: from, to: to)
+            })
         }
         
         return path

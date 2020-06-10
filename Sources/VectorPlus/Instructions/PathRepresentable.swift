@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSVG
 
-public protocol PathRepresentable: InstructionRepresentable, PresentationAttributes {
+public protocol PathRepresentable: CommandRepresentable, PresentationAttributes {
     
 }
 
@@ -19,9 +19,9 @@ public extension PathRepresentable {
         var modifications = transformations
         modifications.append(contentsOf: self.transformations)
         
-        let instructions = try self.instructions().map({ $0.applying(transformations: modifications) })
+        let commands = try self.commands().map({ $0.applying(transformations: modifications) })
         
-        let path = Path(instructions: instructions)
+        let path = Path(commands: commands)
         path.fillColor = fillColor
         path.fillOpacity = fillOpacity
         path.strokeColor = strokeColor
@@ -30,4 +30,22 @@ public extension PathRepresentable {
         
         return path
     }
+}
+
+extension Circle: PathRepresentable {
+}
+
+extension Line: PathRepresentable {
+}
+
+extension Path: PathRepresentable {
+}
+
+extension SwiftSVG.Polygon: PathRepresentable {
+}
+
+extension Polyline: PathRepresentable {
+}
+
+extension Rectangle: PathRepresentable {
 }

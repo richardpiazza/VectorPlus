@@ -58,8 +58,8 @@ private extension SVG {
 private extension Path {
     func asCoreGraphicsDescription(variable: String = "path", originalSize: Size) throws -> String {
         var outputs: [String] = []
-        let instructions = (try? self.instructions()) ?? []
-        instructions.forEach { (i) in
+        let commands = (try? self.commands()) ?? []
+        commands.forEach { (i) in
             let method = i.coreGraphicsDescription(originalSize: originalSize)
             let code = "\(variable)\(method)"
             outputs.append(code)

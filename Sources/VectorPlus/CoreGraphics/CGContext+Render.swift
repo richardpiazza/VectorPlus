@@ -11,9 +11,9 @@ public extension CGContext {
         
         let cgPath = CGMutablePath()
         
-        let instructions = (try? path.instructions()) ?? []
-        instructions.forEach { (instruction) in
-            cgPath.addInstruction(instruction, from: from, to: to)
+        let commands = (try? path.commands()) ?? []
+        commands.forEach { (command) in
+            cgPath.addCommand(command, from: from, to: to)
         }
         
         if let fill = path.fill {
