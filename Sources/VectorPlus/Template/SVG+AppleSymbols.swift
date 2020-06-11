@@ -4,7 +4,7 @@ import SwiftSVG
 
 public extension SVG {
     
-    static func encodeSymbols(_ document: SVG, encoder: XMLEncoder = XMLEncoder()) throws -> Data {
+    static func encodeDocument(_ document: SVG, encoder: XMLEncoder = XMLEncoder()) throws -> Data {
         let rootAttributes: [String: String] = [
             "version": "1.1",
             "xmlns": "http://www.w3.org/2000/svg",

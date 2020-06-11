@@ -15,7 +15,7 @@ public extension SVG {
         
         let paths: [Path]
         do {
-            paths = try self.allPaths()
+            paths = try self.subpaths()
         } catch {
             return nil
         }

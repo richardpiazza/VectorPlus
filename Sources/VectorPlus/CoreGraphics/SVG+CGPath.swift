@@ -10,7 +10,7 @@ public extension SVG {
             return CGMutablePath()
         }
         
-        guard let paths = try? allPaths() else {
+        guard let paths = try? subpaths() else {
             return CGMutablePath()
         }
         

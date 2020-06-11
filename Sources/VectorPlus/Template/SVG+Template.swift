@@ -18,13 +18,13 @@ public extension SVG {
 
 private extension SVG {
     func asCoreGraphicsDescription(variable: String = "path") throws -> String {
-        return try allPaths().map({ try $0.asCoreGraphicsDescription(variable: variable, originalSize: originalSize) }).joined(separator: "\n        ")
+        return try subpaths().map({ try $0.asCoreGraphicsDescription(variable: variable, originalSize: originalSize) }).joined(separator: "\n        ")
     }
     
     func asCGContextDescription() throws -> String {
         var outputs: [String] = []
         
-        let paths = try allPaths()
+        let paths = try subpaths()
         try paths.forEach { (path) in
             let instructions = try path.asCoreGraphicsDescription(variable: "path", originalSize: originalSize)
             let fillColor = path.fill?.swiftColor?.coreGraphicsDescription ?? "nil"
@@ -51,19 +51,6 @@ private extension SVG {
             )
         }
         
-        return outputs.joined(separator: "\n        ")
-    }
-}
-
-private extension Path {
-    func asCoreGraphicsDescription(variable: String = "path", originalSize: Size) throws -> String {
-        var outputs: [String] = []
-        let commands = (try? self.commands()) ?? []
-        commands.forEach { (i) in
-            let method = i.coreGraphicsDescription(originalSize: originalSize)
-            let code = "\(variable)\(method)"
-            outputs.append(code)
-        }
         return outputs.joined(separator: "\n        ")
     }
 }
