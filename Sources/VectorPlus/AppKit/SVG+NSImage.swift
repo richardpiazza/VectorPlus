@@ -17,6 +17,7 @@ public extension SVG {
         do {
             paths = try self.subpaths()
         } catch {
+            print(error)
             return nil
         }
         

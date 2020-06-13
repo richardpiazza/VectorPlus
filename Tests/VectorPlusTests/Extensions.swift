@@ -36,6 +36,8 @@ extension Path.Command {
             return prefix == .cubicBezierCurve
         case .quadraticBezierCurve:
             return prefix == .quadraticBezierCurve
+        case .ellipticalArcCurve:
+            return prefix == .ellipticalArcCurve
         case .closePath:
             return prefix == .close
         }

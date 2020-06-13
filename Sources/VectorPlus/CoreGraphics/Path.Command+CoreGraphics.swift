@@ -22,6 +22,9 @@ public extension Path.Command {
             let _cp = VectorPoint(point: cp, in: rect)
             let _point = VectorPoint(point: point, in: rect)
             return ".addQuadCurve(to: \(_point.coreGraphicsDescription), control: \(_cp.coreGraphicsDescription))"
+        case .ellipticalArcCurve:
+            #warning("No Implementation (convert to Bezier)")
+            return ""
         case .closePath:
             return ".closeSubpath()"
         }

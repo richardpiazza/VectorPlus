@@ -21,6 +21,9 @@ public extension CGMutablePath {
             addCurve(to: point.cgPoint, control1: cp1.cgPoint, control2: cp2.cgPoint)
         case .quadraticBezierCurve(let cp, let point):
             addQuadCurve(to: point.cgPoint, control: cp.cgPoint)
+        case .ellipticalArcCurve:
+            #warning("No Implementation")
+            break
         case .closePath:
             closeSubpath()
         }

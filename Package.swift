@@ -27,7 +27,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/richardpiazza/SwiftSVG.git",
-            from: "0.3.4"
+            .branch("master")
         ),
         .package(
             url: "https://github.com/richardpiazza/Swift2D.git",
