@@ -12,8 +12,15 @@ public extension CGContext {
         let cgPath = CGMutablePath()
         
         let commands = (try? path.commands()) ?? []
-        commands.forEach { (command) in
-            cgPath.addCommand(command, from: from, to: to)
+        commands.enumerated().forEach { (idx, command) in
+            let previous: Point?
+            if idx > 0 {
+                previous = commands[idx - 1].previousPoint
+            } else {
+                previous = nil
+            }
+            
+            cgPath.addCommand(command, from: from, to: to, previousPoint: previous)
         }
         
         if let fill = path.fill {

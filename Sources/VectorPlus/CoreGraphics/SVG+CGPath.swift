@@ -21,9 +21,16 @@ public extension SVG {
         
         paths.forEach { (p) in
             let commands = (try? p.commands()) ?? []
-            commands.forEach({
-                path.addCommand($0, from: from, to: to)
-            })
+            commands.enumerated().forEach { (idx, command) in
+                let previous: Point?
+                if idx > 0 {
+                    previous = commands[idx - 1].previousPoint
+                } else {
+                    previous = nil
+                }
+                
+                path.addCommand(command, from: from, to: to, previousPoint: previous)
+            }
         }
         
         return path
