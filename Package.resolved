@@ -41,9 +41,9 @@
         "package": "SwiftSVG",
         "repositoryURL": "https://github.com/richardpiazza/SwiftSVG.git",
         "state": {
-          "branch": "master",
-          "revision": "fe0396c7c23b8cd4591d1a632bb07eb91c908c3a",
-          "version": null
+          "branch": null,
+          "revision": "42b71b3531a35ac800f36bf2ddee735ff78bd0f1",
+          "version": "0.5.0"
         }
       },
       {
