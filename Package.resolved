@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/richardpiazza/Swift2D.git",
         "state": {
           "branch": null,
-          "revision": "9440d0cacae5232e585577cd7562dedd2ab6e5f7",
-          "version": "0.1.1"
+          "revision": "e4b141b696ac519efa984b0e03a981ab29f893bc",
+          "version": "0.3.0"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/richardpiazza/SwiftSVG.git",
         "state": {
           "branch": null,
-          "revision": "42b71b3531a35ac800f36bf2ddee735ff78bd0f1",
-          "version": "0.5.0"
+          "revision": "9228246ec5579eff7848090074d02acbf2a09397",
+          "version": "0.6.0"
         }
       },
       {
