@@ -1,5 +1,8 @@
 import Foundation
 import SwiftSVG
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
 
 public extension Path.Command {
     /// Uses the _Power of Math_ to translate a commands controls/points from one `Rect` to another `Rect`.

@@ -9,8 +9,8 @@ public extension SVG {
             return nil
         }
         
-        let from = Rect(origin: .zero, size: originalSize)
-        let to = Rect(origin: .zero, size: size.size)
+        let from = CGRect(origin: .zero, size: originalSize)
+        let to = CGRect(origin: .zero, size: size)
         
         let paths: [Path]
         do {

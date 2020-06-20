@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
 
 /// A cartesian-based struct that describes the relationship of any particular `Point` to the _origin_ of a `Rect`.
 public struct VectorPoint {

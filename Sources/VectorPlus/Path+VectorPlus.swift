@@ -1,5 +1,8 @@
 import Foundation
 import SwiftSVG
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
 
 public extension Path {
     func asCoreGraphicsDescription(variable: String = "path", originalSize: CGSize) throws -> String {
