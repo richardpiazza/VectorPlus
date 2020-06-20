@@ -1,5 +1,4 @@
 import Foundation
-import Swift2D
 import SwiftSVG
 #if canImport(UIKit)
 import UIKit

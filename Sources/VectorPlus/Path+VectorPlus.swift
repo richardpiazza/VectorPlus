@@ -1,13 +1,12 @@
 import Foundation
-import Swift2D
 import SwiftSVG
 
 public extension Path {
-    func asCoreGraphicsDescription(variable: String = "path", originalSize: Size) throws -> String {
+    func asCoreGraphicsDescription(variable: String = "path", originalSize: CGSize) throws -> String {
         var outputs: [String] = []
         let commands = (try? self.commands()) ?? []
         commands.enumerated().forEach { (idx, command) in
-            let previous: Point?
+            let previous: CGPoint?
             if idx > 0 {
                 previous = commands[idx - 1].previousPoint
             } else {
@@ -23,7 +22,7 @@ public extension Path {
 }
 
 extension Path.Command {
-    var previousPoint: Point {
+    var previousPoint: CGPoint {
         switch self {
         case .moveTo(let point): return point
         case .lineTo(let point): return point

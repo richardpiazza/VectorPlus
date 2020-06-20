@@ -1,6 +1,5 @@
 import Foundation
 import ArgumentParser
-import Swift2D
 import ShellOut
 import SwiftSVG
 import VectorPlus
@@ -60,8 +59,8 @@ struct Convert: ParsableCommand {
         case .symbols:
             let path = try document.coalescedPath()
             
-            let from = Rect(origin: .zero, size: document.originalSize)
-            let to = Rect(origin: .zero, size: Size(width: 100, height: 100))
+            let from = CGRect(origin: .zero, size: document.originalSize)
+            let to = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
             let commands = try path.commands().map({ $0.translate(from: from, to: to) })
             let p = Path(commands: commands)
             let symbolsDoc = SVG.appleSymbols(path: p)

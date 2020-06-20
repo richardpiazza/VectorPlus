@@ -1,6 +1,5 @@
 import Foundation
 import ArgumentParser
-import Swift2D
 import SwiftSVG
 import VectorPlus
 #if canImport(AppKit)
@@ -39,7 +38,7 @@ struct Preview: ParsableCommand {
         let url = try FileManager.default.url(for: filename)
         let document = try SVG.make(from: url)
         
-        guard let data = document.pngData(size: Size(width: 400, height: 400).cgSize) else {
+        guard let data = document.pngData(size: CGSize(width: 400, height: 400)) else {
             throw ValidationError("Invalid PNG data.")
         }
         

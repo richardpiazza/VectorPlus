@@ -46,7 +46,7 @@ struct Render: ParsableCommand {
         if let size = self.size {
             outputSize = CGSize(width: CGFloat(size), height: CGFloat(size))
         } else {
-            outputSize = document.outputSize.cgSize
+            outputSize = document.outputSize
         }
         
         guard let data = document.pngData(size: outputSize) else {

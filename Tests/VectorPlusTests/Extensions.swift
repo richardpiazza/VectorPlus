@@ -1,5 +1,4 @@
 import XCTest
-import Swift2D
 import SwiftSVG
 @testable import VectorPlus
 
@@ -63,14 +62,14 @@ extension Path.Command: RoughEquatability {
     }
 }
 
-extension Float: RoughEquatability {
-    static func ~~ (lhs: Float, rhs: Float) -> Bool {
+extension CGFloat: RoughEquatability {
+    static func ~~ (lhs: CGFloat, rhs: CGFloat) -> Bool {
         return abs(lhs - rhs) < 0.001
     }
 }
 
-extension Point: RoughEquatability {
-    static func ~~ (lhs: Point, rhs: Point) -> Bool {
+extension CGPoint: RoughEquatability {
+    static func ~~ (lhs: CGPoint, rhs: CGPoint) -> Bool {
         return (lhs.x ~~ rhs.x) && (lhs.y ~~ rhs.y)
     }
 }

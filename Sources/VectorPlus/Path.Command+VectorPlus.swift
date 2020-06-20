@@ -1,10 +1,9 @@
 import Foundation
-import Swift2D
 import SwiftSVG
 
 public extension Path.Command {
     /// Uses the _Power of Math_ to translate a commands controls/points from one `Rect` to another `Rect`.
-    func translate(from: Rect, to: Rect) -> Path.Command {
+    func translate(from: CGRect, to: CGRect) -> Path.Command {
         switch self {
         case .moveTo(let point):
             let _point = VectorPoint(point: point, in: from).translate(to: to)
@@ -33,8 +32,8 @@ public extension Path.Command {
 }
 
 public extension Path.Command {
-    func coreGraphicsDescription(originalSize: Size, previousPoint: Point? = nil) -> String {
-        let rect = Rect(origin: .zero, size: originalSize)
+    func coreGraphicsDescription(originalSize: CGSize, previousPoint: CGPoint? = nil) -> String {
+        let rect = CGRect(origin: .zero, size: originalSize)
         
         switch self {
         case .moveTo(let point):
@@ -73,7 +72,7 @@ public extension Path.Command {
 extension Path.Command {
     /// Converts an `.ellipticalArcCurve` into one or more `.cubicBezierCurve`s.
     /// https://github.com/colinmeinke/svg-arc-to-cubic-bezier/blob/master/src/index.js
-    func convertToCubicBezierCurves(with previousPoint: Point) throws -> [Path.Command] {
+    func convertToCubicBezierCurves(with previousPoint: CGPoint) throws -> [Path.Command] {
         guard case let .ellipticalArcCurve(rx, ry, angle, largeArg, clockwise, point) = self else {
             throw Path.Command.Error.message("\(#function); Only .ellipticalArcCurve is allowed.")
         }
@@ -118,7 +117,7 @@ extension Path.Command {
         
         angle2 /= segments
         
-        var rawCurves: [(Point, Point, Point)] = []
+        var rawCurves: [(CGPoint, CGPoint, CGPoint)] = []
         for _ in 0...Int(segments) {
             rawCurves.append(approximateUnitArc(angle1: angle1, angle2: angle2))
             angle1 += angle2
@@ -135,8 +134,8 @@ extension Path.Command {
     }
 }
 
-private func arcCenter(previousPoint: Point, point: Point, rx: Float, ry: Float, largeArc: Bool, clockwise: Bool, sinφ: Float, cosφ: Float, pxp: Float, pyp: Float) ->
-    (center: Point, angle1: Float, angle2: Float) {
+private func arcCenter(previousPoint: CGPoint, point: CGPoint, rx: CGFloat, ry: CGFloat, largeArc: Bool, clockwise: Bool, sinφ: CGFloat, cosφ: CGFloat, pxp: CGFloat, pyp: CGFloat) ->
+    (center: CGPoint, angle1: CGFloat, angle2: CGFloat) {
         
         let rxsq = pow(rx, 2.0)
         let rysq = pow(ry, 2.0)
@@ -162,8 +161,8 @@ private func arcCenter(previousPoint: Point, point: Point, rx: Float, ry: Float,
         let vx2 = (-pxp - centerxp) / rx
         let vy2 = (-pyp - centeryp) / ry
         
-        let angle1 = vectorAngle(u: Point(x: 1, y: 0), v: Point(x: vx1, y: vy1))
-        var angle2 = vectorAngle(u: Point(x: vx1, y: vy1), v: Point(x: vx2, y: vy2))
+        let angle1 = vectorAngle(u: CGPoint(x: 1, y: 0), v: CGPoint(x: vx1, y: vy1))
+        var angle2 = vectorAngle(u: CGPoint(x: vx1, y: vy1), v: CGPoint(x: vx2, y: vy2))
         
         if clockwise == false && angle2 > 0.0 {
             angle2 -= (.pi * 2.0)
@@ -171,11 +170,11 @@ private func arcCenter(previousPoint: Point, point: Point, rx: Float, ry: Float,
             angle2 += (.pi * 2.0)
         }
         
-        return (Point(x: centerx, y: centery), angle1, angle2)
+        return (CGPoint(x: centerx, y: centery), angle1, angle2)
 }
 
-private func vectorAngle(u: Point, v: Point) -> Float {
-    let sign: Float = ((u.x * v.y - u.y * v.x) < 0.0) ? -1.0 : 1.0
+private func vectorAngle(u: CGPoint, v: CGPoint) -> CGFloat {
+    let sign: CGFloat = ((u.x * v.y - u.y * v.x) < 0.0) ? -1.0 : 1.0
     var dot = u.x * v.x + u.y * v.y
     if dot > 1.0 {
         dot = 1.0
@@ -186,10 +185,10 @@ private func vectorAngle(u: Point, v: Point) -> Float {
     return sign * acos(dot)
 }
 
-private func approximateUnitArc(angle1: Float, angle2: Float) -> (Point, Point, Point) {
+private func approximateUnitArc(angle1: CGFloat, angle2: CGFloat) -> (CGPoint, CGPoint, CGPoint) {
     // If 90 degree circular arc, use a constant
     // as derived from http://spencermortensen.com/articles/bezier-circle
-    let a: Float
+    let a: CGFloat
     switch angle2 {
     case 1.5707963267948966:
         a = 0.551915024494
@@ -204,13 +203,13 @@ private func approximateUnitArc(angle1: Float, angle2: Float) -> (Point, Point, 
     let x2 = cos(angle1 + angle2)
     let y2 = sin(angle1 + angle2)
     
-    return (Point(x: x1 - y1 * a, y: y1 + x1 * a), Point(x: x2 + y2 * a, y: y2 - x2 * 1), Point(x: x2, y: y2))
+    return (CGPoint(x: x1 - y1 * a, y: y1 + x1 * a), CGPoint(x: x2 + y2 * a, y: y2 - x2 * 1), CGPoint(x: x2, y: y2))
 }
 
-private func mapToEllipse(point: Point, rx: Float, ry: Float, sinφ: Float, cosφ: Float, center: Point) -> Point {
+private func mapToEllipse(point: CGPoint, rx: CGFloat, ry: CGFloat, sinφ: CGFloat, cosφ: CGFloat, center: CGPoint) -> CGPoint {
     let x = point.x * rx
     let y = point.y * ry
     let xp = cosφ * x - sinφ * y
     let yp = sinφ * x + cosφ * y
-    return Point(x: xp + center.x, y: yp + center.y)
+    return CGPoint(x: xp + center.x, y: yp + center.y)
 }

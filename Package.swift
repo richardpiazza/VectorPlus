@@ -27,11 +27,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/richardpiazza/SwiftSVG.git",
-            from: "0.6.0"
-        ),
-        .package(
-            url: "https://github.com/richardpiazza/Swift2D.git",
-            from: "0.3.0"
+            from: "0.7.0"
         ),
         .package(
             url: "https://github.com/richardpiazza/SwiftColor.git",
@@ -54,7 +50,7 @@ let package = Package(
         ),
         .target(
             name: "VectorPlus",
-            dependencies: ["SwiftSVG", "Swift2D", "SwiftColor"]
+            dependencies: ["SwiftSVG", "SwiftColor"]
         ),
         .testTarget(
             name: "VectorPlusTests",

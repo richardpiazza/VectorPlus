@@ -20,15 +20,6 @@
         }
       },
       {
-        "package": "Swift2D",
-        "repositoryURL": "https://github.com/richardpiazza/Swift2D.git",
-        "state": {
-          "branch": null,
-          "revision": "e4b141b696ac519efa984b0e03a981ab29f893bc",
-          "version": "0.3.0"
-        }
-      },
-      {
         "package": "SwiftColor",
         "repositoryURL": "https://github.com/richardpiazza/SwiftColor.git",
         "state": {
@@ -42,8 +33,8 @@
         "repositoryURL": "https://github.com/richardpiazza/SwiftSVG.git",
         "state": {
           "branch": null,
-          "revision": "9228246ec5579eff7848090074d02acbf2a09397",
-          "version": "0.6.0"
+          "revision": "5481ec70cfa093ff938cb834c4c59366707fecdf",
+          "version": "0.7.0"
         }
       },
       {
