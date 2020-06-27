@@ -1,10 +1,10 @@
-import Foundation
 import SwiftSVG
+import Swift2D
 #if canImport(CoreGraphics)
 import CoreGraphics
 
 public extension SVG {
-    func path(size: CGSize) -> CGPath {
+    func path(size: Size) -> CGPath {
         guard size.height > 0.0 && size.width > 0.0 else {
             return CGMutablePath()
         }
@@ -13,15 +13,15 @@ public extension SVG {
             return CGMutablePath()
         }
         
-        let from = CGRect(origin: .zero, size: originalSize)
-        let to = CGRect(origin: .zero, size: size)
+        let from = Rect(origin: .zero, size: originalSize)
+        let to = Rect(origin: .zero, size: size)
         
         let path = CGMutablePath()
         
         paths.forEach { (p) in
             let commands = (try? p.commands()) ?? []
             commands.enumerated().forEach { (idx, command) in
-                let previous: CGPoint?
+                let previous: Point?
                 if idx > 0 {
                     previous = commands[idx - 1].previousPoint
                 } else {

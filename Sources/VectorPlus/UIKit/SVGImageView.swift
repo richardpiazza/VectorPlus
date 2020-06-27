@@ -72,7 +72,7 @@ import UIKit
     }
     
     public func updateSubviews() {
-        image = svg.uiImage(size: bounds.size)
+        image = svg.uiImage(size: bounds.size.size)
     }
 }
 

@@ -27,7 +27,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/richardpiazza/SwiftSVG.git",
-            from: "0.7.1"
+            .branch("feature/foundation-removal")
         ),
         .package(
             url: "https://github.com/richardpiazza/SwiftColor.git",

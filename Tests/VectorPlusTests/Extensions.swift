@@ -1,5 +1,6 @@
 import XCTest
 import SwiftSVG
+import Swift2D
 @testable import VectorPlus
 
 infix operator ~~
@@ -7,6 +8,24 @@ protocol RoughEquatability {
     static func ~~ (lhs: Self, rhs: Self) -> Bool
 }
 
+#if swift(>=5.3)
+func XCTAssertRoughlyEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #filePath, line: UInt = #line) where T : RoughEquatability {
+    let lhs: T
+    let rhs: T
+    do {
+        lhs = try expression1()
+        rhs = try expression2()
+    } catch {
+        XCTFail(error.localizedDescription, file: file, line: line)
+        return
+    }
+    
+    guard lhs ~~ rhs else {
+        XCTFail(message(), file: file, line: line)
+        return
+    }
+}
+#else
 func XCTAssertRoughlyEqual<T>(_ expression1: @autoclosure () throws -> T, _ expression2: @autoclosure () throws -> T, _ message: @autoclosure () -> String = "", file: StaticString = #file, line: UInt = #line) where T : RoughEquatability {
     let lhs: T
     let rhs: T
@@ -23,6 +42,7 @@ func XCTAssertRoughlyEqual<T>(_ expression1: @autoclosure () throws -> T, _ expr
         return
     }
 }
+#endif
 
 extension Path.Command {
     func hasPrefix(_ prefix: Path.Command.Prefix) -> Bool {
@@ -62,15 +82,15 @@ extension Path.Command: RoughEquatability {
     }
 }
 
-extension CGFloat: RoughEquatability {
-    static func ~~ (lhs: CGFloat, rhs: CGFloat) -> Bool {
+extension Float: RoughEquatability {
+    static func ~~ (lhs: Float, rhs: Float) -> Bool {
         // CGFloat.abs is unavailable on some platforms
         return Swift.abs(lhs - rhs) < 0.001
     }
 }
 
-extension CGPoint: RoughEquatability {
-    static func ~~ (lhs: CGPoint, rhs: CGPoint) -> Bool {
+extension Point: RoughEquatability {
+    static func ~~ (lhs: Point, rhs: Point) -> Bool {
         return (lhs.x ~~ rhs.x) && (lhs.y ~~ rhs.y)
     }
 }

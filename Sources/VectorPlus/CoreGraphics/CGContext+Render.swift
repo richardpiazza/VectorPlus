@@ -1,18 +1,18 @@
-import Foundation
-import SwiftColor
 import SwiftSVG
+import Swift2D
+import SwiftColor
 #if canImport(CoreGraphics)
 import CoreGraphics
 
 public extension CGContext {
-    func render(path: Path, from: CGRect, to: CGRect) throws {
+    func render(path: Path, from: Rect, to: Rect) throws {
         saveGState()
         
         let cgPath = CGMutablePath()
         
         let commands = (try? path.commands()) ?? []
         commands.enumerated().forEach { (idx, command) in
-            let previous: CGPoint?
+            let previous: Point?
             if idx > 0 {
                 previous = commands[idx - 1].previousPoint
             } else {
@@ -24,7 +24,7 @@ public extension CGContext {
         
         if let fill = path.fill {
             let cgColor = Color(fill.color ?? "black").cgColor
-            let color = cgColor.copy(alpha: fill.opacity ?? 1.0) ?? cgColor
+            let color = cgColor.copy(alpha: CGFloat(fill.opacity ?? 1.0)) ?? cgColor
             let rule = fill.rule.cgFillRule
             
             setFillColor(color)
@@ -34,16 +34,16 @@ public extension CGContext {
         
         if let stroke = path.stroke {
             let cgColor = Color(stroke.color ?? "black").cgColor
-            let color = cgColor.copy(alpha: stroke.opacity ?? 1.0) ?? cgColor
+            let color = cgColor.copy(alpha: CGFloat(stroke.opacity ?? 1.0)) ?? cgColor
             let width = stroke.width ?? 1.0
             let lineWidth = width * (to.size.width / from.size.width)
             
-            setLineWidth(lineWidth)
+            setLineWidth(CGFloat(lineWidth))
             setStrokeColor(color)
             setLineCap(stroke.lineCap.cgLineCap)
             setLineJoin(stroke.lineJoin.cgLineJoin)
             if let miterLimit = stroke.miterLimit, stroke.lineJoin == .miter {
-                setMiterLimit(miterLimit)
+                setMiterLimit(CGFloat(miterLimit))
             }
             addPath(cgPath)
             strokePath()
@@ -59,7 +59,7 @@ public extension CGContext {
         restoreGState()
     }
     
-    func render(path: Path, in rect: CGRect) throws {
+    func render(path: Path, in rect: Rect) throws {
         return try render(path: path, from: rect, to: rect)
     }
 }

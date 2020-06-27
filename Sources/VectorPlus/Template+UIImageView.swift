@@ -1,5 +1,3 @@
-import Foundation
-
 internal let imageViewSubclassTemplate: String = """
 #if canImport(UIKit)
 import UIKit

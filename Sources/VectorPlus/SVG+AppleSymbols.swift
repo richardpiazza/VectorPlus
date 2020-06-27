@@ -1,6 +1,7 @@
 import Foundation
 import XMLCoder
 import SwiftSVG
+import Swift2D
 
 public extension SVG {
     
@@ -14,16 +15,16 @@ public extension SVG {
         return try encoder.encode(document, withRootKey: "svg", rootAttributes: rootAttributes, header: header)
     }
     
-    static func appleSymbols(path: Path) -> SVG {
-        let document = SVG(width: 3300, height: 2200)
-        document.groups = [.appleSymbolsNotes, .appleSymbolsGuides, .appleSymbols(path: path)]
+    static func appleSymbols(path: Path, in rect: Rect) throws -> SVG {
+        var document = SVG(width: 3300, height: 2200)
+        document.groups = [.appleSymbolsNotes, .appleSymbolsGuides, try .appleSymbols(path: path, in: rect)]
         return document
     }
 }
 
 public extension Group {
     static var appleSymbolsNotes: Group {
-        let group = Group()
+        var group = Group()
 
         group.id = "Notes"
         group.rectangles = []
@@ -31,20 +32,20 @@ public extension Group {
         group.texts = []
         group.groups = []
         
-        let artboard = Rectangle(x: 0, y: 0, width: 3300, height: 2200)
+        var artboard = Rectangle(x: 0, y: 0, width: 3300, height: 2200)
         artboard.id = "artboard"
         artboard.style = "fill:white;opacity:1"
         group.rectangles?.append(artboard)
         
-        let topLine = Line(x1: 263, y1: 292, x2: 3036, y2: 292)
+        var topLine = Line(x1: 263, y1: 292, x2: 3036, y2: 292)
         topLine.style = "fill:none;stroke:black;opacity:1;stroke-width:0.5;"
         group.lines?.append(topLine)
         
-        let bottomLine = Line(x1: 263, y1: 1903, x2: 3036, y2: 1903)
+        var bottomLine = Line(x1: 263, y1: 1903, x2: 3036, y2: 1903)
         bottomLine.style = "fill:none;stroke:black;opacity:1;stroke-width:0.5;"
         group.lines?.append(bottomLine)
         
-        let text = Text()
+        var text = Text()
         text.style = "stroke:none;fill:black;font-family:-apple-system,&quot;SF Pro Display&quot;,&quot;SF Pro Text&quot;,Helvetica,sans-serif;font-weight:bold;"
         text.transform = "matrix(1 0 0 1 263 322)"
         text.value = "Weight/Scale Variations"
@@ -87,8 +88,8 @@ public extension Group {
         text.value = "Black"
         group.texts?.append(text)
         
-        let path = Path(data: "M 9.24805 0.830078 C 13.5547 0.830078 17.1387 -2.74414 17.1387 -7.05078 C 17.1387 -11.3574 13.5449 -14.9316 9.23828 -14.9316 C 4.94141 -14.9316 1.36719 -11.3574 1.36719 -7.05078 C 1.36719 -2.74414 4.95117 0.830078 9.24805 0.830078 Z M 9.24805 -0.654297 C 5.70312 -0.654297 2.87109 -3.49609 2.87109 -7.05078 C 2.87109 -10.6055 5.69336 -13.4473 9.23828 -13.4473 C 12.793 -13.4473 15.6348 -10.6055 15.6445 -7.05078 C 15.6543 -3.49609 12.8027 -0.654297 9.24805 -0.654297 Z M 9.22852 -3.42773 C 9.69727 -3.42773 9.9707 -3.74023 9.9707 -4.25781 L 9.9707 -6.31836 L 12.1973 -6.31836 C 12.6953 -6.31836 13.0371 -6.57227 13.0371 -7.04102 C 13.0371 -7.51953 12.7148 -7.7832 12.1973 -7.7832 L 9.9707 -7.7832 L 9.9707 -10.0098 C 9.9707 -10.5273 9.69727 -10.8496 9.22852 -10.8496 C 8.75977 -10.8496 8.50586 -10.5078 8.50586 -10.0098 L 8.50586 -7.7832 L 6.29883 -7.7832 C 5.78125 -7.7832 5.44922 -7.51953 5.44922 -7.04102 C 5.44922 -6.57227 5.80078 -6.31836 6.29883 -6.31836 L 8.50586 -6.31836 L 8.50586 -4.25781 C 8.50586 -3.75977 8.75977 -3.42773 9.22852 -3.42773 Z")
-        let subGroup = Group("", path: path, transform: "matrix(1 0 0 1 263 1933)")
+        var path = Path(data: "M 9.24805 0.830078 C 13.5547 0.830078 17.1387 -2.74414 17.1387 -7.05078 C 17.1387 -11.3574 13.5449 -14.9316 9.23828 -14.9316 C 4.94141 -14.9316 1.36719 -11.3574 1.36719 -7.05078 C 1.36719 -2.74414 4.95117 0.830078 9.24805 0.830078 Z M 9.24805 -0.654297 C 5.70312 -0.654297 2.87109 -3.49609 2.87109 -7.05078 C 2.87109 -10.6055 5.69336 -13.4473 9.23828 -13.4473 C 12.793 -13.4473 15.6348 -10.6055 15.6445 -7.05078 C 15.6543 -3.49609 12.8027 -0.654297 9.24805 -0.654297 Z M 9.22852 -3.42773 C 9.69727 -3.42773 9.9707 -3.74023 9.9707 -4.25781 L 9.9707 -6.31836 L 12.1973 -6.31836 C 12.6953 -6.31836 13.0371 -6.57227 13.0371 -7.04102 C 13.0371 -7.51953 12.7148 -7.7832 12.1973 -7.7832 L 9.9707 -7.7832 L 9.9707 -10.0098 C 9.9707 -10.5273 9.69727 -10.8496 9.22852 -10.8496 C 8.75977 -10.8496 8.50586 -10.5078 8.50586 -10.0098 L 8.50586 -7.7832 L 6.29883 -7.7832 C 5.78125 -7.7832 5.44922 -7.51953 5.44922 -7.04102 C 5.44922 -6.57227 5.80078 -6.31836 6.29883 -6.31836 L 8.50586 -6.31836 L 8.50586 -4.25781 C 8.50586 -3.75977 8.75977 -3.42773 9.22852 -3.42773 Z")
+        var subGroup = Group("", path: path, transform: "matrix(1 0 0 1 263 1933)")
         group.groups?.append(subGroup)
         
         path.data = "M 11.709 2.91016 C 17.1582 2.91016 21.6699 -1.60156 21.6699 -7.05078 C 21.6699 -12.4902 17.1484 -17.0117 11.6992 -17.0117 C 6.25977 -17.0117 1.74805 -12.4902 1.74805 -7.05078 C 1.74805 -1.60156 6.26953 2.91016 11.709 2.91016 Z M 11.709 1.25 C 7.09961 1.25 3.41797 -2.44141 3.41797 -7.05078 C 3.41797 -11.6504 7.08984 -15.3516 11.6992 -15.3516 C 16.3086 -15.3516 20 -11.6504 20.0098 -7.05078 C 20.0195 -2.44141 16.3184 1.25 11.709 1.25 Z M 11.6895 -2.41211 C 12.207 -2.41211 12.5195 -2.77344 12.5195 -3.33984 L 12.5195 -6.23047 L 15.5762 -6.23047 C 16.123 -6.23047 16.5039 -6.51367 16.5039 -7.03125 C 16.5039 -7.55859 16.1426 -7.86133 15.5762 -7.86133 L 12.5195 -7.86133 L 12.5195 -10.9277 C 12.5195 -11.5039 12.207 -11.8555 11.6895 -11.8555 C 11.1719 -11.8555 10.8789 -11.4844 10.8789 -10.9277 L 10.8789 -7.86133 L 7.83203 -7.86133 C 7.26562 -7.86133 6.89453 -7.55859 6.89453 -7.03125 C 6.89453 -6.51367 7.28516 -6.23047 7.83203 -6.23047 L 10.8789 -6.23047 L 10.8789 -3.33984 C 10.8789 -2.79297 11.1719 -2.41211 11.6895 -2.41211 Z"
@@ -119,7 +120,7 @@ public extension Group {
         text.value = "symbols with the adjacent text."
         group.texts?.append(text)
         
-        let rect = Rectangle(x: 776, y: 1919, width: 3, height: 14)
+        var rect = Rectangle(x: 776, y: 1919, width: 3, height: 14)
         rect.style = "fill:#00AEEF;stroke:none;opacity:0.4;"
         group.rectangles?.append(rect)
         
@@ -200,26 +201,26 @@ public extension Group {
     }
     
     static var appleSymbolsGuides: Group {
-        let group = Group()
+        var group = Group()
         
         group.id = "Guides"
         group.groups = []
         group.lines = []
         group.rectangles = []
         
-        let hRef = Group()
+        var hRef = Group()
         hRef.id = "H-reference"
         hRef.style = "fill:#27AAE1;stroke:none;"
         hRef.transform = "matrix(1 0 0 1 339 696)"
         hRef.paths = [Path(data: "M 54.9316 0 L 57.666 0 L 30.5664 -70.459 L 28.0762 -70.459 L 0.976562 0 L 3.66211 0 L 12.9395 -24.4629 L 45.7031 -24.4629 Z M 29.1992 -67.0898 L 29.4434 -67.0898 L 44.8242 -26.709 L 13.8184 -26.709 Z")]
         group.groups?.append(hRef)
         
-        let baseline = Line(x1: 263, y1: 696, x2: 3036, y2: 696)
+        var baseline = Line(x1: 263, y1: 696, x2: 3036, y2: 696)
         baseline.id = "Baseline-S"
         baseline.style = "fill:none;stroke:#27AAE1;opacity:1;stroke-width:0.577;"
         group.lines?.append(baseline)
         
-        let capline = Line(x1: 263, y1: 625.541, x2: 3036, y2: 625.541)
+        var capline = Line(x1: 263, y1: 625.541, x2: 3036, y2: 625.541)
         capline.id = "Capline-S"
         capline.style = "fill:none;stroke:#27AAE1;opacity:1;stroke-width:0.577;"
         group.lines?.append(capline)
@@ -252,7 +253,7 @@ public extension Group {
         capline.y2 = 1485.54
         group.lines?.append(capline)
         
-        let margin = Rectangle(x: 1391.3, y: 1030.79, width: 8.74023, height: 119.336)
+        var margin = Rectangle(x: 1391.3, y: 1030.79, width: 8.74023, height: 119.336)
         margin.id = "left-margin"
         margin.style = "fill:#00AEEF;stroke:none;opacity:0.4;"
         group.rectangles?.append(margin)
@@ -264,51 +265,90 @@ public extension Group {
         return group
     }
     
-    static func appleSymbols(path: Path) -> Group {
-        let group = Group()
+    static func appleSymbols(path: Path, in rect: Rect) throws -> Group {
+        var group = Group()
         
         group.id = "Symbols"
-        group.groups = []
+//        group.groups = []
+        
+        let translations: [(name: String, size: Float, center: Point)] = [
+            ("Ultralight-S", 0.75, .init(x: 559.0, y: 661.0)),
+            ("Thin-S", 0.76, .init(x: 857.0, y: 661.0)),
+            ("Light-S", 0.78, .init(x: 1153.0, y: 661.0)),
+            ("Regular-S", 0.79, .init(x: 1449.5, y: 661.0)),
+            ("Medium-S", 0.80, .init(x: 1747.0, y: 661.0)),
+            ("Semibold-S", 0.81, .init(x: 2043.0, y: 661.0)),
+            ("Bold-S", 0.82, .init(x: 2340.0, y: 661.0)),
+            ("Heavy-S", 0.85, .init(x: 2636.5, y: 661.0)),
+            ("Black-S", 0.86, .init(x: 2933.0, y: 661.0)),
+            ("Ultralight-M", 0.95, .init(x: 559.0, y: 1091.0)),
+            ("Thin-M", 0.96, .init(x: 857.0, y: 1091.0)),
+            ("Light-M", 0.98, .init(x: 1153.0, y: 1091.0)),
+            ("Regular-M", 1.00, .init(x: 1449.5, y: 1091.0)),
+            ("Medium-M", 1.02, .init(x: 1747.0, y: 1091.0)),
+            ("Semibold-M", 1.03, .init(x: 2043.0, y: 1091.0)),
+            ("Bold-M", 1.05, .init(x: 2340.0, y: 1091.0)),
+            ("Heavy-M", 1.07, .init(x: 2636.5, y: 1091.0)),
+            ("Black-M", 1.10, .init(x: 2933.0, y: 1091.0)),
+            ("Ultralight-L", 1.22, .init(x: 559.0, y: 1521.0)),
+            ("Thin-L", 1.24, .init(x: 857.0, y: 1521.0)),
+            ("Light-L", 1.26, .init(x: 1153.0, y: 1521.0)),
+            ("Regular-L", 1.28, .init(x: 1449.5, y: 1521.0)),
+            ("Medium-L", 1.30, .init(x: 1747.0, y: 1521.0)),
+            ("Semibold-L", 1.31, .init(x: 2043.0, y: 1521.0)),
+            ("Bold-L", 1.33, .init(x: 2340.0, y: 1521.0)),
+            ("Heavy-L", 1.36, .init(x: 2636.5, y: 1521.0)),
+            ("Black-L", 1.39, .init(x: 2933.0, y: 1521.0))
+        ]
+        
+        group.groups = try translations.map { (symbol) -> Group in
+            let size = Size(width: rect.size.width * symbol.size, height: rect.size.height * symbol.size)
+            let to = Rect(origin: .zero, size: size)
+            let commands = try path.commands().map({ $0.translate(from: rect, to: to) })
+            let p = Path(commands: commands)
+            let matrixOrign = Point(x: symbol.center.x - size.width / 2.0, y: symbol.center.y - size.height / 2.0)
+            let matrix: Transformation = .matrix(a: 1, b: 0, c: 0, d: 1, e: matrixOrign.x, f: matrixOrign.y)
+            return Group(symbol.name, path: p, transform: matrix.description)
+        }
         
         // A translation of +9, -85 is applied
-        group.groups?.append(Group("Black-L", path: path, transform: "matrix(1 0 0 1 2863.05 1471)"))
-        group.groups?.append(Group("Heavy-L", path: path, transform: "matrix(1 0 0 1 2567.39 1471)"))
-        group.groups?.append(Group("Bold-L", path: path, transform: "matrix(1 0 0 1 2271.88 1471)"))
-        group.groups?.append(Group("Semibold-L", path: path, transform: "matrix(1 0 0 1 1975.97 1471)"))
-        group.groups?.append(Group("Medium-L", path: path, transform: "matrix(1 0 0 1 1679.87 1471)"))
-        group.groups?.append(Group("Regular-L", path: path, transform: "matrix(1 0 0 1 1383.97 1471)"))
-        group.groups?.append(Group("Light-L", path: path, transform: "matrix(1 0 0 1 1088.18 1471)"))
-        group.groups?.append(Group("Thin-L", path: path, transform: "matrix(1 0 0 1 792.693 1471)"))
-        group.groups?.append(Group("Ultralight-L", path: path, transform: "matrix(1 0 0 1 496.616 1471)"))
-        group.groups?.append(Group("Black-M", path: path, transform: "matrix(1 0 0 1 2879.97 1041)"))
-        group.groups?.append(Group("Heavy-M", path: path, transform: "matrix(1 0 0 1 2584.19 1041)"))
-        group.groups?.append(Group("Bold-M", path: path, transform: "matrix(1 0 0 1 2288.5 1041)"))
-        group.groups?.append(Group("Semibold-M", path: path, transform: "matrix(1 0 0 1 1992.5 1041)"))
-        group.groups?.append(Group("Medium-M", path: path, transform: "matrix(1 0 0 1 1696.3 1041)"))
-        group.groups?.append(Group("Regular-M", path: path, transform: "matrix(1 0 0 1 1400.3 1041)"))
-        group.groups?.append(Group("Light-M", path: path, transform: "matrix(1 0 0 1 1104.42 1041)"))
-        group.groups?.append(Group("Thin-M", path: path, transform: "matrix(1 0 0 1 808.806 1041)"))
-        group.groups?.append(Group("Ultralight-M", path: path, transform: "matrix(1 0 0 1 512.656 1041)"))
-        group.groups?.append(Group("Black-S", path: path, transform: "matrix(1 0 0 1 2893.57 611)"))
-        group.groups?.append(Group("Heavy-S", path: path, transform: "matrix(1 0 0 1 2597.47 611)"))
-        group.groups?.append(Group("Bold-S", path: path, transform: "matrix(1 0 0 1 2301.44 611)"))
-        group.groups?.append(Group("Semibold-S", path: path, transform: "matrix(1 0 0 1 2005.2 611)"))
-        group.groups?.append(Group("Medium-S", path: path, transform: "matrix(1 0 0 1 1708.83 611)"))
-        group.groups?.append(Group("Regular-S", path: path, transform: "matrix(1 0 0 1 1412.58 611)"))
-        group.groups?.append(Group("Light-S", path: path, transform: "matrix(1 0 0 1 1116.6 611)"))
-        group.groups?.append(Group("Thin-S", path: path, transform: "matrix(1 0 0 1 820.867 611)"))
-        group.groups?.append(Group("Ultralight-S", path: path, transform: "matrix(1 0 0 1 524.644 611)"))
+//        group.groups?.append(Group("Black-L", path: path, transform: "matrix(1 0 0 1 2863.05 1471)"))
+//        group.groups?.append(Group("Heavy-L", path: path, transform: "matrix(1 0 0 1 2567.39 1471)"))
+//        group.groups?.append(Group("Bold-L", path: path, transform: "matrix(1 0 0 1 2271.88 1471)"))
+//        group.groups?.append(Group("Semibold-L", path: path, transform: "matrix(1 0 0 1 1975.97 1471)"))
+//        group.groups?.append(Group("Medium-L", path: path, transform: "matrix(1 0 0 1 1679.87 1471)"))
+//        group.groups?.append(Group("Regular-L", path: path, transform: "matrix(1 0 0 1 1383.97 1471)"))
+//        group.groups?.append(Group("Light-L", path: path, transform: "matrix(1 0 0 1 1088.18 1471)"))
+//        group.groups?.append(Group("Thin-L", path: path, transform: "matrix(1 0 0 1 792.693 1471)"))
+//        group.groups?.append(Group("Ultralight-L", path: path, transform: "matrix(1 0 0 1 496.616 1471)"))
+//        group.groups?.append(Group("Black-M", path: path, transform: "matrix(1 0 0 1 2879.97 1041)"))
+//        group.groups?.append(Group("Heavy-M", path: path, transform: "matrix(1 0 0 1 2584.19 1041)"))
+//        group.groups?.append(Group("Bold-M", path: path, transform: "matrix(1 0 0 1 2288.5 1041)"))
+//        group.groups?.append(Group("Semibold-M", path: path, transform: "matrix(1 0 0 1 1992.5 1041)"))
+//        group.groups?.append(Group("Medium-M", path: path, transform: "matrix(1 0 0 1 1696.3 1041)"))
+//        group.groups?.append(Group("Regular-M", path: path, transform: "matrix(1 0 0 1 1400.3 1041)"))
+//        group.groups?.append(Group("Light-M", path: path, transform: "matrix(1 0 0 1 1104.42 1041)"))
+//        group.groups?.append(Group("Thin-M", path: path, transform: "matrix(1 0 0 1 808.806 1041)"))
+//        group.groups?.append(Group("Ultralight-M", path: path, transform: "matrix(1 0 0 1 512.656 1041)"))
+//        group.groups?.append(Group("Black-S", path: path, transform: "matrix(1 0 0 1 2893.57 611)"))
+//        group.groups?.append(Group("Heavy-S", path: path, transform: "matrix(1 0 0 1 2597.47 611)"))
+//        group.groups?.append(Group("Bold-S", path: path, transform: "matrix(1 0 0 1 2301.44 611)"))
+//        group.groups?.append(Group("Semibold-S", path: path, transform: "matrix(1 0 0 1 2005.2 611)"))
+//        group.groups?.append(Group("Medium-S", path: path, transform: "matrix(1 0 0 1 1708.83 611)"))
+//        group.groups?.append(Group("Regular-S", path: path, transform: "matrix(1 0 0 1 1412.58 611)"))
+//        group.groups?.append(Group("Light-S", path: path, transform: "matrix(1 0 0 1 1116.6 611)"))
+//        group.groups?.append(Group("Thin-S", path: path, transform: "matrix(1 0 0 1 820.867 611)"))
+//        group.groups?.append(Group("Ultralight-S", path: path, transform: "matrix(1 0 0 1 524.644 611)"))
         
         return group
     }
 }
 
 fileprivate extension Group {
-    convenience init(_ id: String, path: Path, transform: String) {
+    init(_ id: String, path: Path, transform: String) {
         self.init()
         self.id = id
         self.transform = transform
-        paths = []
-        paths?.append(path)
+        paths = [path]
     }
 }

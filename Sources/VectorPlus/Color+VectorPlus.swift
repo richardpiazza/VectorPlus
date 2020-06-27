@@ -1,4 +1,3 @@
-import Foundation
 import SwiftColor
 
 public extension Color {

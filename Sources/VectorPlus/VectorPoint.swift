@@ -1,7 +1,4 @@
-import Foundation
-#if canImport(CoreGraphics)
-import CoreGraphics
-#endif
+import Swift2D
 
 /// A cartesian-based struct that describes the relationship of any particular `Point` to the _origin_ of a `Rect`.
 public struct VectorPoint {
@@ -10,7 +7,7 @@ public struct VectorPoint {
         case minus = "-"
     }
     
-    public typealias Offset = (sign: Sign, multiplier: CGFloat)
+    public typealias Offset = (sign: Sign, multiplier: Float)
     
     public var x: Offset
     public var y: Offset
@@ -21,7 +18,7 @@ public struct VectorPoint {
     }
     
     /// Initializes a `VectorPoint` for a given `Point` container in the provided `Rect`.
-    public init(point: CGPoint, in rect: CGRect) {
+    public init(point: Point, in rect: Rect) {
         let radius = rect.size.maxRadius
         let cartesianPoint = Self.cartesianPoint(for: point, in: rect)
         
@@ -73,9 +70,9 @@ public extension VectorPoint {
     ///
     /// For example: Given `Rect(x: 0, y: 0, width: 100, height: 100)`, the point
     /// `Point(x: 25, y: 25)` would translate to `Point(x: -25, y: 25)`.
-    static func cartesianPoint(for point: CGPoint, in rect: CGRect) -> CGPoint {
-        let origin = CGPoint(x: rect.size.width / 2.0, y: rect.size.height / 2.0)
-        var cartesianPoint: CGPoint = .zero
+    static func cartesianPoint(for point: Point, in rect: Rect) -> Point {
+        let origin = Point(x: rect.size.width / 2.0, y: rect.size.height / 2.0)
+        var cartesianPoint: Point = .zero
         
         if point.x < origin.x {
             cartesianPoint.x = -(origin.x - point.x)
@@ -96,24 +93,24 @@ public extension VectorPoint {
 // MARK: - Instance Functionality
 public extension VectorPoint {
     /// Calculates the `Point` for this instance in the specified `Rect`.
-    func translate(to rect: CGRect) -> CGPoint {
+    func translate(to rect: Rect) -> Point {
         return translate(to: rect.size)
     }
     
     /// Calculates the `Point` in the desired output size
-    func translate(to outputSize: CGSize) -> CGPoint {
+    func translate(to outputSize: Size) -> Point {
         let center = outputSize.center
         let radius = outputSize.minRadius
         
         switch (x.sign, y.sign) {
         case (.plus, .plus):
-            return CGPoint(x: center.x + (radius * x.multiplier), y: center.y + (radius * y.multiplier))
+            return Point(x: center.x + (radius * x.multiplier), y: center.y + (radius * y.multiplier))
         case (.plus, .minus):
-            return CGPoint(x: center.x + (radius * x.multiplier), y: center.y - (radius * y.multiplier))
+            return Point(x: center.x + (radius * x.multiplier), y: center.y - (radius * y.multiplier))
         case (.minus, .plus):
-            return CGPoint(x: center.x - (radius * x.multiplier), y: center.y + (radius * y.multiplier))
+            return Point(x: center.x - (radius * x.multiplier), y: center.y + (radius * y.multiplier))
         case (.minus, .minus):
-            return CGPoint(x: center.x - (radius * x.multiplier), y: center.y - (radius * y.multiplier))
+            return Point(x: center.x - (radius * x.multiplier), y: center.y - (radius * y.multiplier))
         }
     }
 }

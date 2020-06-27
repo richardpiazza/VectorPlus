@@ -1,5 +1,6 @@
 import XCTest
 import SwiftSVG
+import Swift2D
 @testable import VectorPlus
 
 final class InstructionTranslationTests: XCTestCase {
@@ -11,14 +12,14 @@ final class InstructionTranslationTests: XCTestCase {
     ]
     
     func testTranslateLineFromRectToRect() {
-        var from = CGRect(x: 0, y: 0, width: 500, height: 500)
-        var to = CGRect(x: 0, y: 0, width: 100, height: 100)
+        var from = Rect(x: 0, y: 0, width: 500, height: 500)
+        var to = Rect(x: 0, y: 0, width: 100, height: 100)
         
         var commands: [Path.Command] = [
-            .moveTo(point: CGPoint(x: 250, y: 50)),
-            .lineTo(point: CGPoint(x: 450, y: 250)),
-            .lineTo(point: CGPoint(x: 250, y: 450)),
-            .lineTo(point: CGPoint(x: 50, y: 250)),
+            .moveTo(point: Point(x: 250, y: 50)),
+            .lineTo(point: Point(x: 450, y: 250)),
+            .lineTo(point: Point(x: 250, y: 450)),
+            .lineTo(point: Point(x: 50, y: 250)),
             .closePath
         ]
         
@@ -26,23 +27,23 @@ final class InstructionTranslationTests: XCTestCase {
         XCTAssertEqual(translated.count, 5)
         
         var expected: [Path.Command] = [
-            .moveTo(point: CGPoint(x: 50, y: 10)),
-            .lineTo(point: CGPoint(x: 90, y: 50)),
-            .lineTo(point: CGPoint(x: 50, y: 90)),
-            .lineTo(point: CGPoint(x: 10, y: 50)),
+            .moveTo(point: Point(x: 50, y: 10)),
+            .lineTo(point: Point(x: 90, y: 50)),
+            .lineTo(point: Point(x: 50, y: 90)),
+            .lineTo(point: Point(x: 10, y: 50)),
             .closePath
         ]
         
         XCTAssertEqual(translated, expected)
         
-        from = CGRect(x: 0, y: 0, width: 100, height: 100)
-        to = CGRect(x: 0, y: 0, width: 500, height: 500)
+        from = Rect(x: 0, y: 0, width: 100, height: 100)
+        to = Rect(x: 0, y: 0, width: 500, height: 500)
         
         commands = [
-            .moveTo(point: CGPoint(x: 50, y: 10)),
-            .lineTo(point: CGPoint(x: 90, y: 50)),
-            .lineTo(point: CGPoint(x: 50, y: 90)),
-            .lineTo(point: CGPoint(x: 10, y: 50)),
+            .moveTo(point: Point(x: 50, y: 10)),
+            .lineTo(point: Point(x: 90, y: 50)),
+            .lineTo(point: Point(x: 50, y: 90)),
+            .lineTo(point: Point(x: 10, y: 50)),
             .closePath
         ]
         
@@ -50,10 +51,10 @@ final class InstructionTranslationTests: XCTestCase {
         XCTAssertEqual(translated.count, 5)
         
         expected = [
-            .moveTo(point: CGPoint(x: 250, y: 50)),
-            .lineTo(point: CGPoint(x: 450, y: 250)),
-            .lineTo(point: CGPoint(x: 250, y: 450)),
-            .lineTo(point: CGPoint(x: 50, y: 250)),
+            .moveTo(point: Point(x: 250, y: 50)),
+            .lineTo(point: Point(x: 450, y: 250)),
+            .lineTo(point: Point(x: 250, y: 450)),
+            .lineTo(point: Point(x: 50, y: 250)),
             .closePath
         ]
         
@@ -61,11 +62,11 @@ final class InstructionTranslationTests: XCTestCase {
     }
     
     func testTranslateBezierCurveFromRectToRect() {
-        var from = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
-        var to = CGRect(origin: .zero, size: CGSize(width: 750, height: 750))
+        var from = Rect(origin: .zero, size: Size(width: 100, height: 100))
+        var to = Rect(origin: .zero, size: Size(width: 750, height: 750))
         
         var commands: [Path.Command] = [
-            .moveTo(point: CGPoint(x: 0, y: 20)),
+            .moveTo(point: Point(x: 0, y: 20)),
             .cubicBezierCurve(cp1: .init(x: 60, y: 0), cp2: .init(x: 40, y: 100), point: .init(x: 100, y: 80)),
             .closePath
         ]
@@ -74,18 +75,18 @@ final class InstructionTranslationTests: XCTestCase {
         XCTAssertEqual(translated.count, 3)
         
         var expected: [Path.Command] = [
-            .moveTo(point: CGPoint(x: 0, y: 150)),
+            .moveTo(point: Point(x: 0, y: 150)),
             .cubicBezierCurve(cp1: .init(x: 450, y: 0), cp2: .init(x: 300, y: 750), point: .init(x: 750, y: 600)),
             .closePath
         ]
         
         XCTAssertRoughlyEqual(translated, expected)
         
-        to = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
-        from = CGRect(origin: .zero, size: CGSize(width: 750, height: 750))
+        to = Rect(origin: .zero, size: Size(width: 100, height: 100))
+        from = Rect(origin: .zero, size: Size(width: 750, height: 750))
         
         commands = [
-            .moveTo(point: CGPoint(x: 0, y: 150)),
+            .moveTo(point: Point(x: 0, y: 150)),
             .cubicBezierCurve(cp1: .init(x: 450, y: 0), cp2: .init(x: 300, y: 750), point: .init(x: 750, y: 600)),
             .closePath
         ]
@@ -94,7 +95,7 @@ final class InstructionTranslationTests: XCTestCase {
         XCTAssertEqual(translated.count, 3)
         
         expected = [
-            .moveTo(point: CGPoint(x: 0, y: 20)),
+            .moveTo(point: Point(x: 0, y: 20)),
             .cubicBezierCurve(cp1: .init(x: 60, y: 0), cp2: .init(x: 40, y: 100), point: .init(x: 100, y: 80)),
             .closePath
         ]
@@ -103,8 +104,8 @@ final class InstructionTranslationTests: XCTestCase {
     }
     
     func testTranslateQuadraticCurveFromRectToRect() {
-        var from = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
-        var to = CGRect(origin: .zero, size: CGSize(width: 170, height: 170))
+        var from = Rect(origin: .zero, size: Size(width: 100, height: 100))
+        var to = Rect(origin: .zero, size: Size(width: 170, height: 170))
         
         var commands: [Path.Command] = [
             .moveTo(point: .init(x: 20, y: 20)),
@@ -123,8 +124,8 @@ final class InstructionTranslationTests: XCTestCase {
         
         XCTAssertRoughlyEqual(translated, expected)
         
-        to = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
-        from = CGRect(origin: .zero, size: CGSize(width: 170, height: 170))
+        to = Rect(origin: .zero, size: Size(width: 100, height: 100))
+        from = Rect(origin: .zero, size: Size(width: 170, height: 170))
         
         commands = [
             .moveTo(point: .init(x: 34, y: 34)),

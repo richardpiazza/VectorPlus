@@ -1,16 +1,16 @@
-import Foundation
 import SwiftSVG
+import Swift2D
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
 import AppKit
 
 public extension SVG {
-    func nsImage(size: CGSize) -> NSImage? {
+    func nsImage(size: Size) -> NSImage? {
         guard size.height > 0.0 && size.width > 0.0 else {
             return nil
         }
         
-        let from = CGRect(origin: .zero, size: originalSize)
-        let to = CGRect(origin: .zero, size: size)
+        let from = Rect(origin: .zero, size: originalSize)
+        let to = Rect(origin: .zero, size: size)
         
         let paths: [Path]
         do {
@@ -20,7 +20,7 @@ public extension SVG {
             return nil
         }
         
-        let image = NSImage(size: size)
+        let image = NSImage(size: size.cgSize)
         image.lockFocusFlipped(true)
         
         if let context = NSGraphicsContext.current?.cgContext {
@@ -33,7 +33,7 @@ public extension SVG {
         return image
     }
     
-    func pngData(size: CGSize) -> Data? {
+    func pngData(size: Size) -> Data? {
         guard let data = nsImage(size: size)?.tiffRepresentation else {
             return nil
         }

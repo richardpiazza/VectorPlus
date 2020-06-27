@@ -15,8 +15,17 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "3d79b2b5a2e5af52c14e462044702ea7728f5770",
-          "version": "0.1.0"
+          "revision": "eb51f949cdd0c9d88abba9ce79d37eb7ea1231d0",
+          "version": "0.2.0"
+        }
+      },
+      {
+        "package": "Swift2D",
+        "repositoryURL": "https://github.com/richardpiazza/Swift2D.git",
+        "state": {
+          "branch": null,
+          "revision": "2cb008918081b17d852431f0a2a1751c7c429137",
+          "version": "1.0.0"
         }
       },
       {
@@ -32,9 +41,9 @@
         "package": "SwiftSVG",
         "repositoryURL": "https://github.com/richardpiazza/SwiftSVG.git",
         "state": {
-          "branch": null,
-          "revision": "d0a575bf153e4a3586517c86caff4999b0863bd2",
-          "version": "0.7.1"
+          "branch": "feature/foundation-removal",
+          "revision": "5b5f4c4497f32553d1bd25ca8987ce41ab019760",
+          "version": null
         }
       },
       {

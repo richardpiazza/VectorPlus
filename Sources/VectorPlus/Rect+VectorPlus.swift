@@ -1,9 +1,6 @@
-import Foundation
-#if canImport(CoreGraphics)
-import CoreGraphics
-#endif
+import Swift2D
 
-public extension CGRect {
+public extension Rect {
     var coreGraphicsDescription: String {
         return "CGRect(origin: \(origin.coreGraphicsDescription), size: \(size.coreGraphicsDescription))"
     }

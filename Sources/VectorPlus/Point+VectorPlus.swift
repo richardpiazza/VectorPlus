@@ -1,9 +1,6 @@
-import Foundation
-#if canImport(CoreGraphics)
-import CoreGraphics
-#endif
+import Swift2D
 
-public extension CGPoint {
+public extension Point {
     var coreGraphicsDescription: String {
         return "CGPoint(x: \(x), y: \(y))"
     }

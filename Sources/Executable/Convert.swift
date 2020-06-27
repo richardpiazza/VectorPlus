@@ -2,6 +2,7 @@ import Foundation
 import ArgumentParser
 import ShellOut
 import SwiftSVG
+import Swift2D
 import VectorPlus
 
 struct Convert: ParsableCommand {
@@ -58,12 +59,8 @@ struct Convert: ParsableCommand {
             try data.write(to: outputURL)
         case .symbols:
             let path = try document.coalescedPath()
-            
-            let from = CGRect(origin: .zero, size: document.originalSize)
-            let to = CGRect(origin: .zero, size: CGSize(width: 100, height: 100))
-            let commands = try path.commands().map({ $0.translate(from: from, to: to) })
-            let p = Path(commands: commands)
-            let symbolsDoc = SVG.appleSymbols(path: p)
+            let rect = Rect(origin: .zero, size: document.originalSize)
+            let symbolsDoc = try SVG.appleSymbols(path: path, in: rect)
             let data = try SVG.encodeDocument(symbolsDoc)
             let outputURL = url.deletingPathExtension().appendingPathExtension("symbols.svg")
             try data.write(to: outputURL)
@@ -82,7 +79,7 @@ struct Convert: ParsableCommand {
 
 extension SVG {
     func usingAbsolutePaths() throws -> SVG {
-        let svg = self
+        var svg = self
         svg.groups = nil
         svg.paths = []
         
@@ -104,7 +101,7 @@ extension SVG {
 
 extension Group {
     func usingAbsolutePaths(applying transformations: [Transformation] = []) throws -> Group {
-        let group = self
+        var group = self
         group.circles = nil
         group.lines = nil
         group.polygons = nil

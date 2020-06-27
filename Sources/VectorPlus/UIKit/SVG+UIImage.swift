@@ -1,16 +1,16 @@
-import Foundation
 import SwiftSVG
+import Swift2D
 #if canImport(UIKit)
 import UIKit
 
 public extension SVG {
-    func uiImage(size: CGSize) -> UIImage? {
+    func uiImage(size: Size) -> UIImage? {
         guard size.height > 0.0 && size.width > 0.0 else {
             return nil
         }
         
-        let from = CGRect(origin: .zero, size: originalSize)
-        let to = CGRect(origin: .zero, size: size)
+        let from = Rect(origin: .zero, size: originalSize)
+        let to = Rect(origin: .zero, size: size)
         
         let paths: [Path]
         do {
@@ -23,7 +23,7 @@ public extension SVG {
             UIGraphicsEndImageContext()
         }
         
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        UIGraphicsBeginImageContextWithOptions(size.cgSize, false, 0.0)
         
         guard let context = UIGraphicsGetCurrentContext() else {
             return nil
@@ -36,7 +36,7 @@ public extension SVG {
         return UIGraphicsGetImageFromCurrentImageContext()
     }
     
-    func pngData(size: CGSize) -> Data? {
+    func pngData(size: Size) -> Data? {
         return uiImage(size: size)?.pngData()
     }
 }
