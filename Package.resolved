@@ -41,9 +41,9 @@
         "package": "SwiftSVG",
         "repositoryURL": "https://github.com/richardpiazza/SwiftSVG.git",
         "state": {
-          "branch": "feature/foundation-removal",
-          "revision": "5b5f4c4497f32553d1bd25ca8987ce41ab019760",
-          "version": null
+          "branch": null,
+          "revision": "0cb92d92b3fa241abe34235d7c007e172c840370",
+          "version": "0.8.0"
         }
       },
       {
