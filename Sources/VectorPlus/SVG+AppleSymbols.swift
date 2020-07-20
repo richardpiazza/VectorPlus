@@ -176,7 +176,7 @@ public extension Group {
         text.id = "template-version"
         text.style = "stroke:none;fill:black;font-family:-apple-system,\"SF Pro Display\",\"SF Pro Text\",Helvetica,sans-serif;text-anchor:end;"
         text.transform = "matrix(1 0 0 1 3036 1933)"
-        text.value = "Template v.1.0"
+        text.value = "Template v.2.0"
         group.texts?.append(text)
         
         text.id = nil
@@ -206,7 +206,6 @@ public extension Group {
         group.id = "Guides"
         group.groups = []
         group.lines = []
-        group.rectangles = []
         
         var hRef = Group()
         hRef.id = "H-reference"
@@ -253,14 +252,15 @@ public extension Group {
         capline.y2 = 1485.54
         group.lines?.append(capline)
         
-        var margin = Rectangle(x: 1391.3, y: 1030.79, width: 8.74023, height: 119.336)
+        var margin = Line(x1: 1399.72, y1: 1030.79, x2: 1399.72, y2: 1150.12)
         margin.id = "left-margin"
-        margin.style = "fill:#00AEEF;stroke:none;opacity:0.4;"
-        group.rectangles?.append(margin)
+        margin.style = "fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;"
+        group.lines?.append(margin)
         
+        margin = Line(x1: 1499.97, y1: 1030.79, x2: 1499.97, y2: 1150.12)
         margin.id = "right-margin"
-        margin.x = 1499.65
-        group.rectangles?.append(margin)
+        margin.style = "fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;"
+        group.lines?.append(margin)
         
         return group
     }
