@@ -23,30 +23,36 @@ public extension CGContext {
         }
         
         if let fill = path.fill {
-            let cgColor = Color(fill.color ?? "black").cgColor
-            let color = cgColor.copy(alpha: CGFloat(fill.opacity ?? 1.0)) ?? cgColor
-            let rule = fill.rule.cgFillRule
-            
-            setFillColor(color)
-            addPath(cgPath)
-            fillPath(using: rule)
+            let _color = Color(fill.color ?? "black")
+            if _color.alpha != 0.0 {
+                let cgColor = _color.cgColor
+                let color = cgColor.copy(alpha: CGFloat(fill.opacity ?? 1.0)) ?? cgColor
+                let rule = fill.rule.cgFillRule
+                
+                setFillColor(color)
+                addPath(cgPath)
+                fillPath(using: rule)
+            }
         }
         
         if let stroke = path.stroke {
-            let cgColor = Color(stroke.color ?? "black").cgColor
-            let color = cgColor.copy(alpha: CGFloat(stroke.opacity ?? 1.0)) ?? cgColor
-            let width = stroke.width ?? 1.0
-            let lineWidth = width * (to.size.width / from.size.width)
-            
-            setLineWidth(CGFloat(lineWidth))
-            setStrokeColor(color)
-            setLineCap(stroke.lineCap.cgLineCap)
-            setLineJoin(stroke.lineJoin.cgLineJoin)
-            if let miterLimit = stroke.miterLimit, stroke.lineJoin == .miter {
-                setMiterLimit(CGFloat(miterLimit))
+            let _color = Color(stroke.color ?? "black")
+            if _color.alpha != 0.0 {
+                let cgColor = _color.cgColor
+                let color = cgColor.copy(alpha: CGFloat(stroke.opacity ?? 1.0)) ?? cgColor
+                let width = stroke.width ?? 1.0
+                let lineWidth = width * (to.size.width / from.size.width)
+                
+                setLineWidth(CGFloat(lineWidth))
+                setStrokeColor(color)
+                setLineCap(stroke.lineCap.cgLineCap)
+                setLineJoin(stroke.lineJoin.cgLineJoin)
+                if let miterLimit = stroke.miterLimit, stroke.lineJoin == .miter {
+                    setMiterLimit(CGFloat(miterLimit))
+                }
+                addPath(cgPath)
+                strokePath()
             }
-            addPath(cgPath)
-            strokePath()
         }
         
         if path.fill == nil && path.stroke == nil {
