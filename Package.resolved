@@ -32,9 +32,9 @@
         "package": "SwiftColor",
         "repositoryURL": "https://github.com/richardpiazza/SwiftColor.git",
         "state": {
-          "branch": null,
-          "revision": "34a2c06341cb5aba6a7b0811243c88c284eaa50e",
-          "version": "0.1.3"
+          "branch": "main",
+          "revision": "dc207cfb3f366398c5b25d1d751575f8736da489",
+          "version": null
         }
       },
       {
