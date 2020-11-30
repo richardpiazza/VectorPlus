@@ -23,11 +23,11 @@ let package = Package(
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser",
-            from: "0.0.5"
+            .upToNextMinor(from: "0.3.1")
         ),
         .package(
             url: "https://github.com/richardpiazza/SwiftSVG.git",
-            from: "0.8.0"
+            .branch("main")
         ),
         .package(
             url: "https://github.com/richardpiazza/SwiftColor.git",

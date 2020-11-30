@@ -20,7 +20,7 @@ public extension SVG {
             return nil
         }
         
-        let image = NSImage(size: size.cgSize)
+        let image = NSImage(size: CGSize(size))
         image.lockFocusFlipped(true)
         
         if let context = NSGraphicsContext.current?.cgContext {

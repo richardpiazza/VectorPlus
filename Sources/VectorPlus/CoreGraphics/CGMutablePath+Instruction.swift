@@ -14,16 +14,16 @@ public extension CGMutablePath {
         let translated = command.translate(from: from, to: to)
         switch translated {
         case .moveTo(let point):
-            move(to: point.cgPoint)
+            move(to: CGPoint(point))
         case .lineTo(let point):
-            addLine(to: point.cgPoint)
+            addLine(to: CGPoint(point))
         case .cubicBezierCurve(let cp1, let cp2, let point):
-            addCurve(to: point.cgPoint, control1: cp1.cgPoint, control2: cp2.cgPoint)
+            addCurve(to: CGPoint(point), control1: CGPoint(cp1), control2: CGPoint(cp2))
         case .quadraticBezierCurve(let cp, let point):
-            addQuadCurve(to: point.cgPoint, control: cp.cgPoint)
+            addQuadCurve(to: CGPoint(point), control: CGPoint(cp))
         case .ellipticalArcCurve(_, _, _, _, _, let point):
             guard let previousPoint = previousPoint else {
-                addLine(to: point.cgPoint)
+                addLine(to: CGPoint(point))
                 return
             }
             
@@ -34,7 +34,7 @@ public extension CGMutablePath {
                 }
             } catch {
                 print(error)
-                addLine(to: point.cgPoint)
+                addLine(to: CGPoint(point))
             }
         case .closePath:
             closeSubpath()
