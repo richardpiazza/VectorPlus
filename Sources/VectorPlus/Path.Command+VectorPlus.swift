@@ -1,5 +1,6 @@
 import SwiftSVG
 import Swift2D
+import Foundation
 
 public extension Path.Command {
     /// Uses the _Power of Math_ to translate a commands controls/points from one `Rect` to another `Rect`.
@@ -68,8 +69,6 @@ public extension Path.Command {
         }
     }
 }
-
-import CoreGraphics
 
 extension Path.Command {
     /// Converts an `.ellipticalArcCurve` into one or more `.cubicBezierCurve`s.
