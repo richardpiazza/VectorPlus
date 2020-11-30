@@ -1,17 +1,14 @@
 # VectorPlus
 
-<p align="center">
-    <img src="https://github.com/richardpiazza/VectorPlus/workflows/Swift/badge.svg?branch=master" />
+A utility & library for interacting with SVG documents.
+
+<p>
+    <img src="https://github.com/richardpiazza/VectorPlus/workflows/Swift/badge.svg?branch=main" />
     <img src="https://img.shields.io/badge/Swift-5.2-orange.svg" />
-    <a href="https://swift.org/package-manager">
-        <img src="https://img.shields.io/badge/swiftpm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" />
-    </a>
     <a href="https://twitter.com/richardpiazza">
         <img src="https://img.shields.io/badge/twitter-@richardpiazza-blue.svg?style=flat" alt="Twitter: @richardpiazza" />
     </a>
 </p>
-
-<p align="center">A utility & library for interacting with SVG documents.</p>
 
 ## Usage
 
@@ -49,7 +46,7 @@ When linked to a target that supports one of these frameworks, multiple options 
 
 * `CGMutablePath.addCommand(_:from:to:)`: Adds a `Path.Command` to the mutable path. The addition of the `Rect`s allow for correct placement and scaling.
 
-* `CGContext.render(path:from:to:) throws`: Renderd a `Path` in the given context. Uses information about _fills_ and _strokes_ to fill and/or stroke the path.
+* `CGContext.render(path:from:to:) throws`: Rendered a `Path` in the given context. Uses information about _fills_ and _strokes_ to fill and/or stroke the path.
 
 #### UIKit
 
