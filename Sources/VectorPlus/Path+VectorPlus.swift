@@ -21,7 +21,7 @@ public extension Path {
     }
 }
 
-extension Path.Command {
+public extension Path.Command {
     var previousPoint: Point {
         switch self {
         case .moveTo(let point): return point
