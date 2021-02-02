@@ -117,6 +117,6 @@ public extension VectorPoint {
 
 public extension VectorPoint {
     var coreGraphicsDescription: String {
-        return "CGPoint(x: center.x \(x.sign.rawValue) (radius * \(x.multiplier), y: center.y \(y.sign.rawValue) (radius * \(y.multiplier))"
+        return "CGPoint(x: center.x \(x.sign.rawValue) (radius * \(x.multiplier)), y: center.y \(y.sign.rawValue) (radius * \(y.multiplier)))"
     }
 }
