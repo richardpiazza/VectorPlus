@@ -7,7 +7,7 @@ public struct VectorPoint {
         case minus = "-"
     }
     
-    public typealias Offset = (sign: Sign, multiplier: Float)
+    public typealias Offset = (sign: Sign, multiplier: Double)
     
     public var x: Offset
     public var y: Offset

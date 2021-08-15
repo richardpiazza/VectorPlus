@@ -135,8 +135,8 @@ extension Path.Command {
     }
 }
 
-private func arcCenter(previousPoint: Point, point: Point, rx: Float, ry: Float, largeArc: Bool, clockwise: Bool, sinφ: Float, cosφ: Float, pxp: Float, pyp: Float) ->
-    (center: Point, angle1: Float, angle2: Float) {
+private func arcCenter(previousPoint: Point, point: Point, rx: Double, ry: Double, largeArc: Bool, clockwise: Bool, sinφ: Double, cosφ: Double, pxp: Double, pyp: Double) ->
+    (center: Point, angle1: Double, angle2: Double) {
         
         let rxsq = pow(rx, 2.0)
         let rysq = pow(ry, 2.0)
@@ -174,8 +174,8 @@ private func arcCenter(previousPoint: Point, point: Point, rx: Float, ry: Float,
         return (Point(x: centerx, y: centery), angle1, angle2)
 }
 
-private func vectorAngle(u: Point, v: Point) -> Float {
-    let sign: Float = ((u.x * v.y - u.y * v.x) < 0.0) ? -1.0 : 1.0
+private func vectorAngle(u: Point, v: Point) -> Double {
+    let sign: Double = ((u.x * v.y - u.y * v.x) < 0.0) ? -1.0 : 1.0
     var dot = u.x * v.x + u.y * v.y
     if dot > 1.0 {
         dot = 1.0
@@ -186,10 +186,10 @@ private func vectorAngle(u: Point, v: Point) -> Float {
     return sign * acos(dot)
 }
 
-private func approximateUnitArc(angle1: Float, angle2: Float) -> (Point, Point, Point) {
+private func approximateUnitArc(angle1: Double, angle2: Double) -> (Point, Point, Point) {
     // If 90 degree circular arc, use a constant
     // as derived from http://spencermortensen.com/articles/bezier-circle
-    let a: Float
+    let a: Double
     switch angle2 {
     case 1.5707963267948966:
         a = 0.551915024494
@@ -207,7 +207,7 @@ private func approximateUnitArc(angle1: Float, angle2: Float) -> (Point, Point, 
     return (Point(x: x1 - y1 * a, y: y1 + x1 * a), Point(x: x2 + y2 * a, y: y2 - x2 * 1), Point(x: x2, y: y2))
 }
 
-private func mapToEllipse(point: Point, rx: Float, ry: Float, sinφ: Float, cosφ: Float, center: Point) -> Point {
+private func mapToEllipse(point: Point, rx: Double, ry: Double, sinφ: Double, cosφ: Double, center: Point) -> Point {
     let x = point.x * rx
     let y = point.y * ry
     let xp = cosφ * x - sinφ * y
