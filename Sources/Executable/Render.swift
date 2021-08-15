@@ -31,7 +31,7 @@ struct Render: ParsableCommand {
     var filename: String
     
     @Option(help: "The horizontal and vertical output size.")
-    var size: Float?
+    var size: Double?
     
     mutating func validate() throws {
         guard !filename.isEmpty else {
