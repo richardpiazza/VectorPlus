@@ -23,7 +23,7 @@ public extension SVG {
             UIGraphicsEndImageContext()
         }
         
-        UIGraphicsBeginImageContextWithOptions(size.cgSize, false, 0.0)
+        UIGraphicsBeginImageContextWithOptions(CGSize(size), false, 0.0)
         
         guard let context = UIGraphicsGetCurrentContext() else {
             return nil

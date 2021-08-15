@@ -1,4 +1,5 @@
 import SwiftSVG
+import Swift2D
 #if canImport(UIKit)
 import UIKit
 
@@ -18,11 +19,11 @@ import UIKit
     }
     
     public var widthToHeightAspectRatio: CGFloat {
-        guard width != .nan, width > 0.0 else {
+        guard !width.isNaN, width > 0.0 else {
             return 0.0
         }
         
-        guard height != .nan, height > 0.0 else {
+        guard !height.isNaN, height > 0.0 else {
             return 0.0
         }
         
@@ -30,11 +31,11 @@ import UIKit
     }
     
     public var heightToWidthAspectRatio: CGFloat {
-        guard height != .nan, height > 0.0 else {
+        guard !height.isNaN, height > 0.0 else {
             return 0.0
         }
         
-        guard width != .nan, width > 0.0 else {
+        guard !width.isNaN, width > 0.0 else {
             return 0.0
         }
         
@@ -72,7 +73,7 @@ import UIKit
     }
     
     public func updateSubviews() {
-        image = svg.uiImage(size: bounds.size.size)
+        image = svg.uiImage(size: Size(bounds.size))
     }
 }
 
