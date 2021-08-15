@@ -31,7 +31,7 @@ let package = Package(
         ),
         .package(
             url: "https://github.com/richardpiazza/SwiftColor.git",
-            .branch("main")
+            from: "0.1.4"
         ),
         .package(
             url: "https://github.com/JohnSundell/ShellOut.git",
