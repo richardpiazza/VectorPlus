@@ -18,7 +18,7 @@ VectorPlus is distributed using the [Swift Package Manager](https://swift.org/pa
 let package = Package(
     ...
     dependencies: [
-        .package(url: "https://github.com/richardpiazza/VectorPlus.git", from: "0.1.0")
+        .package(url: "https://github.com/richardpiazza/VectorPlus.git", from: "0.3.0")
     ],
     ...
 )
@@ -39,6 +39,7 @@ import VectorPlus
 * `CoreGraphics`
 * `UIKit`
 * `AppKit`
+* `SwiftUI`
 
 When linked to a target that supports one of these frameworks, multiple options become available.
 
@@ -61,6 +62,10 @@ When linked to a target that supports one of these frameworks, multiple options 
 * `SVG.nsImage(size:) -> NSImage?`: A `CoreGraphics` rendered `NSImage` representation of the SVG paths.
 
 * `SVG.pngData(size:) -> Data?`: A `Data` representation of the `NSImage`.
+
+#### SwiftUI
+
+* `SVGView(svg:)`: A `SwiftUI.View` that renders a `SVG` document.
 
 ## Command Line Interface
 

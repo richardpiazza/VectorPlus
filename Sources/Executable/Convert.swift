@@ -1,6 +1,5 @@
 import Foundation
 import ArgumentParser
-import ShellOut
 import SwiftSVG
 import Swift2D
 import VectorPlus
