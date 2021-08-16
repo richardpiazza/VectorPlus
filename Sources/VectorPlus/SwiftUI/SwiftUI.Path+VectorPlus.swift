@@ -26,55 +26,46 @@ extension SwiftUI.Path {
     }
     
     @ViewBuilder func styling(fill: SwiftSVG.Fill? = nil, stroke: SwiftSVG.Stroke? = nil) -> some View {
-        self
+        switch (fill, stroke) {
+        case (.some(let fill), .some(let stroke)):
+            switch (fill.swiftColor, stroke.swiftColor) {
+
+            case (.some(let fillColor), .some(let strokeColor)):
+                self.fill(SwiftUI.Color.make(fillColor)).border(SwiftUI.Color.make(strokeColor))
+
+            case (.some(let fillColor), .none):
+                self.fill(SwiftUI.Color.make(fillColor))
+
+            case (.none, .some(let strokeColor)):
+                self.border(SwiftUI.Color.make(strokeColor))
+
+            default:
+                self
+            }
+        case (.some(let fill), .none):
+            switch (fill.swiftColor, fill.opacity) {
+
+            case (.some(let fillColor), _):
+                self.fill(SwiftUI.Color.make(fillColor))
+
+            default:
+                self
+            }
+        case (.none, .some(let stroke)):
+            switch (stroke.swiftColor, stroke.opacity, stroke.width) {
+
+            case (.some(let strokeColor), _, .some(let width)):
+                self.border(SwiftUI.Color.make(strokeColor), width: CGFloat(width))
+
+            case (.some(let strokeColor), _, .none):
+                self.border(SwiftUI.Color.make(strokeColor))
+
+            default:
+                self
+            }
+        default:
+            self
+        }
     }
-//    @ViewBuilder func styling(fill: SwiftSVG.Fill? = nil, stroke: SwiftSVG.Stroke? = nil) -> some View {
-//        switch (fill, stroke) {
-//        case (.some(let fill), .some(let stroke)):
-//            switch (fill.swiftColor, stroke.swiftColor) {
-//
-//            case (.some(let fillColor), .some(let strokeColor)):
-//                self.fill(Color(fillColor.uiColor)).border(Color(strokeColor.uiColor))
-//
-//            case (.some(let fillColor), .none):
-//                self.fill(Color(fillColor.uiColor))
-//
-//            case (.none, .some(let strokeColor)):
-//                self.border(Color(strokeColor.uiColor))
-//
-//            default:
-//                self
-//            }
-//        case (.some(let fill), .none):
-//            switch (fill.swiftColor, fill.opacity) {
-//
-//            case (.some(let fillColor), .some(let opacity)):
-//                self.fill(Color(fillColor.uiColor).opacity(Double(opacity)))
-//
-//            case (.some(let fillColor), .none):
-//                self.fill(Color(fillColor.uiColor))
-//
-//            default:
-//                self
-//            }
-//        case (.none, .some(let stroke)):
-//            switch (stroke.swiftColor, stroke.opacity, stroke.width) {
-//
-//            case (.some(let strokeColor), .some(let opacity), .some(let width)):
-//                self.border(Color(strokeColor.uiColor).opacity(Double(opacity)), width: CGFloat(width))
-//
-//            case (.some(let strokeColor), .none, .some(let width)):
-//                self.border(Color(strokeColor.uiColor), width: CGFloat(width))
-//
-//            case (.some(let strokeColor), .some(let opacity), .none):
-//                self.border(Color(strokeColor.uiColor).opacity(Double(opacity)))
-//
-//            default:
-//                self
-//            }
-//        default:
-//            self
-//        }
-//    }
 }
 #endif
