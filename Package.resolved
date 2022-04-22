@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "92646c0cdbaca076c8d3d0207891785b3379cbff",
-          "version": "0.3.1"
+          "revision": "f3c9084a71ef4376f2fabbdf1d3d90a49f1fabdb",
+          "version": "1.1.2"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/richardpiazza/SwiftColor.git",
         "state": {
           "branch": null,
-          "revision": "dc207cfb3f366398c5b25d1d751575f8736da489",
-          "version": "0.1.4"
+          "revision": "d1e5bad50a0e6e37534ad79dbaf6dc8de9a733cc",
+          "version": "0.2.0"
         }
       },
       {

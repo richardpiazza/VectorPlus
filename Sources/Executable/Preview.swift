@@ -17,6 +17,7 @@ struct Preview: ParsableCommand {
         return CommandConfiguration(
             commandName: "preview",
             abstract: "Preview the interpretation of an SVG document",
+            usage: nil,
             discussion: discussion,
             version: "",
             shouldDisplay: true,

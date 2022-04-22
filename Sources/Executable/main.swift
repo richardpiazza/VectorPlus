@@ -19,6 +19,7 @@ struct Command: ParsableCommand {
         return CommandConfiguration(
             commandName: "vectorplus",
             abstract: "A utility for manipulating SVG documents.",
+            usage: nil,
             discussion: discussion,
             version: "1.0.0",
             shouldDisplay: true,

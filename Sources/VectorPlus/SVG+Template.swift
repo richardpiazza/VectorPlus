@@ -25,10 +25,10 @@ private extension SVG {
         let paths = try subpaths()
         try paths.forEach { (path) in
             let instructions = try path.asCoreGraphicsDescription(variable: "path", originalSize: originalSize)
-            let fillColor = path.fill?.swiftColor?.coreGraphicsDescription ?? "nil"
+            let fillColor = path.fill?.pigment?.coreGraphicsDescription ?? "nil"
             let fillOpacity = (path.fillOpacity != nil) ? "\(path.fillOpacity!)" : "nil"
             let fillRule = (path.fillRule ?? .nonZero).coreGraphicsDescription
-            let strokeColor = path.stroke?.swiftColor?.coreGraphicsDescription ?? "nil"
+            let strokeColor = path.stroke?.pigment?.coreGraphicsDescription ?? "nil"
             let strokeOpacity = (path.strokeOpacity != nil) ? "\(path.strokeOpacity!)" : "nil"
             let strokeWidth = (path.strokeWidth != nil) ? "\(path.strokeWidth!) * (size.width / width)" : "nil"
             let strokeLineCap = (path.strokeLineCap != nil) ? "\(path.strokeLineCap!.coreGraphicsDescription)" : "nil"
