@@ -2,10 +2,6 @@ import XCTest
 
 final class VectorPlusTests: XCTestCase {
     
-    static var allTests = [
-        ("testCLI", testCLI),
-    ]
-    
     /// Returns path to the built products directory.
     var productsDirectory: URL {
       #if os(macOS)

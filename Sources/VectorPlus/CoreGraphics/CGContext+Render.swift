@@ -23,7 +23,7 @@ public extension CGContext {
         }
         
         if let fill = path.fill {
-            let _color = Color(fill.color ?? "black")
+            let _color = Pigment(fill.color ?? "black")
             if _color.alpha != 0.0 {
                 let cgColor = CGColor.make(_color)
                 let color = cgColor.copy(alpha: CGFloat(fill.opacity ?? 1.0)) ?? cgColor
@@ -36,7 +36,7 @@ public extension CGContext {
         }
         
         if let stroke = path.stroke {
-            let _color = Color(stroke.color ?? "black")
+            let _color = Pigment(stroke.color ?? "black")
             if _color.alpha != 0.0 {
                 let cgColor = CGColor.make(_color)
                 let color = cgColor.copy(alpha: CGFloat(stroke.opacity ?? 1.0)) ?? cgColor

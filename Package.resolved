@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "92646c0cdbaca076c8d3d0207891785b3379cbff",
-          "version": "0.3.1"
+          "revision": "fee6933f37fde9a5e12a1e4aeaa93fe60116ff2a",
+          "version": "1.2.2"
         }
       },
       {
@@ -33,26 +33,26 @@
         "repositoryURL": "https://github.com/richardpiazza/SwiftColor.git",
         "state": {
           "branch": null,
-          "revision": "dc207cfb3f366398c5b25d1d751575f8736da489",
-          "version": "0.1.4"
+          "revision": "d1e5bad50a0e6e37534ad79dbaf6dc8de9a733cc",
+          "version": "0.2.0"
         }
       },
       {
         "package": "SwiftSVG",
-        "repositoryURL": "https://github.com/richardpiazza/SwiftSVG.git",
+        "repositoryURL": "https://github.com/richardpiazza/SwiftSVG",
         "state": {
           "branch": null,
-          "revision": "ef024d61218b044e2aa90dde2469d2e080308e26",
-          "version": "0.9.0"
+          "revision": "2f5b4418f49b56c95265ae5ada1ef6bd8cccec68",
+          "version": "0.10.0"
         }
       },
       {
         "package": "XMLCoder",
-        "repositoryURL": "https://github.com/MaxDesiatov/XMLCoder.git",
+        "repositoryURL": "https://github.com/CoreOffice/XMLCoder.git",
         "state": {
           "branch": null,
-          "revision": "ac411bd6ab342780be0dfe6f679410f791d751d9",
-          "version": "0.11.1"
+          "revision": "c438dad94f6a243b411b70a4b4bac54595064808",
+          "version": "0.15.0"
         }
       }
     ]

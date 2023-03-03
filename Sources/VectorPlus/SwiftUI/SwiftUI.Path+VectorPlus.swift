@@ -28,7 +28,7 @@ extension SwiftUI.Path {
     @ViewBuilder func styling(fill: SwiftSVG.Fill? = nil, stroke: SwiftSVG.Stroke? = nil) -> some View {
         switch (fill, stroke) {
         case (.some(let fill), .some(let stroke)):
-            switch (fill.swiftColor, stroke.swiftColor) {
+            switch (fill.pigment, stroke.pigment) {
 
             case (.some(let fillColor), .some(let strokeColor)):
                 self.fill(SwiftUI.Color.make(fillColor)).border(SwiftUI.Color.make(strokeColor))
@@ -43,7 +43,7 @@ extension SwiftUI.Path {
                 self
             }
         case (.some(let fill), .none):
-            switch (fill.swiftColor, fill.opacity) {
+            switch (fill.pigment, fill.opacity) {
 
             case (.some(let fillColor), _):
                 self.fill(SwiftUI.Color.make(fillColor))
@@ -52,7 +52,7 @@ extension SwiftUI.Path {
                 self
             }
         case (.none, .some(let stroke)):
-            switch (stroke.swiftColor, stroke.opacity, stroke.width) {
+            switch (stroke.pigment, stroke.opacity, stroke.width) {
 
             case (.some(let strokeColor), _, .some(let width)):
                 self.border(SwiftUI.Color.make(strokeColor), width: CGFloat(width))

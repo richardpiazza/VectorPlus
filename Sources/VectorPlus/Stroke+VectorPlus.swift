@@ -2,12 +2,15 @@ import SwiftSVG
 import SwiftColor
 
 public extension Stroke {
-    var swiftColor: Color? {
+    @available(*, deprecated, renamed: "pigment")
+    var swiftColor: Color? { pigment }
+    
+    var pigment: Pigment? {
         guard let color = self.color, !color.isEmpty else {
             return nil
         }
         
-        let _color = Color(color)
+        let _color = Pigment(color)
         guard _color.alpha != 0.0 else {
             return nil
         }
