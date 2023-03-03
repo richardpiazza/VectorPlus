@@ -5,12 +5,6 @@ import Swift2D
 
 final class InstructionTranslationTests: XCTestCase {
     
-    static var allTests = [
-        ("testTranslateLineFromRectToRect", testTranslateLineFromRectToRect),
-        ("testTranslateBezierCurveFromRectToRect", testTranslateBezierCurveFromRectToRect),
-        ("testTranslateQuadraticCurveFromRectToRect", testTranslateQuadraticCurveFromRectToRect),
-    ]
-    
     func testTranslateLineFromRectToRect() {
         var from = Rect(x: 0, y: 0, width: 500, height: 500)
         var to = Rect(x: 0, y: 0, width: 100, height: 100)

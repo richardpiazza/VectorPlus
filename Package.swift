@@ -21,8 +21,8 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.1.1"),
-        .package(url: "https://github.com/richardpiazza/SwiftSVG", from: "0.9.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.2"),
+        .package(url: "https://github.com/richardpiazza/SwiftSVG", from: "0.10.0"),
         .package(url: "https://github.com/richardpiazza/SwiftColor", from: "0.2.0"),
         .package(url: "https://github.com/JohnSundell/ShellOut", from: "2.3.0"),
     ],
