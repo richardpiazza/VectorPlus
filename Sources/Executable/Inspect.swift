@@ -13,12 +13,7 @@ struct Inspect: ParsableCommand {
         return CommandConfiguration(
             commandName: "inspect",
             abstract: "Parses an SVG file and displays the interpretation.",
-            usage: nil,
             discussion: discussion,
-            version: "",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: [.short, .long]
         )
     }()
