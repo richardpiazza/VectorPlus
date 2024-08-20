@@ -25,12 +25,7 @@ struct Convert: ParsableCommand {
         return CommandConfiguration(
             commandName: "convert",
             abstract: "Transforms an SVG file to a specific output",
-            usage: nil,
             discussion: discussion,
-            version: "",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: [.short, .long]
         )
     }()

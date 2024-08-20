@@ -18,12 +18,7 @@ struct Render: ParsableCommand {
         return CommandConfiguration(
             commandName: "render",
             abstract: "Renders an SVG document to a PNG file",
-            usage: nil,
             discussion: discussion,
-            version: "",
-            shouldDisplay: true,
-            subcommands: [],
-            defaultSubcommand: nil,
             helpNames: [.short, .long]
         )
     }()
@@ -60,5 +55,4 @@ struct Render: ParsableCommand {
         try shellOut(to: .openFile(at: outputURL.absoluteString))
     }
 }
-
 #endif
