@@ -2,13 +2,9 @@
 
 A utility & library for interacting with SVG documents.
 
-<p>
-    <img src="https://github.com/richardpiazza/VectorPlus/workflows/Swift/badge.svg?branch=main" />
-    <img src="https://img.shields.io/badge/Swift-5.2-orange.svg" />
-    <a href="https://twitter.com/richardpiazza">
-        <img src="https://img.shields.io/badge/twitter-@richardpiazza-blue.svg?style=flat" alt="Twitter: @richardpiazza" />
-    </a>
-</p>
+[![](https://github.com/richardpiazza/VectorPlus/workflows/swift/badge.svg?branch=main)](https://github.com/richardpiazza/VectorPlus/actions/workflows/swift.yml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Frichardpiazza%2FVectorPlus%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/richardpiazza/VectorPlus)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Frichardpiazza%2FVectorPlus%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/richardpiazza/VectorPlus)
 
 ## Usage
 
@@ -18,7 +14,7 @@ VectorPlus is distributed using the [Swift Package Manager](https://swift.org/pa
 let package = Package(
     ...
     dependencies: [
-        .package(url: "https://github.com/richardpiazza/VectorPlus.git", from: "0.3.0")
+        .package(url: "https://github.com/richardpiazza/VectorPlus.git", from: "0.4.0")
     ],
     ...
 )
