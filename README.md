@@ -2,7 +2,7 @@
 
 A utility & library for interacting with SVG documents.
 
-[![](https://github.com/richardpiazza/VectorPlus/workflows/Swift/badge.svg?branch=main)](https://github.com/richardpiazza/VectorPlus/workflows/Swift/badge.svg?branch=main)
+[![](https://github.com/richardpiazza/VectorPlus/workflows/swift/badge.svg?branch=main)](https://github.com/richardpiazza/VectorPlus/actions/workflows/swift.yml)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Frichardpiazza%2FVectorPlus%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/richardpiazza/VectorPlus)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Frichardpiazza%2FVectorPlus%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/richardpiazza/VectorPlus)
 
