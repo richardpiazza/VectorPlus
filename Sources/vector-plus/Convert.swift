@@ -5,13 +5,13 @@ import SwiftSVG
 import VectorPlus
 
 struct Convert: AsyncParsableCommand {
-    
+
     enum Conversion: String, Codable, CaseIterable, ExpressibleByArgument {
         case absolute
         case symbols
         case uiKit = "uikit"
     }
-    
+
     static let configuration: CommandConfiguration = CommandConfiguration(
         commandName: "convert",
         abstract: "Transforms an SVG file to a specific output",
@@ -25,29 +25,30 @@ struct Convert: AsyncParsableCommand {
         """,
         helpNames: [.short, .long]
     )
-    
+
     @Argument(help: "The relative or absolute path of the SVG file to be parsed.")
     var filename: String
-    
+
     @Option(name: [.customShort("t"), .customLong("type")], help: "The type of conversion to perform. [absolute, symbols, uikit]")
     var conversion: Conversion
-    
+
     mutating func validate() throws {
         guard !filename.isEmpty else {
             throw ValidationError("Filename not provided or empty.")
         }
     }
-    
+
     func run() async throws {
         let url = try FileManager.default.url(for: filename)
         let document = try SVG.make(from: url)
-        
+
         switch conversion {
         case .absolute:
             let absolute = try document.usingAbsolutePaths()
             let data = try SVG.encodeDocument(absolute)
             let outputURL = url.deletingPathExtension().appendingPathExtension("absolute.svg")
             try data.write(to: outputURL)
+
         case .symbols:
             let path = try document.coalescedPath()
             let rect = Rect(origin: .zero, size: document.originalSize)
@@ -55,13 +56,13 @@ struct Convert: AsyncParsableCommand {
             let data = try SVG.encodeDocument(symbolsDoc)
             let outputURL = url.deletingPathExtension().appendingPathExtension("symbols.svg")
             try data.write(to: outputURL)
-            
+
         case .uiKit:
             let value = try document.asImageViewSubclass()
             guard let data = value.data(using: .utf8) else {
                 throw CocoaError(.coderInvalidValue)
             }
-            
+
             let outputURL = url.deletingPathExtension().appendingPathExtension("swift")
             try data.write(to: outputURL)
         }
@@ -73,19 +74,19 @@ extension SVG {
         var svg = self
         svg.groups = nil
         svg.paths = []
-        
-        if let elements = self.paths {
-            let _elements = try elements.compactMap({ try $0.path(applying: []) })
-            try _elements.map({ try $0.commands() }).forEach { (commands) in
+
+        if let elements = paths {
+            let _elements = try elements.compactMap { try $0.path(applying: []) }
+            try _elements.map { try $0.commands() }.forEach { commands in
                 svg.paths?.append(Path(commands: commands))
             }
         }
-        
-        if let elements = self.groups {
-            let _groups = try elements.compactMap({ try $0.usingAbsolutePaths() })
+
+        if let elements = groups {
+            let _groups = try elements.compactMap { try $0.usingAbsolutePaths() }
             svg.groups = _groups
         }
-        
+
         return svg
     }
 }
@@ -99,50 +100,50 @@ extension Group {
         group.polylines = nil
         group.groups = nil
         group.paths = []
-        
+
         var _transformations = transformations
         _transformations.append(contentsOf: self.transformations)
-        
-        if let elements = self.circles {
-            let _elements = try elements.compactMap({ try $0.path(applying: _transformations) })
-            try _elements.map({ try $0.commands() }).forEach { (commands) in
+
+        if let elements = circles {
+            let _elements = try elements.compactMap { try $0.path(applying: _transformations) }
+            try _elements.map { try $0.commands() }.forEach { commands in
                 group.paths?.append(Path(commands: commands))
             }
         }
-        
-        if let elements = self.rectangles {
-            let _elements = try elements.compactMap({ try $0.path(applying: _transformations) })
-            try _elements.map({ try $0.commands() }).forEach { (commands) in
+
+        if let elements = rectangles {
+            let _elements = try elements.compactMap { try $0.path(applying: _transformations) }
+            try _elements.map { try $0.commands() }.forEach { commands in
                 group.paths?.append(Path(commands: commands))
             }
         }
-        
-        if let elements = self.polygons {
-            let _elements = try elements.compactMap({ try $0.path(applying: _transformations) })
-            try _elements.map({ try $0.commands() }).forEach { (commands) in
+
+        if let elements = polygons {
+            let _elements = try elements.compactMap { try $0.path(applying: _transformations) }
+            try _elements.map { try $0.commands() }.forEach { commands in
                 group.paths?.append(Path(commands: commands))
             }
         }
-        
-        if let elements = self.polylines {
-            let _elements = try elements.compactMap({ try $0.path(applying: _transformations) })
-            try _elements.map({ try $0.commands() }).forEach { (commands) in
+
+        if let elements = polylines {
+            let _elements = try elements.compactMap { try $0.path(applying: _transformations) }
+            try _elements.map { try $0.commands() }.forEach { commands in
                 group.paths?.append(Path(commands: commands))
             }
         }
-        
-        if let elements = self.paths {
-            let _elements = try elements.compactMap({ try $0.path(applying: _transformations) })
-            try _elements.map({ try $0.commands() }).forEach { (commands) in
+
+        if let elements = paths {
+            let _elements = try elements.compactMap { try $0.path(applying: _transformations) }
+            try _elements.map { try $0.commands() }.forEach { commands in
                 group.paths?.append(Path(commands: commands))
             }
         }
-        
-        if let elements = self.groups {
-            let _groups = try elements.compactMap({ try $0.usingAbsolutePaths(applying: _transformations) })
+
+        if let elements = groups {
+            let _groups = try elements.compactMap { try $0.usingAbsolutePaths(applying: _transformations) }
             group.groups = _groups
         }
-        
+
         return group
     }
 }

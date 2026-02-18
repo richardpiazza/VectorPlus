@@ -6,9 +6,9 @@ import CoreGraphics
 public extension Stroke.LineCap {
     var cgLineCap: CGLineCap {
         switch self {
-        case .butt: return .butt
-        case .round: return .round
-        case .square: return .square
+        case .butt: .butt
+        case .round: .round
+        case .square: .square
         }
     }
 }
@@ -16,9 +16,9 @@ public extension Stroke.LineCap {
 public extension Stroke.LineJoin {
     var cgLineJoin: CGLineJoin {
         switch self {
-        case .bevel: return .bevel
-        case .arcs, .miter, .miterClip: return .miter
-        case .round: return .round
+        case .bevel: .bevel
+        case .arcs, .miter, .miterClip: .miter
+        case .round: .round
         }
     }
 }

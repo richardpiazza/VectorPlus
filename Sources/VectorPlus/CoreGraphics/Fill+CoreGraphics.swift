@@ -6,8 +6,8 @@ import CoreGraphics
 public extension Fill.Rule {
     var cgFillRule: CGPathFillRule {
         switch self {
-        case .evenOdd: return .evenOdd
-        case .nonZero: return .winding
+        case .evenOdd: .evenOdd
+        case .nonZero: .winding
         }
     }
 }

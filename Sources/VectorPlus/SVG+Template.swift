@@ -6,7 +6,7 @@ public extension SVG {
     func asImageViewSubclass() throws -> String {
         let instructions = try asCoreGraphicsDescription()
         let renders = try asCGContextDescription()
-        
+
         return imageViewSubclassTemplate
             .replacingOccurrences(of: "{{name}}", with: name)
             .replacingOccurrences(of: "{{width}}", with: String(format: "%.1f", originalSize.width))
@@ -18,14 +18,14 @@ public extension SVG {
 
 private extension SVG {
     func asCoreGraphicsDescription(variable: String = "path") throws -> String {
-        return try subpaths().map({ try $0.asCoreGraphicsDescription(variable: variable, originalSize: originalSize) }).joined(separator: "\n        ")
+        try subpaths().map { try $0.asCoreGraphicsDescription(variable: variable, originalSize: originalSize) }.joined(separator: "\n        ")
     }
-    
+
     func asCGContextDescription() throws -> String {
         var outputs: [String] = []
-        
+
         let paths = try subpaths()
-        try paths.forEach { (path) in
+        try paths.forEach { path in
             let instructions = try path.asCoreGraphicsDescription(variable: "path", originalSize: originalSize)
             let fillColor = path.fill?.pigment?.coreGraphicsDescription ?? "nil"
             let fillOpacity = (path.fillOpacity != nil) ? "\(path.fillOpacity!)" : "nil"
@@ -36,7 +36,7 @@ private extension SVG {
             let strokeLineCap = (path.strokeLineCap != nil) ? "\(path.strokeLineCap!.coreGraphicsDescription)" : "nil"
             let strokeLineJoin = (path.strokeLineJoin != nil) ? "\(path.strokeLineJoin!.coreGraphicsDescription)" : "nil"
             let strokeMiterLimit = (path.strokeMiterLimit != nil) ? "\(path.strokeMiterLimit!)" : "nil"
-            
+
             outputs.append(contextTemplate
                 .replacingOccurrences(of: "{{instructions}}", with: instructions)
                 .replacingOccurrences(of: "{{fillColor}}", with: fillColor)
@@ -50,7 +50,7 @@ private extension SVG {
                 .replacingOccurrences(of: "{{strokeMiterLimit}}", with: strokeMiterLimit)
             )
         }
-        
+
         return outputs.joined(separator: "\n        ")
     }
 }

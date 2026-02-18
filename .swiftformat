@@ -1,0 +1,17 @@
+# Compiler
+--languagemode 5
+--swiftversion 5.10
+
+# Options
+--exclude derivedData
+--ifdef no-indent
+--indent 4
+
+# Rules
+--disable blankLinesAtStartOfScope
+--disable hoistPatternLet
+--disable redundantPublic
+--disable redundantType
+--disable unusedArguments
+--disable wrapArguments
+--disable wrapPropertyBodies

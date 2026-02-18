@@ -7,7 +7,7 @@ struct SVGView: View {
     let svg: SVG
     private var paths: [SwiftSVG.Path] { svg.paths ?? [] }
     private var content: [(Int, SwiftSVG.Path)] { Array(zip(paths.indices, paths)) }
-    
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
