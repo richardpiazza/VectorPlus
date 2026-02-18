@@ -1,6 +1,6 @@
+#if canImport(UIKit)
 import SwiftSVG
 import Swift2D
-#if canImport(UIKit)
 import UIKit
 
 public extension SVG {

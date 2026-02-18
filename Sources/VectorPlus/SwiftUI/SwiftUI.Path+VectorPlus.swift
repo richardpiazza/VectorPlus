@@ -1,7 +1,7 @@
-import SwiftSVG
+#if canImport(SwiftUI)
 import Swift2D
 import SwiftColor
-#if canImport(SwiftUI)
+import SwiftSVG
 import SwiftUI
 
 extension SwiftUI.Path {

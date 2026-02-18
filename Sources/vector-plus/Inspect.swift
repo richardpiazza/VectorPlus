@@ -1,22 +1,18 @@
-import Foundation
 import ArgumentParser
+import Foundation
 import SwiftSVG
 import VectorPlus
 
-struct Inspect: ParsableCommand {
+struct Inspect: AsyncParsableCommand {
     
-    static var configuration: CommandConfiguration = {
-        let discussion: String = """
+    static let configuration: CommandConfiguration = CommandConfiguration(
+        commandName: "inspect",
+        abstract: "Parses an SVG file and displays the interpretation.",
+        discussion: """
         Parses an SVG document and prints out the document description.
-        """
-        
-        return CommandConfiguration(
-            commandName: "inspect",
-            abstract: "Parses an SVG file and displays the interpretation.",
-            discussion: discussion,
-            helpNames: [.short, .long]
-        )
-    }()
+        """,
+        helpNames: [.short, .long]
+    )
     
     @Argument(help: "The relative or absolute path of the SVG file to be parsed.")
     var filename: String
@@ -27,7 +23,7 @@ struct Inspect: ParsableCommand {
         }
     }
     
-    func run() throws {
+    func run() async throws {
         let url = try FileManager.default.url(for: filename)
         let document = try SVG.make(from: url)
         

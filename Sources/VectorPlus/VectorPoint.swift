@@ -75,15 +75,15 @@ public extension VectorPoint {
         var cartesianPoint: Point = .zero
         
         if point.x < origin.x {
-            cartesianPoint.x = -(origin.x - point.x)
+            cartesianPoint = cartesianPoint.x(-(origin.x - point.x))
         } else if point.x > origin.x {
-            cartesianPoint.x = point.x - origin.x
+            cartesianPoint = cartesianPoint.x(point.x - origin.x)
         }
         
         if point.y > origin.y {
-            cartesianPoint.y = -(point.y - origin.y)
+            cartesianPoint = cartesianPoint.y(-(point.y - origin.y))
         } else if point.y < origin.y {
-            cartesianPoint.y = origin.y - point.y
+            cartesianPoint = cartesianPoint.y(origin.y - point.y)
         }
         
         return cartesianPoint

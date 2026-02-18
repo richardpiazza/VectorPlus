@@ -1,30 +1,9 @@
 # VectorPlus
 
-A utility & library for interacting with SVG documents.
+A library & utility for interacting with SVG documents.
 
-[![](https://github.com/richardpiazza/VectorPlus/workflows/swift/badge.svg?branch=main)](https://github.com/richardpiazza/VectorPlus/actions/workflows/swift.yml)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Frichardpiazza%2FVectorPlus%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/richardpiazza/VectorPlus)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Frichardpiazza%2FVectorPlus%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/richardpiazza/VectorPlus)
-
-## Usage
-
-VectorPlus is distributed using the [Swift Package Manager](https://swift.org/package-manager). To install it into a project, add it as a dependency within your `Package.swift` manifest:
-
-```swift
-let package = Package(
-    ...
-    dependencies: [
-        .package(url: "https://github.com/richardpiazza/VectorPlus.git", from: "0.4.0")
-    ],
-    ...
-)
-```
-
-Then import the **VectorPlus** packages wherever you'd like to use it:
-
-```swift
-import VectorPlus
-```
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Frichardpiazza%2FVectorPlus%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/richardpiazza/VectorPlus)
 
 ## Packages
 

@@ -1,7 +1,7 @@
-import SwiftSVG
-import Swift2D
 #if canImport(AppKit) && !targetEnvironment(macCatalyst)
 import AppKit
+import SwiftSVG
+import Swift2D
 
 public extension SVG {
     func nsImage(size: Size) -> NSImage? {

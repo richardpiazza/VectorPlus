@@ -1,6 +1,6 @@
-import SwiftSVG
-import Swift2D
 #if canImport(SwiftUI)
+import Swift2D
+import SwiftSVG
 import SwiftUI
 
 struct SVGView: View {

@@ -1,3 +1,5 @@
+import Foundation
+import Swift2D
 import SwiftSVG
 
 public extension SVG {
