@@ -7,14 +7,14 @@ extension FileManager {
         if fileExists(atPath: absoluteURL.path) {
             return absoluteURL
         }
-        
+
         // Relative Path?
         let directory = URL(fileURLWithPath: currentDirectoryPath, isDirectory: true)
         let relativeURL = directory.appendingPathComponent(filename)
         if fileExists(atPath: relativeURL.path) {
             return relativeURL
         }
-        
+
         throw CocoaError(.fileNoSuchFile)
     }
 }

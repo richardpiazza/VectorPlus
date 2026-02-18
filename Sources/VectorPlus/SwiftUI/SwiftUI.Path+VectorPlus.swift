@@ -8,23 +8,22 @@ extension SwiftUI.Path {
     init(path: SwiftSVG.Path, originalSize: Size, outputSize: Size) {
         let from = Rect(origin: .zero, size: originalSize)
         let to = Rect(origin: .zero, size: outputSize)
-        
+
         let mutablePath = CGMutablePath()
         let commands = (try? path.commands()) ?? []
-        commands.enumerated().forEach({ (idx, command) in
-            let previous: Point?
-            if idx > 0 {
-                previous = commands[idx - 1].point
+        for (idx, command) in commands.enumerated() {
+            let previous: Point? = if idx > 0 {
+                commands[idx - 1].point
             } else {
-                previous = nil
+                nil
             }
-            
+
             mutablePath.addCommand(command, from: from, to: to, previousPoint: previous)
-        })
-        
+        }
+
         self.init(mutablePath)
     }
-    
+
     @ViewBuilder func styling(fill: SwiftSVG.Fill? = nil, stroke: SwiftSVG.Stroke? = nil) -> some View {
         switch (fill, stroke) {
         case (.some(let fill), .some(let stroke)):
@@ -37,7 +36,7 @@ extension SwiftUI.Path {
                 self.fill(SwiftUI.Color.make(fillColor))
 
             case (.none, .some(let strokeColor)):
-                self.border(SwiftUI.Color.make(strokeColor))
+                border(SwiftUI.Color.make(strokeColor))
 
             default:
                 self
@@ -55,10 +54,10 @@ extension SwiftUI.Path {
             switch (stroke.pigment, stroke.opacity, stroke.width) {
 
             case (.some(let strokeColor), _, .some(let width)):
-                self.border(SwiftUI.Color.make(strokeColor), width: CGFloat(width))
+                border(SwiftUI.Color.make(strokeColor), width: CGFloat(width))
 
             case (.some(let strokeColor), _, .none):
-                self.border(SwiftUI.Color.make(strokeColor))
+                border(SwiftUI.Color.make(strokeColor))
 
             default:
                 self

@@ -1,26 +1,26 @@
 #if canImport(AppKit)
-import ArgumentParser
 import AppKit
+import ArgumentParser
 import Foundation
 import Swift2D
 import SwiftSVG
 import VectorPlus
 
 struct Preview: AsyncParsableCommand {
-    
+
     static let configuration: CommandConfiguration = CommandConfiguration(
         commandName: "preview",
         abstract: "Preview the interpretation of an SVG document",
-        discussion:  """
+        discussion: """
         Parses an SVG document displaying the results in an Application window. Do to limitations,
         this command is only available when the `AppKit` framework is present.
         """,
         helpNames: [.short, .long]
     )
-    
+
     @Argument(help: "The relative or absolute path of the SVG file to be parsed.")
     var filename: String
-    
+
     mutating func validate() throws {
         guard !filename.isEmpty else {
             throw ValidationError("Filename not provided or empty.")
@@ -30,7 +30,7 @@ struct Preview: AsyncParsableCommand {
     func run() async throws {
         let url = try FileManager.default.url(for: filename)
         let document = try SVG.make(from: url)
-        
+
         guard let data = document.pngData(size: Size(width: 400, height: 400)) else {
             throw ValidationError("Invalid PNG data.")
         }
@@ -88,7 +88,7 @@ private class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return true
+        true
     }
 }
 #endif

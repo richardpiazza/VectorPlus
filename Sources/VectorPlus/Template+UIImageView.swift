@@ -1,4 +1,4 @@
-internal let imageViewSubclassTemplate: String = """
+let imageViewSubclassTemplate: String = """
 #if canImport(UIKit)
 import UIKit
 
@@ -119,7 +119,7 @@ private extension CGContext {
 
 """
 
-internal let contextTemplate: String = """
+let contextTemplate: String = """
         context.rendering { (ctx) in
             ctx.saveGState()
             

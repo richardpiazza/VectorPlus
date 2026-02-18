@@ -1,5 +1,5 @@
-import Foundation
 import ArgumentParser
+import Foundation
 
 @main
 struct Command: AsyncParsableCommand {
@@ -19,7 +19,7 @@ struct Command: AsyncParsableCommand {
         commandName: "vectorplus",
         abstract: "A utility for manipulating SVG documents.",
         discussion: """
-        
+
         """,
         version: "1.0.0",
         subcommands: subcommands,

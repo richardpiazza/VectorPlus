@@ -1,4 +1,4 @@
 version: 1
 builder:
   configs:
-    - documentation_targets: ["Executable", "VectorPlus"]
+    - documentation_targets: ["vector-plus", "VectorPlus"]

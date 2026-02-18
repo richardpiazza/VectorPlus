@@ -1,5 +1,5 @@
-import SwiftSVG
 import Swift2D
+import SwiftSVG
 #if canImport(CoreGraphics)
 import CoreGraphics
 
@@ -22,14 +22,14 @@ public extension CGMutablePath {
         case .quadraticBezierCurve(let cp, let point):
             addQuadCurve(to: CGPoint(point), control: CGPoint(cp))
         case .ellipticalArcCurve(_, _, _, _, _, let point):
-            guard let previousPoint = previousPoint else {
+            guard let previousPoint else {
                 addLine(to: CGPoint(point))
                 return
             }
-            
+
             do {
                 let curves = try command.convertToCubicBezierCurves(with: previousPoint)
-                curves.forEach { (curve) in
+                for curve in curves {
                     addCommand(curve, from: from, to: to)
                 }
             } catch {
