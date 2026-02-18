@@ -1,11 +1,11 @@
 import Swift2D
 import SwiftSVG
+import Testing
 @testable import VectorPlus
-import XCTest
 
-final class InstructionTranslationTests: XCTestCase {
+struct InstructionTranslationTests {
 
-    func testTranslateLineFromRectToRect() {
+    @Test func translateLineFromRectToRect() {
         var from = Rect(x: 0, y: 0, width: 500, height: 500)
         var to = Rect(x: 0, y: 0, width: 100, height: 100)
 
@@ -18,7 +18,7 @@ final class InstructionTranslationTests: XCTestCase {
         ]
 
         var translated = commands.map { $0.translate(from: from, to: to) }
-        XCTAssertEqual(translated.count, 5)
+        #expect(translated.count == 5)
 
         var expected: [Path.Command] = [
             .moveTo(point: Point(x: 50, y: 10)),
@@ -28,7 +28,7 @@ final class InstructionTranslationTests: XCTestCase {
             .closePath,
         ]
 
-        XCTAssertEqual(translated, expected)
+        #expect(translated == expected)
 
         from = Rect(x: 0, y: 0, width: 100, height: 100)
         to = Rect(x: 0, y: 0, width: 500, height: 500)
@@ -42,7 +42,7 @@ final class InstructionTranslationTests: XCTestCase {
         ]
 
         translated = commands.map { $0.translate(from: from, to: to) }
-        XCTAssertEqual(translated.count, 5)
+        #expect(translated.count == 5)
 
         expected = [
             .moveTo(point: Point(x: 250, y: 50)),
@@ -52,90 +52,90 @@ final class InstructionTranslationTests: XCTestCase {
             .closePath,
         ]
 
-        XCTAssertEqual(translated, expected)
+        #expect(translated == expected)
     }
 
-    func testTranslateBezierCurveFromRectToRect() {
+    @Test func translateBezierCurveFromRectToRect() {
         var from = Rect(origin: .zero, size: Size(width: 100, height: 100))
         var to = Rect(origin: .zero, size: Size(width: 750, height: 750))
 
         var commands: [Path.Command] = [
             .moveTo(point: Point(x: 0, y: 20)),
-            .cubicBezierCurve(cp1: .init(x: 60, y: 0), cp2: .init(x: 40, y: 100), point: .init(x: 100, y: 80)),
+            .cubicBezierCurve(cp1: Point(x: 60, y: 0), cp2: Point(x: 40, y: 100), point: Point(x: 100, y: 80)),
             .closePath,
         ]
 
         var translated = commands.map { $0.translate(from: from, to: to) }
-        XCTAssertEqual(translated.count, 3)
+        #expect(translated.count == 3)
 
         var expected: [Path.Command] = [
             .moveTo(point: Point(x: 0, y: 150)),
-            .cubicBezierCurve(cp1: .init(x: 450, y: 0), cp2: .init(x: 300, y: 750), point: .init(x: 750, y: 600)),
+            .cubicBezierCurve(cp1: Point(x: 450, y: 0), cp2: Point(x: 300, y: 750), point: Point(x: 750, y: 600)),
             .closePath,
         ]
 
-        XCTAssertRoughlyEqual(translated, expected)
+        #expect(translated == expected)
 
         to = Rect(origin: .zero, size: Size(width: 100, height: 100))
         from = Rect(origin: .zero, size: Size(width: 750, height: 750))
 
         commands = [
             .moveTo(point: Point(x: 0, y: 150)),
-            .cubicBezierCurve(cp1: .init(x: 450, y: 0), cp2: .init(x: 300, y: 750), point: .init(x: 750, y: 600)),
+            .cubicBezierCurve(cp1: Point(x: 450, y: 0), cp2: Point(x: 300, y: 750), point: Point(x: 750, y: 600)),
             .closePath,
         ]
 
         translated = commands.map { $0.translate(from: from, to: to) }
-        XCTAssertEqual(translated.count, 3)
+        #expect(translated.count == 3)
 
         expected = [
             .moveTo(point: Point(x: 0, y: 20)),
-            .cubicBezierCurve(cp1: .init(x: 60, y: 0), cp2: .init(x: 40, y: 100), point: .init(x: 100, y: 80)),
+            .cubicBezierCurve(cp1: Point(x: 60, y: 0), cp2: Point(x: 40, y: 100), point: Point(x: 100, y: 80)),
             .closePath,
         ]
 
-        XCTAssertRoughlyEqual(translated, expected)
+        #expect(translated == expected)
     }
 
-    func testTranslateQuadraticCurveFromRectToRect() {
+    @Test func translateQuadraticCurveFromRectToRect() {
         var from = Rect(origin: .zero, size: Size(width: 100, height: 100))
         var to = Rect(origin: .zero, size: Size(width: 170, height: 170))
 
         var commands: [Path.Command] = [
-            .moveTo(point: .init(x: 20, y: 20)),
-            .quadraticBezierCurve(cp: .init(x: 50, y: 90), point: .init(x: 80, y: 20)),
+            .moveTo(point: Point(x: 20, y: 20)),
+            .quadraticBezierCurve(cp: Point(x: 50, y: 90), point: Point(x: 80, y: 20)),
             .closePath,
         ]
 
         var translated = commands.map { $0.translate(from: from, to: to) }
-        XCTAssertEqual(translated.count, 3)
+        #expect(translated.count == 3)
 
         var expected: [Path.Command] = [
-            .moveTo(point: .init(x: 34, y: 34)),
-            .quadraticBezierCurve(cp: .init(x: 85, y: 153), point: .init(x: 136, y: 34)),
+            .moveTo(point: Point(x: 34, y: 34)),
+            .quadraticBezierCurve(cp: Point(x: 85, y: 153), point: Point(x: 136, y: 34)),
             .closePath,
         ]
 
-        XCTAssertRoughlyEqual(translated, expected)
+        #expect(translated == expected)
 
         to = Rect(origin: .zero, size: Size(width: 100, height: 100))
         from = Rect(origin: .zero, size: Size(width: 170, height: 170))
 
         commands = [
-            .moveTo(point: .init(x: 34, y: 34)),
-            .quadraticBezierCurve(cp: .init(x: 85, y: 153), point: .init(x: 136, y: 34)),
+            .moveTo(point: Point(x: 34, y: 34)),
+            .quadraticBezierCurve(cp: Point(x: 85, y: 153), point: Point(x: 136, y: 34)),
             .closePath,
         ]
 
         translated = commands.map { $0.translate(from: from, to: to) }
-        XCTAssertEqual(translated.count, 3)
+        #expect(translated.count == 3)
 
         expected = [
-            .moveTo(point: .init(x: 20, y: 20)),
-            .quadraticBezierCurve(cp: .init(x: 50, y: 90), point: .init(x: 80, y: 20)),
+            .moveTo(point: Point(x: 20, y: 20)),
+            .quadraticBezierCurve(cp: Point(x: 50, y: 90), point: Point(x: 80, y: 20)),
             .closePath,
         ]
 
-        XCTAssertRoughlyEqual(translated, expected)
+        #expect(translated == expected)
     }
 }
