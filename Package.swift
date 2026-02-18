@@ -6,16 +6,17 @@ import PackageDescription
 let package = Package(
     name: "VectorPlus",
     platforms: [
-        .macOS(.v12),
-        .macCatalyst(.v15),
-        .iOS(.v15),
-        .tvOS(.v15),
-        .watchOS(.v8),
+        .macOS(.v13),
+        .macCatalyst(.v16),
+        .iOS(.v16),
+        .tvOS(.v16),
+        .watchOS(.v9),
+        .visionOS(.v1),
     ],
     products: [
         .executable(
-            name: "vectorplus",
-            targets: ["Executable"]
+            name: "vector-plus",
+            targets: ["vector-plus"]
         ),
         .library(
             name: "VectorPlus",
@@ -23,19 +24,28 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.5.0")),
-        .package(url: "https://github.com/richardpiazza/SwiftSVG.git", .upToNextMajor(from: "0.11.0")),
-        .package(url: "https://github.com/richardpiazza/SwiftColor.git", .upToNextMajor(from: "0.2.0")),
-        .package(url: "https://github.com/JohnSundell/ShellOut.git", .upToNextMajor(from: "2.3.0")),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.7.0"),
+        .package(url: "https://github.com/richardpiazza/SwiftSVG.git", from: "0.12.0"),
+        .package(url: "https://github.com/richardpiazza/SwiftColor.git", from: "0.3.1"),
+        .package(url: "https://github.com/JohnSundell/ShellOut.git", from: "2.3.0"),
     ],
     targets: [
         .executableTarget(
-            name: "Executable",
+            name: "vector-plus",
             dependencies: [
                 "VectorPlus",
                 .product(name: "SwiftSVG", package: "SwiftSVG"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "ShellOut", package: "ShellOut"),
+                .product(
+                    name: "ShellOut",
+                    package: "ShellOut",
+                    condition: .when(
+                        platforms: [
+                            .macOS,
+                            .linux,
+                        ]
+                    )
+                ),
             ]
         ),
         .target(
@@ -48,10 +58,20 @@ let package = Package(
         .testTarget(
             name: "VectorPlusTests",
             dependencies: [
-                "Executable",
+                "vector-plus",
                 "VectorPlus",
                 .product(name: "SwiftSVG", package: "SwiftSVG"),
             ]
         ),
     ]
 )
+
+for target in package.targets {
+    var settings = target.swiftSettings ?? []
+    settings.append(contentsOf: [
+        .enableUpcomingFeature("ExistentialAny"),
+        .enableUpcomingFeature("MemberImportVisibility"),
+        .enableUpcomingFeature("StrictConcurrency=complete"),
+    ])
+    target.swiftSettings = settings
+}

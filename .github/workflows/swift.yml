@@ -5,26 +5,39 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  macos-build:
 
-    runs-on: macos-latest
+  Swift-Package:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-26, ubuntu-latest]
 
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build (macOS)
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
-  
-  ubuntu-build:
-
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build (Ubuntu)
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Cache
+      uses: actions/cache@v5
+      with:
+        path: |
+          .build
+          ~/Library/Developer/Xcode/DerivedData/ModuleCache.noindex
+          ~/Library/Caches/org.swift.swiftpm
+          ~/Library/org.swift.swiftpm
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+
+    - name: Package Resolution
+      run: swift package resolve
+
+    - name: Build
+      run: swift build
+
+    - name: Test
+      run: swift test

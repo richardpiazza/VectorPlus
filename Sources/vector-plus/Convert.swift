@@ -1,10 +1,10 @@
-import Foundation
 import ArgumentParser
-import SwiftSVG
+import Foundation
 import Swift2D
+import SwiftSVG
 import VectorPlus
 
-struct Convert: ParsableCommand {
+struct Convert: AsyncParsableCommand {
     
     enum Conversion: String, Codable, CaseIterable, ExpressibleByArgument {
         case absolute
@@ -12,23 +12,19 @@ struct Convert: ParsableCommand {
         case uiKit = "uikit"
     }
     
-    static var configuration: CommandConfiguration = {
-        let discussion: String = """
+    static let configuration: CommandConfiguration = CommandConfiguration(
+        commandName: "convert",
+        abstract: "Transforms an SVG file to a specific output",
+        discussion: """
         Parses an SVG document and creates a PNG rendered version of the instructions.
 
         Supported conversion options are:
         * absolute: Translates all elements to 'absolute' paths.
         * symbols: Generates an Apple Symbols compatible SVG.
         * uikit: A UIImageView subclass that supports dynamic sizing.
-        """
-        
-        return CommandConfiguration(
-            commandName: "convert",
-            abstract: "Transforms an SVG file to a specific output",
-            discussion: discussion,
-            helpNames: [.short, .long]
-        )
-    }()
+        """,
+        helpNames: [.short, .long]
+    )
     
     @Argument(help: "The relative or absolute path of the SVG file to be parsed.")
     var filename: String
@@ -42,7 +38,7 @@ struct Convert: ParsableCommand {
         }
     }
     
-    func run() throws {
+    func run() async throws {
         let url = try FileManager.default.url(for: filename)
         let document = try SVG.make(from: url)
         

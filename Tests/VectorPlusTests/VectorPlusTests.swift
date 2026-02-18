@@ -13,7 +13,8 @@ final class VectorPlusTests: XCTestCase {
         return Bundle.main.bundleURL
       #endif
     }
-    
+
+    #if os(macOS) || os(Linux)
     func testCLI() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
@@ -24,7 +25,7 @@ final class VectorPlusTests: XCTestCase {
             return
         }
 
-        let fooBinary = productsDirectory.appendingPathComponent("vectorplus")
+        let fooBinary = productsDirectory.appendingPathComponent("vector-plus")
 
         let process = Process()
         process.executableURL = fooBinary
@@ -40,4 +41,5 @@ final class VectorPlusTests: XCTestCase {
 
         XCTAssertEqual(output, "")
     }
+    #endif
 }

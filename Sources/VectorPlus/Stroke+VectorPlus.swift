@@ -3,7 +3,7 @@ import SwiftColor
 
 public extension Stroke {
     @available(*, deprecated, renamed: "pigment")
-    var swiftColor: Color? { pigment }
+    var swiftColor: Pigment? { pigment }
     
     var pigment: Pigment? {
         guard let color = self.color, !color.isEmpty else {
