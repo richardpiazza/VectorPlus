@@ -25,6 +25,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.7.0"),
+        .package(url: "https://github.com/swiftlang/swift-testing.git", from: "6.2.0"),
         .package(url: "https://github.com/richardpiazza/SwiftSVG.git", from: "0.12.0"),
         .package(url: "https://github.com/richardpiazza/SwiftColor.git", from: "0.3.1"),
         .package(url: "https://github.com/JohnSundell/ShellOut.git", from: "2.3.0"),
@@ -61,6 +62,7 @@ let package = Package(
                 "vector-plus",
                 "VectorPlus",
                 .product(name: "SwiftSVG", package: "SwiftSVG"),
+                .product(name: "Testing", package: "swift-testing"),
             ]
         ),
     ]

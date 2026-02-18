@@ -1,6 +1,7 @@
-import XCTest
+import Foundation
+import Testing
 
-final class VectorPlusTests: XCTestCase {
+struct VectorPlusTests {
 
     /// Returns path to the built products directory.
     var productsDirectory: URL {
@@ -39,7 +40,7 @@ final class VectorPlusTests: XCTestCase {
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         let output = String(data: data, encoding: .utf8)
 
-        XCTAssertEqual(output, "")
+        #expect(output == "")
     }
     #endif
 }
