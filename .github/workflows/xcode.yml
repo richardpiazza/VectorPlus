@@ -45,4 +45,4 @@ jobs:
       env:
         SCHEME: "VectorPlus-Package"
         DESTINATION: "generic/platform=${{ matrix.platform }}"
-      run: xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" | xcbeautify
+      run: set -o pipefail && xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" | xcbeautify
