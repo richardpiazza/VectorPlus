@@ -1,5 +1,5 @@
 {
-  "originHash" : "f9478a1b38d2d039aa612874cd0c1268255f2f1e8ec1d9ac9011af02fd91c15e",
+  "originHash" : "6fd3f876d7af743e8e9aa2aee64117e5981e9a065a97788c5116ab0022f6aa1a",
   "pins" : [
     {
       "identity" : "shellout",
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/richardpiazza/SwiftColor.git",
       "state" : {
-        "revision" : "3194696c3f1c532b48bcdbece1aa7265376c1fbb",
-        "version" : "0.3.1"
+        "revision" : "a64f48f7dda85abe5236b24dea74258d6cded166",
+        "version" : "0.3.2"
       }
     },
     {

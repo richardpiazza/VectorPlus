@@ -1,4 +1,4 @@
-name: Swift
+name: Xcode
 
 on:
   pull_request:
@@ -7,14 +7,19 @@ on:
 
 jobs:
 
-  Swift-Package:
+  Xcode-Build:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-26, ubuntu-latest]
-
-    runs-on: ${{ matrix.os }}
-
+        platform: [
+          "macOS",
+          "iOS",
+          "tvOS",
+          "watchOS",
+          "visionOS",
+          "macOS,variant=Mac Catalyst",
+        ]
+    runs-on: macos-26
     steps:
     - name: Checkout
       uses: actions/checkout@v6
@@ -35,7 +40,7 @@ jobs:
       run: swift package resolve
 
     - name: Build
-      run: swift build
-
-    - name: Test
-      run: swift test
+      env:
+        SCHEME: "VectorPlus-Package"
+        DESTINATION: "generic/platform=${{ matrix.platform }}"
+      run: set -o pipefail && xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" | xcbeautify
