@@ -1,6 +1,6 @@
 import Swift2D
 import SwiftSVG
-#if canImport(UIKit)
+#if canImport(UIKit) && !os(watchOS)
 import UIKit
 
 @IBDesignable open class SVGImageView: UIImageView {

@@ -8,7 +8,7 @@ struct Command: AsyncParsableCommand {
         var subcommands: [any ParsableCommand.Type] = []
         subcommands.append(Inspect.self)
         subcommands.append(Convert.self)
-        #if canImport(AppKit)
+        #if canImport(AppKit) && !targetEnvironment(macCatalyst)
         subcommands.append(Preview.self)
         subcommands.append(Render.self)
         #endif

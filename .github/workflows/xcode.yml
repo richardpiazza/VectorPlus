@@ -1,0 +1,48 @@
+name: Swift
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  Xcode-Build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [
+          "macOS",
+          "iOS",
+          "tvOS",
+          "watchOS",
+          "visionOS",
+          "macOS,variant=Mac Catalyst",
+        ]
+    runs-on: macos-26
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Cache
+      uses: actions/cache@v5
+      with:
+        path: |
+          .build
+          ~/Library/Developer/Xcode/DerivedData/ModuleCache.noindex
+          ~/Library/Caches/org.swift.swiftpm
+          ~/Library/org.swift.swiftpm
+        key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
+
+    - name: Package Resolution
+      run: swift package resolve
+
+    - name: Build
+      env:
+        SCHEME: "VectorPlus-Package"
+        DESTINATION: "generic/platform=${{ matrix.platform }}"
+      run: xcodebuild build -scheme "$SCHEME" -destination "$DESTINATION" | xcbeautify

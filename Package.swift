@@ -40,12 +40,7 @@ let package = Package(
                 .product(
                     name: "ShellOut",
                     package: "ShellOut",
-                    condition: .when(
-                        platforms: [
-                            .macOS,
-                            .linux,
-                        ]
-                    )
+                    condition: .when(platforms: [.macOS]),
                 ),
             ]
         ),
