@@ -3,12 +3,16 @@ import Swift2D
 import SwiftSVG
 import SwiftUI
 
-struct SVGView: View {
+public struct SVGView: View {
     let svg: SVG
     private var paths: [SwiftSVG.Path] { svg.paths ?? [] }
     private var content: [(Int, SwiftSVG.Path)] { Array(zip(paths.indices, paths)) }
 
-    var body: some View {
+    public init(svg: SVG) {
+        self.svg = svg
+    }
+
+    public var body: some View {
         GeometryReader { geometry in
             ZStack {
                 ForEach(content, id: \.0) { index, path in
